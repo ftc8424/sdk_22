@@ -35,7 +35,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+/**
+ * Created by FTC8424 on 9/15/2016.
+ */
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -58,28 +63,33 @@ public class TeleOp_Trollbot extends OpMode
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    // private DcMotor leftMotor = null;
-    // private DcMotor rightMotor = null;
+    private DcMotor leftMotorFront = null;
+    //private DcMotor leftMotorBack = null;
+    private DcMotor rightMotorFront = null;
+    //private DcMotor rightMotorBack = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        // leftMotor  = hardwareMap.dcMotor.get("left motor");
-        // rightMotor = hardwareMap.dcMotor.get("right motor");
+        leftMotorFront  = hardwareMap.dcMotor.get("left front motor");
+        //leftMotorBack  = hardwareMap.dcMotor.get("left back motor);
+        rightMotorFront  = hardwareMap.dcMotor.get("right front motor");
+        //rightMotorBack  = hardwareMap.dcMotor.get("right back motor");
 
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized");
+        rightMotorFront.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        //rightMotorBack.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+
+        telemetry.addData("Status", "Initialized");
     }
 
     /*
@@ -104,9 +114,12 @@ public class TeleOp_Trollbot extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-        // leftMotor.setPower(-gamepad1.left_stick_y);
-        // rightMotor.setPower(-gamepad1.right_stick_y);
+        if ( gamepad1.left_stick_y > 0 ) {
+            leftMotorFront.setPower(1);
+            //leftMotorBack.setPower(1);
+            rightMotorFront.setPower(1);
+            //rightMotorBack.setPower(1);
+        }
     }
 
     /*
