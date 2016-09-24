@@ -61,7 +61,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TeleOp_Trollbot extends OpMode
 {
     /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime() - 1;
 
     private DcMotor leftMotorFront = null;
     //private DcMotor leftMotorBack = null;
