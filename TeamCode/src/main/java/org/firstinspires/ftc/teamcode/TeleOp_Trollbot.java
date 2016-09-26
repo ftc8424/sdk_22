@@ -57,7 +57,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="TeleOp: Trollbot", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
+//@Disabled
 public class TeleOp_Trollbot extends OpMode
 {
     /* Declare OpMode members. */
