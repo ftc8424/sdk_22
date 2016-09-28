@@ -57,9 +57,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="TeleOp: Trollbot", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
-public class TeleOp_Trollbot extends OpMode
-{
+
+public class TeleOp_Trollbot extends OpMode {
+
+
+
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -78,15 +80,15 @@ public class TeleOp_Trollbot extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotorFront  = hardwareMap.dcMotor.get("left front motor");
+        leftMotorFront  = hardwareMap.dcMotor.get("L Front");
         //leftMotorBack  = hardwareMap.dcMotor.get("left back motor);
-        rightMotorFront  = hardwareMap.dcMotor.get("right front motor");
+        rightMotorFront  = hardwareMap.dcMotor.get("R Front");
         //rightMotorBack  = hardwareMap.dcMotor.get("right back motor");
 
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotorFront.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+         rightMotorFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        // Set to FORWARD if using AndyMark motors
         //rightMotorBack.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
         telemetry.addData("Status", "Initialized");
@@ -114,12 +116,30 @@ public class TeleOp_Trollbot extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        if ( gamepad1.left_stick_y > 0 ) {
-            leftMotorFront.setPower(1);
-            //leftMotorBack.setPower(1);
-            rightMotorFront.setPower(1);
-            //rightMotorBack.setPower(1);
+        /* This code will take the values from the gamepad, negate them,
+        and then square that value. This will make the values sent to the
+        robot more sensitive, giving the driver more control / precision.
+         */
+        double rightStickVal = -gamepad1.right_stick_y;
+        double leftStickVal = -gamepad1.left_stick_y;
+        double rightSquaredVal = rightStickVal; // * rightStickVal;
+        double leftSquaredVal = leftStickVal; // * leftStickVal;
+
+        rightMotorFront.setPower(rightSquaredVal);
+        leftMotorFront.setPower(leftSquaredVal);
+/*
+        if (rightStickVal < 0 ) {
+
+           rightMotorFront.setPower(-rightSquaredVal);
+        } else {
+            rightMotorFront.setPower(rightSquaredVal);
         }
+        if (leftSquaredVal < 0) {
+            leftMotorFront.setPower(-leftSquaredVal);
+        } else {
+            leftMotorFront.setPower(leftSquaredVal);
+        }
+   */
     }
 
     /*
