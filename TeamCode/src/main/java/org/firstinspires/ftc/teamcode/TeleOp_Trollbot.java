@@ -38,6 +38,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+
 /**
  * Created by FTC8424 on 9/15/2016.
  */
@@ -80,9 +82,9 @@ public class TeleOp_Trollbot extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotorFront  = hardwareMap.dcMotor.get("L Front");
+        leftMotorFront = hardwareMap.dcMotor.get("L Front");
         //leftMotorBack  = hardwareMap.dcMotor.get("left back motor);
-        rightMotorFront  = hardwareMap.dcMotor.get("R Front");
+        rightMotorFront = hardwareMap.dcMotor.get("R Front");
         //rightMotorBack  = hardwareMap.dcMotor.get("right back motor");
 
         // eg: Set the drive motor directions:
@@ -90,8 +92,17 @@ public class TeleOp_Trollbot extends OpMode {
          rightMotorFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         // Set to FORWARD if using AndyMark motors
         //rightMotorBack.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
 
         telemetry.addData("Status", "Initialized");
+
     }
 
     /*
@@ -114,13 +125,15 @@ public class TeleOp_Trollbot extends OpMode {
      */
     @Override
     public void loop() {
+
+
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         /* This code will take the values from the gamepad, negate them,
         and then square that value. This will make the values sent to the
         robot more sensitive, giving the driver more control / precision.
          */
-        double rightStickVal = -gamepad1.right_stick_y;
+        /*double rightStickVal = -gamepad1.right_stick_y;
         double leftStickVal = -gamepad1.left_stick_y;
         double rightSquaredVal = rightStickVal * rightStickVal;
         double leftSquaredVal = leftStickVal * leftStickVal;
@@ -128,9 +141,9 @@ public class TeleOp_Trollbot extends OpMode {
         //rightMotorFront.setPower(rightSquaredVal);
         //leftMotorFront.setPower(leftSquaredVal);
 
-        if (rightStickVal < 0 ) {
+        if (rightStickVal < 0) {
 
-           rightMotorFront.setPower(-rightSquaredVal);
+            rightMotorFront.setPower(-rightSquaredVal);
         } else {
             rightMotorFront.setPower(rightSquaredVal);
         }
@@ -139,8 +152,27 @@ public class TeleOp_Trollbot extends OpMode {
         } else {
             leftMotorFront.setPower(leftSquaredVal);
         }
-    }
+        */
 
+
+
+
+        telemetry.addData("Path0", "Starting at %7d :%7d",
+                leftMotorFront.getCurrentPosition(),
+                rightMotorFront.getCurrentPosition());
+
+        if (gamepad1.a) {
+            leftMotorFront.setTargetPosition(8112 + leftMotorFront.getCurrentPosition());
+            rightMotorFront.setTargetPosition(8112 + rightMotorFront.getCurrentPosition());
+            telemetry.addData("Path1", "Running to %7d :%7d",
+                    leftMotorFront.getTargetPosition(),
+                    rightMotorFront.getTargetPosition());
+            leftMotorFront.setPower(1);
+            rightMotorFront.setPower(1);
+
+        }
+
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
