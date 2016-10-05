@@ -122,24 +122,23 @@ public class TeleOp_Trollbot extends OpMode {
          */
         double rightStickVal = -gamepad1.right_stick_y;
         double leftStickVal = -gamepad1.left_stick_y;
-        double rightSquaredVal = rightStickVal; // * rightStickVal;
-        double leftSquaredVal = leftStickVal; // * leftStickVal;
+        double rightSquaredVal = rightStickVal * rightStickVal;
+        double leftSquaredVal = leftStickVal * leftStickVal;
 
-        rightMotorFront.setPower(rightSquaredVal);
-        leftMotorFront.setPower(leftSquaredVal);
-/*
+        //rightMotorFront.setPower(rightSquaredVal);
+        //leftMotorFront.setPower(leftSquaredVal);
+
         if (rightStickVal < 0 ) {
 
            rightMotorFront.setPower(-rightSquaredVal);
         } else {
             rightMotorFront.setPower(rightSquaredVal);
         }
-        if (leftSquaredVal < 0) {
+        if (leftStickVal < 0) {
             leftMotorFront.setPower(-leftSquaredVal);
         } else {
             leftMotorFront.setPower(leftSquaredVal);
         }
-   */
     }
 
     /*
