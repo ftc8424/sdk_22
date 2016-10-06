@@ -32,44 +32,37 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * Created by FTC8424 on 9/15/2016.
  */
 
 /**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * Just a test for the launcher code with different speeds
  */
 
-@TeleOp(name="TeleOp: Trollbot", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="TeleOp: Launcher", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 
-public class TeleOp_Trollbot extends OpMode {
+public class TeleOp_Launcher extends OpMode {
 
 
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor leftMotorFront = null;
+    private DcMotor launcher = null;
+    private Servo launch_lift = null;
+    double launchPower = 1;
+    private double servoUpTime = 0;
+    private double powerSetTime = 0;
+
     //private DcMotor leftMotorBack = null;
-    private DcMotor rightMotorFront = null;
+    //private DcMotor rightMotorFront = null;
     //private DcMotor rightMotorBack = null;
 
     /*
@@ -82,24 +75,25 @@ public class TeleOp_Trollbot extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotorFront = hardwareMap.dcMotor.get("L Front");
+        launcher = hardwareMap.dcMotor.get("Launcher");
         //leftMotorBack  = hardwareMap.dcMotor.get("left back motor);
-        rightMotorFront = hardwareMap.dcMotor.get("R Front");
+        launch_lift = hardwareMap.servo.get("LaunchLift");
         //rightMotorBack  = hardwareMap.dcMotor.get("right back motor");
 
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
-         rightMotorFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+         //launcher.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         // Set to FORWARD if using AndyMark motors
         //rightMotorBack.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        leftMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //rightMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //leftMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        rightMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
+        launch_lift.setPosition(0.9);
 
         telemetry.addData("Status", "Initialized");
 
@@ -129,6 +123,7 @@ public class TeleOp_Trollbot extends OpMode {
 
         telemetry.addData("Status", "Running: " + runtime.toString());
 
+
         /* This code will take the values from the gamepad, negate them,
         and then square that value. This will make the values sent to the
         robot more sensitive, giving the driver more control / precision.
@@ -157,22 +152,43 @@ public class TeleOp_Trollbot extends OpMode {
 
 
 
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                leftMotorFront.getCurrentPosition(),
-                rightMotorFront.getCurrentPosition());
+//        telemetry.addData("Path0", "Starting at %7d :%7d",
+//                leftMotorFront.getCurrentPosition(),
+//                rightMotorFront.getCurrentPosition());
 
-        if (gamepad1.a) {
-            leftMotorFront.setTargetPosition(8000 + leftMotorFront.getCurrentPosition());
-            rightMotorFront.setTargetPosition(8000 + rightMotorFront.getCurrentPosition());
-            telemetry.addData("Path1", "Running to %7d :%7d",
-                    leftMotorFront.getTargetPosition(),
-                    rightMotorFront.getTargetPosition());
-            leftMotorFront.setPower(0.5);
-            rightMotorFront.setPower(0.5);
-
-            leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
-            rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
-            //telemetry
+        telemetry.addData("LaunchPower:  %.2f", launchPower);
+        if (gamepad1.a && powerSetTime+2 < runtime.seconds()) {
+            if ( launchPower - .25 < 0 ) {
+                telemetry.addData("Launcher: %s", "At min speed");
+            } else {
+                launchPower -= .25;
+                launcher.setPower(launchPower);
+                powerSetTime = runtime.seconds();
+            }
+        }
+        if (gamepad1.x) {
+            launchPower = 0.0;
+            launcher.setPower(launchPower);
+        }
+        if (gamepad1.b && servoUpTime+2 < runtime.seconds()) {
+            if ( launch_lift.getPosition() == 0 ) {
+                launch_lift.setPosition(0.9);
+            } else {
+                launch_lift.setPosition(0);
+                servoUpTime = runtime.seconds();
+            }
+//            launch_lift.setPosition(.25);
+//            leftMotorFront.setTargetPosition(8000 + leftMotorFront.getCurrentPosition());
+//            rightMotorFront.setTargetPosition(8000 + rightMotorFront.getCurrentPosition());
+//            telemetry.addData("Path1", "Running to %7d :%7d",
+//                    leftMotorFront.getTargetPosition(),
+//                    rightMotorFront.getTargetPosition());
+//            leftMotorFront.setPower(0.5);
+//            rightMotorFront.setPower(0.5);
+//
+//            leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
+//            rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
+//            telemetry
 
 
         }
