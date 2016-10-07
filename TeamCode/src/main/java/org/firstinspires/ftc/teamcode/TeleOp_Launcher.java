@@ -57,7 +57,7 @@ public class TeleOp_Launcher extends OpMode {
 
     private DcMotor launcher = null;
     private Servo launch_lift = null;
-    double launchPower = 1;
+    double launchPower = 1.25;
     private double servoUpTime = 0;
     private double powerSetTime = 0;
 
