@@ -65,6 +65,7 @@ public class TeleOp_Launcher extends OpMode {
     //private DcMotor rightMotorFront = null;
     //private DcMotor rightMotorBack = null;
 
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -88,12 +89,12 @@ public class TeleOp_Launcher extends OpMode {
         //leftMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //rightMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //leftMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rightMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        leftMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        rightMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //rightMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //rightMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        launch_lift.setPosition(0.9);
+        //launch_lift.setPosition(0.9);
 
         telemetry.addData("Status", "Initialized");
 
@@ -171,12 +172,18 @@ public class TeleOp_Launcher extends OpMode {
             launcher.setPower(launchPower);
         }
         if (gamepad1.b && servoUpTime+2 < runtime.seconds()) {
-            if ( launch_lift.getPosition() == 0 ) {
+            if (launch_lift.getPosition() == 0) {
                 launch_lift.setPosition(0.9);
             } else {
                 launch_lift.setPosition(0);
-                servoUpTime = runtime.seconds();
             }
+            servoUpTime = runtime.seconds();
+
+        }
+
+        telemetry.addData("Servo", "Servo Set to " + launch_lift.getPosition());
+
+
 //            launch_lift.setPosition(.25);
 //            leftMotorFront.setTargetPosition(8000 + leftMotorFront.getCurrentPosition());
 //            rightMotorFront.setTargetPosition(8000 + rightMotorFront.getCurrentPosition());
@@ -191,7 +198,7 @@ public class TeleOp_Launcher extends OpMode {
 //            telemetry
 
 
-        }
+        //}
 
     }
     /*

@@ -40,6 +40,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by FTC8424 on 9/15/2016.
  */
@@ -57,7 +59,6 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-
 @TeleOp(name="TeleOp: Trollbot", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 
 public class TeleOp_Trollbot extends OpMode {
@@ -71,6 +72,7 @@ public class TeleOp_Trollbot extends OpMode {
     //private DcMotor leftMotorBack = null;
     private DcMotor rightMotorFront = null;
     //private DcMotor rightMotorBack = null;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -170,9 +172,24 @@ public class TeleOp_Trollbot extends OpMode {
             leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
 
+            //Turning to align at first beacon
+            leftMotorFront.setPower(-0.5);
+            rightMotorFront.setPower(0.5);
+
+            //Backing up at first beacon
+            leftMotorFront.setTargetPosition(728 + leftMotorFront.getCurrentPosition());
+            rightMotorFront.setTargetPosition(728 + rightMotorFront.getCurrentPosition());
+
+            //Turning right to go towards second beacon. How to wait??
+            leftMotorFront.setPower(0.5);
+            rightMotorFront.setPower(-0.5);
+
+            //TimeUnit.MILLISECONDS.sleep(1000);
+
+
+
             leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
-            //telemetry
 
 
         }
