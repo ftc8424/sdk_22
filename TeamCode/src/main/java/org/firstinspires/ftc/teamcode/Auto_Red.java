@@ -19,10 +19,14 @@ public class Auto_Red extends LinearOpMode{
     Servo rightPush;
     DcMotor leftMotorFront;
     DcMotor rightMotorFront;
-}
+    double leftPushStart = 0.1;
+    double rightPushStart = 0.1;
+    double leftPushSecond = 0.9;
+    double rightPushSecond = 0.9;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         waitForStart();
 //
 //     hsvValues is an array that will hold the hue, saturation, and value information.
@@ -40,6 +44,8 @@ public class Auto_Red extends LinearOpMode{
         colorSensor = hardwareMap.colorSensor.get("color sensor");
         leftPush = hardwareMap.servo.get("left_push");
         rightPush = hardwareMap.servo.get("right_push");
+        leftMotorFront = hardwareMap.dcMotor.get("L Front");
+        rightMotorFront = hardwareMap.dcMotor.get("R Front");
 
         waitForStart();
 
@@ -66,7 +72,9 @@ public class Auto_Red extends LinearOpMode{
             //Turning at Beacon 1
             //Is there a way to do it in encoder ticks, to be more precise
             //How do I put a wait 1 second after the set power?
-            leftMotorFront.setPower(-0.5);
+            leftMotorFront.setTargetPosition(-500 + leftMotorFront.getCurrentPosition());
+            rightMotorFront.setTargetPosition(500 + rightMotorFront.getCurrentPosition());
+            leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
 
             //Driving Towards Beacon 1
@@ -84,22 +92,27 @@ public class Auto_Red extends LinearOpMode{
             //Logic for pressing correct button
             //May need to be edited if we want to use the Hue values instead
             if (colorSensor.red() == 1) {
-                leftPush.setPosition(0.9);
+                leftPush.setPosition(leftPushSecond);
             } else {
-                rightPush.setPosition(0.9);
+                rightPush.setPosition(rightPushSecond);
             }
+            wait(2000);
+            leftPush.setPosition(leftPushStart);
+            rightPush.setPosition(rightPushStart);
 
             //Backing up from Beacon 1
             //Does the Encoder value need to be negative too?
             leftMotorFront.setTargetPosition(-728 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(-728 + rightMotorFront.getCurrentPosition());
-            leftMotorFront.setPower(-0.5);
-            rightMotorFront.setPower(-0.5);
+            leftMotorFront.setPower(0.5);
+            rightMotorFront.setPower(0.5);
 
             //Turning right towards beacon 2
             //How do you put a wait, or how do you do this in encoder ticks?
+            leftMotorFront.setTargetPosition(750 + leftMotorFront.getCurrentPosition());
+            rightMotorFront.setTargetPosition(-750 + rightMotorFront.getCurrentPosition());
             leftMotorFront.setPower(0.5);
-            rightMotorFront.setPower(-0.5);
+            rightMotorFront.setPower(0.5);
 
             //Driving towards beacon 2
             leftMotorFront.setTargetPosition(5408 + leftMotorFront.getCurrentPosition());
@@ -107,8 +120,10 @@ public class Auto_Red extends LinearOpMode{
             leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
 
-            //Turning at Beacon 2
-            leftMotorFront.setPower(-0.5);
+            //Turning left at Beacon 2
+            leftMotorFront.setTargetPosition(-750 + leftMotorFront.getCurrentPosition());
+            rightMotorFront.setTargetPosition(750 + rightMotorFront.getCurrentPosition());
+            leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
 
             //Driving Towards Beacon 2
@@ -125,22 +140,31 @@ public class Auto_Red extends LinearOpMode{
             //Logic for pressing correct button
             //May need to be edited if we want to use the Hue values instead
             if (colorSensor.red() == 1) {
-                leftPush.setPosition(0.9);
+                leftPush.setPosition(leftPushSecond);
             } else {
-                rightPush.setPosition(0.9);
+                rightPush.setPosition(rightPushSecond);
             }
+            wait(2000);
+            leftPush.setPosition(leftPushStart);
+            rightPush.setPosition(rightPushStart);
 
             //Backing up from Beacon 2
             leftMotorFront.setTargetPosition(-1144 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(-1144 + rightMotorFront.getCurrentPosition());
+            leftMotorFront.setPower(0.5);
+            rightMotorFront.setPower(0.5);
 
             //Turning towards Cap ball
-            leftMotorFront.setPower(-0.5);
+            leftMotorFront.setTargetPosition(500 + leftMotorFront.getCurrentPosition());
+            rightMotorFront.setTargetPosition(-500 + rightMotorFront.getCurrentPosition());
+            leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
 
             //Moving towards Cap ball
             leftMotorFront.setTargetPosition(-5200 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(-5200 + rightMotorFront.getCurrentPosition());
+            leftMotorFront.setPower(0.5);
+            rightMotorFront.setPower(0.5);
 
         }
     }

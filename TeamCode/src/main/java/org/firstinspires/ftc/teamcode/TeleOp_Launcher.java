@@ -57,7 +57,7 @@ public class TeleOp_Launcher extends OpMode {
 
     private DcMotor launcher = null;
     private Servo launch_lift = null;
-    double launchPower = 1.25;
+    double launchPower = 1.1;
     private double servoUpTime = 0;
     private double powerSetTime = 0;
 
@@ -159,10 +159,10 @@ public class TeleOp_Launcher extends OpMode {
 
         telemetry.addData("LaunchPower:  %.2f", launchPower);
         if (gamepad1.a && powerSetTime+2 < runtime.seconds()) {
-            if ( launchPower - .25 < 0 ) {
+            if ( launchPower - .1 < 0 ) {
                 telemetry.addData("Launcher: %s", "At min speed");
             } else {
-                launchPower -= .25;
+                launchPower -= .1;
                 launcher.setPower(launchPower);
                 powerSetTime = runtime.seconds();
             }
@@ -181,7 +181,7 @@ public class TeleOp_Launcher extends OpMode {
 
         }
 
-        telemetry.addData("Servo", "Servo Set to " + launch_lift.getPosition());
+        //telemetry.addData("Servo", "Servo Set to " + launch_lift.getPosition());
 
 
 //            launch_lift.setPosition(.25);
