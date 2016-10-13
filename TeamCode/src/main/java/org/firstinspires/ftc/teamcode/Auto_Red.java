@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Devan on 10/9/2016.
  */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Sensor: HT color", group = "Sensor")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Red", group = "Sensor")
 public class Auto_Red extends LinearOpMode{
     ColorSensor colorSensor;
     Servo leftPush;
@@ -27,7 +27,7 @@ public class Auto_Red extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        waitForStart();
+//        waitForStart();
 //
 //     hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
@@ -47,9 +47,13 @@ public class Auto_Red extends LinearOpMode{
         leftMotorFront = hardwareMap.dcMotor.get("L Front");
         rightMotorFront = hardwareMap.dcMotor.get("R Front");
 
-        waitForStart();
+        while ( !isStarted() ) {
+            telemetry.addData("Init:  %s", "Waiting for start");
+            telemetry.update();
+            idle();
+        }
 
-        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsvValues);
+//        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsvValues);
 //
 //      // send the info back to driver station using telemetry function.
         telemetry.addData("Clear", colorSensor.alpha());
@@ -59,7 +63,6 @@ public class Auto_Red extends LinearOpMode{
         telemetry.addData("Hue", hsvValues[0]);
 
 
-        if (gamepad1.a) {
             leftMotorFront.setTargetPosition(8000 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(8000 + rightMotorFront.getCurrentPosition());
             telemetry.addData("Path1", "Running to %7d :%7d",
@@ -67,7 +70,7 @@ public class Auto_Red extends LinearOpMode{
                     rightMotorFront.getTargetPosition());
             leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
-
+            idle();
 
             //Turning at Beacon 1
             //Is there a way to do it in encoder ticks, to be more precise
@@ -76,11 +79,12 @@ public class Auto_Red extends LinearOpMode{
             rightMotorFront.setTargetPosition(500 + rightMotorFront.getCurrentPosition());
             leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
-
+            idle();
+        
             //Driving Towards Beacon 1
             leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
-
+            idle();
 
             // send color values info back to driver station
             telemetry.addData("Clear", colorSensor.alpha());
@@ -99,6 +103,7 @@ public class Auto_Red extends LinearOpMode{
             wait(2000);
             leftPush.setPosition(leftPushStart);
             rightPush.setPosition(rightPushStart);
+            idle();
 
             //Backing up from Beacon 1
             //Does the Encoder value need to be negative too?
@@ -106,6 +111,7 @@ public class Auto_Red extends LinearOpMode{
             rightMotorFront.setTargetPosition(-728 + rightMotorFront.getCurrentPosition());
             leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
+            idle();
 
             //Turning right towards beacon 2
             //How do you put a wait, or how do you do this in encoder ticks?
@@ -166,6 +172,5 @@ public class Auto_Red extends LinearOpMode{
             leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
 
-        }
     }
 }

@@ -167,6 +167,15 @@ public class TeleOp_Launcher extends OpMode {
                 powerSetTime = runtime.seconds();
             }
         }
+        if (gamepad1.y && powerSetTime+2 < runtime.seconds()) {
+            if (launchPower + .1 > 1.0) {
+                telemetry.addData("Launcher: %s", "At max speed");
+            } else {
+                launchPower += .1;
+                launcher.setPower(launchPower);
+                powerSetTime = runtime.seconds();
+            }
+        }
         if (gamepad1.x) {
             launchPower = 0.0;
             launcher.setPower(launchPower);
