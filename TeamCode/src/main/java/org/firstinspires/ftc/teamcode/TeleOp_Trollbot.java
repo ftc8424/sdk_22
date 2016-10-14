@@ -36,11 +36,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 import java.util.concurrent.TimeUnit;
+
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.TROLLBOT;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLROBOT;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.LAUNCHTEST;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.COLORTEST;
 
 /**
  * Created by FTC8424 on 9/15/2016.
@@ -67,44 +74,15 @@ public class TeleOp_Trollbot extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-
-    private DcMotor leftMotorFront = null;
-    //private DcMotor leftMotorBack = null;
-    private DcMotor rightMotorFront = null;
-    //private DcMotor rightMotorBack = null;
-
+    private HardwareHelper robot = new HardwareHelper(TROLLBOT);
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        leftMotorFront = hardwareMap.dcMotor.get("L Front");
-        //leftMotorBack  = hardwareMap.dcMotor.get("left back motor);
-        rightMotorFront = hardwareMap.dcMotor.get("R Front");
-        //rightMotorBack  = hardwareMap.dcMotor.get("right back motor");
-
-        // eg: Set the drive motor directions:
-        // Reverse the motor that runs backwards when connected directly to the battery
-         rightMotorFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        // Set to FORWARD if using AndyMark motors
-        //rightMotorBack.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        leftMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotorFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-
+        robot.robot_init(hardwareMap);
         telemetry.addData("Status", "Initialized");
-
     }
 
     /*
@@ -128,42 +106,24 @@ public class TeleOp_Trollbot extends OpMode {
     @Override
     public void loop() {
 
-
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        /* This code will take the values from the gamepad, negate them,
-        and then square that value. This will make the values sent to the
-        robot more sensitive, giving the driver more control / precision.
-         */
-        /*double rightStickVal = -gamepad1.right_stick_y;
+        double rightStickVal = -gamepad1.right_stick_y;
         double leftStickVal = -gamepad1.left_stick_y;
         double rightSquaredVal = rightStickVal * rightStickVal;
         double leftSquaredVal = leftStickVal * leftStickVal;
 
-        //rightMotorFront.setPower(rightSquaredVal);
-        //leftMotorFront.setPower(leftSquaredVal);
-
-        if (rightStickVal < 0) {
-
-            rightMotorFront.setPower(-rightSquaredVal);
-        } else {
-            rightMotorFront.setPower(rightSquaredVal);
-        }
-        if (leftStickVal < 0) {
-            leftMotorFront.setPower(-leftSquaredVal);
-        } else {
-            leftMotorFront.setPower(leftSquaredVal);
-        }
-        */
-
-
-
+        if (rightStickVal < 0) rightSquaredVal = -rightSquaredVal;
+        if (leftStickVal < 0) leftSquaredVal = -leftSquaredVal;
+        robot.normalDrive(leftSquaredVal, rightSquaredVal);
 
         telemetry.addData("Path0", "Starting at %7d :%7d",
-                leftMotorFront.getCurrentPosition(),
-                rightMotorFront.getCurrentPosition());
+                robot.leftBackDrive.getCurrentPosition(),
+                robot.rightBackDrive.getCurrentPosition());
 
+/*
         if (gamepad1.a) {
+            robot.normalDrive(12, 12);             // Move 12 inches
             leftMotorFront.setTargetPosition(8000 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(8000 + rightMotorFront.getCurrentPosition());
             telemetry.addData("Path1", "Running to %7d :%7d",
@@ -185,14 +145,10 @@ public class TeleOp_Trollbot extends OpMode {
             rightMotorFront.setPower(-0.5);
 
             //TimeUnit.MILLISECONDS.sleep(1000);
-
-
-
             leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
-
-
         }
+*/
 
     }
     /*
@@ -200,6 +156,7 @@ public class TeleOp_Trollbot extends OpMode {
      */
     @Override
     public void stop() {
+        robot.normalDrive(0, 0);
     }
 
 }
