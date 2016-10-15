@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -76,6 +77,14 @@ public class TeleOp_Trollbot extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private HardwareHelper robot = new HardwareHelper(TROLLBOT);
 
+//    private Servo LPush;
+//    double LPushStart = 0.1;
+//    double LPushEnd = 0.9;
+//    double LPushPower = 1.1;
+
+    private double LservoUpTime = 0;
+    private double RservoUpTime = 0;
+    private double powerSetTime = 0;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -83,14 +92,17 @@ public class TeleOp_Trollbot extends OpMode {
     public void init() {
         robot.robot_init(hardwareMap);
         telemetry.addData("Status", "Initialized");
+//        LPush = hardwareMap.servo.get("left_push");
+//        LPush.setPosition(LPushStart);
+//        wait(2000);
+//        LPush.setPosition(LPushEnd);
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
-    @Override
-    public void init_loop() {
-    }
+
+
 
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -120,6 +132,15 @@ public class TeleOp_Trollbot extends OpMode {
         telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.leftBackDrive.getCurrentPosition(),
                 robot.rightBackDrive.getCurrentPosition());
+
+        if (gamepad1.left_bumper && LservoUpTime+2 < runtime.seconds()) {
+            if ( robot.leftPush.getPosition() == robot.lpushStart ) {
+                robot.leftPush.setPosition(robot.lpushDeploy);
+            } else {
+                robot.leftPush.setPosition(robot.lpushStart);
+            }
+            LservoUpTime = runtime.seconds();
+        }
 
 /*
         if (gamepad1.a) {

@@ -85,7 +85,7 @@ public class Auto_Red extends LinearOpMode{
             leftMotorFront.setPower(0.5);
             rightMotorFront.setPower(0.5);
             idle();
-        
+
             //Driving Towards Beacon 1
             leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
