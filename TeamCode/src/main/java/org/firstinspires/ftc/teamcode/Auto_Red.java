@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
+
 /**
  * Created by Devan on 10/9/2016.
  */
@@ -23,6 +26,7 @@ public class Auto_Red extends LinearOpMode{
     double rightPushStart = 0.1;
     double leftPushSecond = 0.9;
     double rightPushSecond = 0.9;
+    HardwareHelper robot = new HardwareHelper(AUTOTEST);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,6 +67,7 @@ public class Auto_Red extends LinearOpMode{
         telemetry.addData("Hue", hsvValues[0]);
 
 
+        robot.encoderDrive(this, .5, 72, 72, 10);
             leftMotorFront.setTargetPosition(8000 + leftMotorFront.getCurrentPosition());
             rightMotorFront.setTargetPosition(8000 + rightMotorFront.getCurrentPosition());
             telemetry.addData("Path1", "Running to %7d :%7d",

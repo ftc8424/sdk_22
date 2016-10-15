@@ -97,7 +97,7 @@ public class HardwareHelper {
         }
 
         /* Set the subsequent motors based on type */
-        if ( robotType == LAUNCHTEST || robotType == FULLROBOT || robotType == TROLLBOT ) {
+        if ( robotType == LAUNCHTEST || robotType == FULLROBOT  ) {
             launchMotor = hwMap.dcMotor.get(cfgLaunchMotor);
         }
 
@@ -105,17 +105,17 @@ public class HardwareHelper {
         if ( robotType == TROLLBOT || robotType == FULLROBOT ) {
             leftPush = hwMap.servo.get(cfgLPush);
             rightPush = hwMap.servo.get(cfgRPush);
+        }
+        if ( robotType == LAUNCHTEST || robotType == FULLROBOT ) {
             launchServo = hwMap.servo.get(cfgLaunchServo);
         }
 
         /* Set the sensors based on type */
-        if ( robotType == AUTOTEST || robotType == COLORTEST ) {
+        if ( robotType == AUTOTEST || robotType == COLORTEST || robotType == FULLROBOT ) {
             color = hwMap.colorSensor.get(cfgColor);
         }
 
         /* Now that hardware is mapped, set to initial positions/settings. */
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        if ( robotType == FULLROBOT ) rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
         if ( robotType == FULLROBOT ) {
@@ -161,7 +161,7 @@ public class HardwareHelper {
         }
 
         // Turn On RUN_TO_POSITION
-        if ( robotType == FULLROBOT ) {
+        if ( robotType == FULLROBOT || robotType == AUTOTEST ) {
             leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         } else {
