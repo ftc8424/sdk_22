@@ -50,12 +50,14 @@ public class Auto_Red extends LinearOpMode{
         //rightPush = hardwareMap.servo.get("right_push");
         //leftMotorFront = hardwareMap.dcMotor.get("L Front");
         //rightMotorFront = hardwareMap.dcMotor.get("R Front");
+    robot.robot_init(hardwareMap);
 
-        while ( !isStarted() ) {
-            telemetry.addData("Init:  %s", "Waiting for start");
+
+            telemetry.addData("Init:" ,"Waiting for start");
             telemetry.update();
             idle();
-        }
+        waitForStart();
+
 
 //        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsvValues);
 //
@@ -96,13 +98,13 @@ public class Auto_Red extends LinearOpMode{
             //Logic for pressing correct button
             //May need to be edited if we want to use the Hue values instead
             if (robot.color.red() == 1) {
-                leftPush.setPosition(leftPushSecond);
+                robot.leftPush.setPosition(leftPushSecond);
             } else {
-                rightPush.setPosition(rightPushSecond);
+                robot.rightPush.setPosition(rightPushSecond);
             }
             wait(2000);
-            leftPush.setPosition(leftPushStart);
-            rightPush.setPosition(rightPushStart);
+            robot.leftPush.setPosition(leftPushStart);
+            robot.rightPush.setPosition(rightPushStart);
             idle();
 
         robot.encoderDrive(this, .5, -7, -7, 10);
@@ -145,14 +147,14 @@ public class Auto_Red extends LinearOpMode{
 
             //Logic for pressing correct button
             //May need to be edited if we want to use the Hue values instead
-            if (colorSensor.red() == 1) {
-                leftPush.setPosition(leftPushSecond);
+            if (robot.color.red() == 1) {
+                robot.leftPush.setPosition(leftPushSecond);
             } else {
-                rightPush.setPosition(rightPushSecond);
+                robot.rightPush.setPosition(rightPushSecond);
             }
             wait(2000);
-            leftPush.setPosition(leftPushStart);
-            rightPush.setPosition(rightPushStart);
+            robot.leftPush.setPosition(leftPushStart);
+            robot.rightPush.setPosition(rightPushStart);
 
         robot.encoderDrive(this, .5, -10.7, -10.7, 10);
             //Backing up from Beacon 2
