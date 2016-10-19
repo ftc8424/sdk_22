@@ -61,7 +61,6 @@ public class HardwareHelper {
     public static final double rpushDeploy = 0.9;
     public static final double launchStart = 0.1;
     public static final double launchDeploy = 0.5;
-
     /* Use this when creating the constructor, to state the type of robot we're using. */
     public enum RobotType {
         FULLROBOT, LAUNCHTEST, COLORTEST, AUTOTEST, TROLLBOT,

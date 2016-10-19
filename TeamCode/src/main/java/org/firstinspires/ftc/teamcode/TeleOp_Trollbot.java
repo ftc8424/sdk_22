@@ -133,14 +133,51 @@ public class TeleOp_Trollbot extends OpMode {
                 robot.leftBackDrive.getCurrentPosition(),
                 robot.rightBackDrive.getCurrentPosition());
 
+        telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
+
         if (gamepad1.left_bumper && LservoUpTime+2 < runtime.seconds()) {
-            if ( robot.leftPush.getPosition() == robot.lpushStart ) {
-                robot.leftPush.setPosition(robot.lpushDeploy);
+            //robot.lpushStart robot.lpushDeploy
+            if ( robot.leftPush.getPosition() == 0.1 ) {
+                robot.leftPush.setPosition(0.9);
             } else {
-                robot.leftPush.setPosition(robot.lpushStart);
+                robot.leftPush.setPosition(0.1);
             }
             LservoUpTime = runtime.seconds();
         }
+        telemetry.addData("Status", "Debug 2 at: " + runtime.toString());
+
+        telemetry.addData("Servo", " 1 rightPush Servo Set to " + robot.rightPush.getPosition());
+
+        if (gamepad1.right_bumper && RservoUpTime+2 < runtime.seconds()) {
+            telemetry.addData("Status", "Debug 3 at: " + runtime.toString());
+            // robot.rpushStart robot.rpushDeploy
+            if ( robot.rightPush.getPosition() == 0.1 ) {
+                robot.rightPush.setPosition(0.9);
+            } else {
+                robot.rightPush.setPosition(0.1);
+            }
+            RservoUpTime = runtime.seconds();
+            telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
+        }
+
+        telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
+
+/*
+        telemetry.addData("Status", "my2 Running: " + runtime.toString());
+        telemetry.addData("Servo", " 1 rightPush Servo Set to " + robot.rightPush.getPosition());
+        if (gamepad1.right_bumper) {
+            telemetry.addData("Status", "my3 Running: " + runtime.toString());
+          //  robot.rightPush.setPosition(robot.rpushDeploy);
+          //  robot.rightPush.setPosition(0.9);
+            if ( robot.rightPush.getPosition() == 0 ) {
+                robot.rightPush.setPosition(0.9);
+            } else {
+                robot.rightPush.setPosition(0);
+            }
+            telemetry.addData("Status", "my4 Running: " + runtime.toString());
+        }
+        telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
+*/
 
 /*
         if (gamepad1.a) {
@@ -171,7 +208,9 @@ public class TeleOp_Trollbot extends OpMode {
         }
 */
 
-    }
+    }  // loop
+
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
