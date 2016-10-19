@@ -140,7 +140,6 @@ public class TeleOp_Trollbot extends OpMode {
             if ( robot.leftPush.getPosition() == 0.1 ) {
                 robot.leftPush.setPosition(0.9);
             } else {
-                robot.leftPush.setPosition(0.1);
             }
             LservoUpTime = runtime.seconds();
         }
