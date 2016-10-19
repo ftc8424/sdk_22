@@ -139,9 +139,8 @@ public class TeleOp_Trollbot extends OpMode {
             //robot.lpushStart robot.lpushDeploy
             if ( robot.leftPush.getPosition() == robot.lpushStart) {
                 robot.leftPush.setPosition(robot.lpushDeploy);
-
             } else {
-                robot.leftPush.setPosition(robot.lpushStart)
+                robot.leftPush.setPosition(robot.lpushStart);
             }
             LservoUpTime = runtime.seconds();
         }
@@ -155,7 +154,7 @@ public class TeleOp_Trollbot extends OpMode {
             if ( robot.rightPush.getPosition() == robot.rpushStart ) {
                 robot.rightPush.setPosition(robot.rpushDeploy);
             } else {
-                robot.rightPush.setPosition(robot.rpushStart)
+                robot.rightPush.setPosition(robot.rpushStart);
             }
             RservoUpTime = runtime.seconds();
             telemetry.addData("Status", "Debug 4 at: " + runtime.toString());

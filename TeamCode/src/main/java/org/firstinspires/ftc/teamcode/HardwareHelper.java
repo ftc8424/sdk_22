@@ -55,10 +55,10 @@ public class HardwareHelper {
     private static final double encoderRatio = 1.0;    // 3" wheels so ratio is 1:1
 
     /* Servo positions, adjust as necessary. */
-    public static final double lpushStart = 0.1;
-    public static final double lpushDeploy = 0.9;
-    public static final double rpushStart = 0.1;
-    public static final double rpushDeploy = 0.9;
+    public static final double lpushStart = 0.25;
+    public static final double lpushDeploy = 1;
+    public static final double rpushStart = 0.25;
+    public static final double rpushDeploy = 1;
     public static final double launchliftStart = 0.1;
     public static final double launchliftDeploy = 0.25;
     /* Use this when creating the constructor, to state the type of robot we're using. */
@@ -108,6 +108,8 @@ public class HardwareHelper {
         if ( robotType == TROLLBOT || robotType == FULLROBOT ) {
             leftPush = hwMap.servo.get(cfgLPush);
             rightPush = hwMap.servo.get(cfgRPush);
+            rightPush.setPosition(rpushStart);
+            leftPush.setPosition(lpushStart);
         }
         if ( robotType == LAUNCHTEST || robotType == FULLROBOT ) {
             launchServo = hwMap.servo.get(cfgLaunchServo);
