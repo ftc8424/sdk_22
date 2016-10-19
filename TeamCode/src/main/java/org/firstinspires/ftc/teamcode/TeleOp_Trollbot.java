@@ -131,15 +131,17 @@ public class TeleOp_Trollbot extends OpMode {
 
         telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.leftBackDrive.getCurrentPosition(),
-                robot.rightBackDrive.getCurrentPosition());
+                robot.rightBackDrive.getCurrentPosition() );
 
         telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
 
         if (gamepad1.left_bumper && LservoUpTime+2 < runtime.seconds()) {
             //robot.lpushStart robot.lpushDeploy
-            if ( robot.leftPush.getPosition() == 0.1 ) {
-                robot.leftPush.setPosition(0.9);
+            if ( robot.leftPush.getPosition() == robot.lpushStart) {
+                robot.leftPush.setPosition(robot.lpushDeploy);
+
             } else {
+                robot.leftPush.setPosition(robot.lpushStart)
             }
             LservoUpTime = runtime.seconds();
         }
@@ -150,10 +152,10 @@ public class TeleOp_Trollbot extends OpMode {
         if (gamepad1.right_bumper && RservoUpTime+2 < runtime.seconds()) {
             telemetry.addData("Status", "Debug 3 at: " + runtime.toString());
             // robot.rpushStart robot.rpushDeploy
-            if ( robot.rightPush.getPosition() == 0.1 ) {
-                robot.rightPush.setPosition(0.9);
+            if ( robot.rightPush.getPosition() == robot.rpushStart ) {
+                robot.rightPush.setPosition(robot.rpushDeploy);
             } else {
-                robot.rightPush.setPosition(0.1);
+                robot.rightPush.setPosition(robot.rpushStart)
             }
             RservoUpTime = runtime.seconds();
             telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
