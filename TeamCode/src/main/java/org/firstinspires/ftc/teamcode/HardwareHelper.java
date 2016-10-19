@@ -86,12 +86,16 @@ public class HardwareHelper {
             rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
             leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             if ( robotType == FULLROBOT ) {
                 leftMidDrive = hwMap.dcMotor.get(cfgLMidDrive);
                 rightMidDrive = hwMap.dcMotor.get(cfgRMidDrive);
                 rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
                 leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
         }
 
@@ -149,9 +153,12 @@ public class HardwareHelper {
         if ( !caller.opModeIsActive() )
             return;
 
+
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
         newRightTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch * encoderRatio);
+        caller.telemetry.addData("encoderDrive: ", "Left Target POS:  %d / Right Target POS:  %d", newLeftTarget, newRightTarget);
+        caller.telemetry.update();
         leftBackDrive.setTargetPosition(newLeftTarget);
         rightBackDrive.setTargetPosition(newRightTarget);
         if ( robotType == FULLROBOT ) {
