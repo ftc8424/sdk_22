@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
@@ -17,15 +18,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
  */
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Red", group = "Sensor")
 public class Auto_Red extends LinearOpMode{
-    //ColorSensor colorSensor;
-    //Servo leftPush;
-    //Servo rightPush;
-    //DcMotor leftMotorFront;
-    //DcMotor rightMotorFront;
-    double leftPushStart = 0.1;
-    double rightPushStart = 0.1;
-    double leftPushSecond = 0.9;
-    double rightPushSecond = 0.9;
+
     HardwareHelper robot = new HardwareHelper(AUTOTEST);
 
     @Override
@@ -34,12 +27,12 @@ public class Auto_Red extends LinearOpMode{
 //        waitForStart();
 //
 //     hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
+//        float hsvValues[] = {0F, 0F, 0F};
 //
 //    // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
+//        final float values[] = hsvValues;
 
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
+//        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
 //
 //    // bPrevState and bCurrState represent the previous and current state of the button.
         boolean bPrevState = false;
@@ -50,13 +43,20 @@ public class Auto_Red extends LinearOpMode{
         //rightPush = hardwareMap.servo.get("right_push");
         //leftMotorFront = hardwareMap.dcMotor.get("L Front");
         //rightMotorFront = hardwareMap.dcMotor.get("R Front");
-    robot.robot_init(hardwareMap);
+        robot.robot_init(hardwareMap);
+
+        robot.color.enableLed(true);
+        idle();
+        sleep(1000L);
+        robot.color.enableLed(false);
+        idle();
 
 
-            telemetry.addData("Init:" ,"Waiting for start");
+        telemetry.addData("Init:" ,"Waiting for start");
             telemetry.update();
             idle();
         waitForStart();
+
 
 
 //        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsvValues);
@@ -79,7 +79,7 @@ public class Auto_Red extends LinearOpMode{
             //Is there a way to do it in encoder ticks, to be more precise
             //How do I put a wait 1 second after the set power?
 
-        robot.encoderDrive(this, .5, -4.8, 4.8, 10);
+        robot.encoderDrive(this, .5, -10, 10, 5);
 
         // leftMotorFront.setTargetPosition(-500 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(500 + rightMotorFront.getCurrentPosition());
@@ -87,24 +87,35 @@ public class Auto_Red extends LinearOpMode{
         //   rightMotorFront.setPower(0.5);
         //  idle();
         robot.encoderDrive(this, .5, 19, 19, 10);
-            //Driving Towards Beacon 1
-        //  leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
-        //  idle();
 
-            // send color values info back to driver station
-
+        telemetry.addData("Auto: ", "Drive completed, looking for color sensor");
+        telemetry.update();
+        this.sleep(5000);
+        telemetry.addData("Color:" , "Connection Info %s ", robot.color.getConnectionInfo());
+        telemetry.update();
 
             //Logic for pressing correct button
             //May need to be edited if we want to use the Hue values instead
-            if (robot.color.red() == 1) {
-                robot.leftPush.setPosition(leftPushSecond);
+        telemetry.addData("Color: ", "Red %d Blue %d Green %d", robot.color.red(), robot.color.blue(), robot.color.green());
+        telemetry.update();
+//
+//        telemetry.addData("Clear", robot.color.alpha());
+//        telemetry.update();
+//        telemetry.addData("Red  ", robot.color.red());
+//        telemetry.update();
+//        telemetry.addData("Green", robot.color.green());
+//        telemetry.update();
+//        telemetry.addData("Blue ", robot.color.blue());
+//        telemetry.update();
+            if (robot.color.blue() == 1) {
+                robot.leftPush.setPosition(robot.lpushDeploy);
             } else {
-                robot.rightPush.setPosition(rightPushSecond);
+                robot.rightPush.setPosition(robot.rpushDeploy);
             }
-            wait(2000);
-            robot.leftPush.setPosition(leftPushStart);
-            robot.rightPush.setPosition(rightPushStart);
+            idle();
+            sleep(2000);
+            robot.leftPush.setPosition(robot.lpushStart);
+            robot.rightPush.setPosition(robot.rpushStart);
             idle();
 
         robot.encoderDrive(this, .5, -7, -7, 10);
@@ -142,19 +153,17 @@ public class Auto_Red extends LinearOpMode{
         //leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
 
-            // send color values info back to driver station
-
-
             //Logic for pressing correct button
             //May need to be edited if we want to use the Hue values instead
-            if (robot.color.red() == 1) {
-                robot.leftPush.setPosition(leftPushSecond);
-            } else {
-                robot.rightPush.setPosition(rightPushSecond);
-            }
-            wait(2000);
-            robot.leftPush.setPosition(leftPushStart);
-            robot.rightPush.setPosition(rightPushStart);
+        if (robot.color.red() == 1) {
+            robot.leftPush.setPosition(robot.lpushDeploy);
+        } else {
+            robot.rightPush.setPosition(robot.rpushDeploy);
+        }
+        sleep(2000);
+        robot.leftPush.setPosition(robot.lpushStart);
+        robot.rightPush.setPosition(robot.rpushStart);
+        idle();
 
         robot.encoderDrive(this, .5, -10.7, -10.7, 10);
             //Backing up from Beacon 2

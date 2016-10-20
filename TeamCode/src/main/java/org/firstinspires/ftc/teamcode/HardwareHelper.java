@@ -51,7 +51,7 @@ public class HardwareHelper {
     public ColorSensor color = null;       private static final String cfgColor       = "color";
 
     /* Wheel ratio values for the encoders. */
-    private static final double encoderInch  = 2500.0 / (3 * 3.14169265);
+    private static final double encoderInch  = 104; //2500.0 / (3 * 3.14169265);
     private static final double encoderRatio = 1.0;    // 3" wheels so ratio is 1:1
 
     /* Servo positions, adjust as necessary. */
@@ -61,6 +61,7 @@ public class HardwareHelper {
     public static final double rpushDeploy = 1;
     public static final double launchliftStart = 0.1;
     public static final double launchliftDeploy = 0.25;
+
     /* Use this when creating the constructor, to state the type of robot we're using. */
     public enum RobotType {
         FULLROBOT, LAUNCHTEST, COLORTEST, AUTOTEST, TROLLBOT,
@@ -105,7 +106,7 @@ public class HardwareHelper {
         }
 
         /* Set the servos based on type */
-        if ( robotType == TROLLBOT || robotType == FULLROBOT ) {
+        if ( robotType == TROLLBOT || robotType == FULLROBOT || robotType == AUTOTEST ) {
             leftPush = hwMap.servo.get(cfgLPush);
             rightPush = hwMap.servo.get(cfgRPush);
             rightPush.setPosition(rpushStart);
@@ -155,6 +156,13 @@ public class HardwareHelper {
         if ( !caller.opModeIsActive() )
             return;
 
+        if ( robotType == FULLROBOT  ) {
+            leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        } else {
+            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
 
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
@@ -167,15 +175,15 @@ public class HardwareHelper {
             leftMidDrive.setTargetPosition(newLeftTarget);
             rightMidDrive.setTargetPosition(newRightTarget);
         }
-
+    caller.telemetry.addData("Encoder Drive: ", "Target Set");
         // Turn On RUN_TO_POSITION
-        if ( robotType == FULLROBOT || robotType == AUTOTEST ) {
-            leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        } else {
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+       // if ( robotType == FULLROBOT || robotType == AUTOTEST ) {
+         //   leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           // rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //} else {
+          //  leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+       // }
 
         // reset the timeout time and start motion.
         runtime.reset();
@@ -185,7 +193,9 @@ public class HardwareHelper {
             leftMidDrive.setPower(Math.abs(speed));
             rightMidDrive.setPower(Math.abs(speed));
         }
-
+        caller.idle();
+        caller.telemetry.addData("Encoder Drive: ", "Power set to %.2f", Math.abs(speed));
+        caller.telemetry.update();
         // keep looping while we are still active, and there is time left, and both motors are running.
         DcMotor leftDrive;
         DcMotor rightDrive;
@@ -201,9 +211,9 @@ public class HardwareHelper {
                 (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Display it for the driver.
-                caller.telemetry.addData("Path1",  "Running to %7d :%7d",
+                caller.telemetry.addData("Drives",  "Running to %7d :%7d",
                         newLeftTarget,  newRightTarget);
-                caller.telemetry.addData("Path2",  "Running at %7d :%7d",
+                caller.telemetry.addData("Drives",  "Currently at %7d :%7d",
                         leftDrive.getCurrentPosition(),
                         rightDrive.getCurrentPosition());
                 caller.telemetry.update();
