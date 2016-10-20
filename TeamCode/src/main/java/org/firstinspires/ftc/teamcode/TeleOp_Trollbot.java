@@ -135,6 +135,7 @@ public class TeleOp_Trollbot extends OpMode {
 
         telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
 
+
         if (gamepad1.left_bumper && LservoUpTime+2 < runtime.seconds()) {
             //robot.lpushStart robot.lpushDeploy
             if ( robot.leftPush.getPosition() == robot.lpushStart) {
@@ -144,12 +145,14 @@ public class TeleOp_Trollbot extends OpMode {
             }
             LservoUpTime = runtime.seconds();
         }
-        telemetry.addData("Status", "Debug 2 at: " + runtime.toString());
+        telemetry.addData("Servo", " leftPush Set To  " + robot.leftPush.getPosition());
 
-        telemetry.addData("Servo", " 1 rightPush Servo Set to " + robot.rightPush.getPosition());
+        //telemetry.addData("Status", "Debug 2 at: " + runtime.toString());
+
+        //telemetry.addData("Servo", " 1 rightPush Servo Set to " + robot.rightPush.getPosition());
 
         if (gamepad1.right_bumper && RservoUpTime+2 < runtime.seconds()) {
-            telemetry.addData("Status", "Debug 3 at: " + runtime.toString());
+            //telemetry.addData("Status", "Debug 3 at: " + runtime.toString());
             // robot.rpushStart robot.rpushDeploy
             if ( robot.rightPush.getPosition() == robot.rpushStart ) {
                 robot.rightPush.setPosition(robot.rpushDeploy);
@@ -157,10 +160,10 @@ public class TeleOp_Trollbot extends OpMode {
                 robot.rightPush.setPosition(robot.rpushStart);
             }
             RservoUpTime = runtime.seconds();
-            telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
+           // telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
         }
 
-        telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
+        telemetry.addData("Servo", "rightPush Set to " + robot.rightPush.getPosition());
 
 /*
         telemetry.addData("Status", "my2 Running: " + runtime.toString());
