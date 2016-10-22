@@ -187,8 +187,9 @@ public class HardwareHelper {
 
         // reset the timeout time and start motion.
         runtime.reset();
-        leftBackDrive.setPower(Math.abs(speed));
         rightBackDrive.setPower(Math.abs(speed));
+        leftBackDrive.setPower(Math.abs(speed));
+
         if ( robotType == FULLROBOT ) {
             leftMidDrive.setPower(Math.abs(speed));
             rightMidDrive.setPower(Math.abs(speed));

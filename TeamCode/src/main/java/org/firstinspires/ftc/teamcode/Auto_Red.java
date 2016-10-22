@@ -18,6 +18,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
  */
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Red", group = "Sensor")
 public class Auto_Red extends LinearOpMode{
+//Trollbot is 14.5 inches
 
     HardwareHelper robot = new HardwareHelper(AUTOTEST);
 
@@ -38,11 +39,7 @@ public class Auto_Red extends LinearOpMode{
         boolean bPrevState = false;
         boolean bCurrState = false;
 
-        //colorSensor = hardwareMap.colorSensor.get("color sensor");
-        //leftPush = hardwareMap.servo.get("left_push");
-        //rightPush = hardwareMap.servo.get("right_push");
-        //leftMotorFront = hardwareMap.dcMotor.get("L Front");
-        //rightMotorFront = hardwareMap.dcMotor.get("R Front");
+
         robot.robot_init(hardwareMap);
 
         robot.color.enableLed(true);
@@ -63,30 +60,18 @@ public class Auto_Red extends LinearOpMode{
 //
 //      // send the info back to driver station using telemetry function.
 
+        //Driving towards center vortex
+        robot.encoderDrive(this, .5, 25, 25, 5);
+        //Turning towards the beacon
+        robot.encoderDrive(this, .5, -7, 7, 5);
+        //Driving towards the 1st beacon
+        robot.encoderDrive(this, .5, 55, 55, 5);
+        //Aligning the robot at the 1st beacon
+        robot.encoderDrive(this, .5, -5, 5, 5);
+        //Driving towards hte first beacon
+        robot.encoderDrive(this, .5, 24, 24, 5);
 
 
-        robot.encoderDrive(this, .5, 77, 77, 10);
-        //  leftMotorFront.setTargetPosition(8000 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(8000 + rightMotorFront.getCurrentPosition());
-        //  telemetry.addData("Path1", "Running to %7d :%7d",
-        //          leftMotorFront.getTargetPosition(),
-        //          rightMotorFront.getTargetPosition());
-        //  leftMotorFront.setPower(0.5);
-        //  rightMotorFront.setPower(0.5);
-        //  idle();
-
-            //Turning at Beacon 1
-            //Is there a way to do it in encoder ticks, to be more precise
-            //How do I put a wait 1 second after the set power?
-
-        robot.encoderDrive(this, .5, -10, 10, 5);
-
-        // leftMotorFront.setTargetPosition(-500 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(500 + rightMotorFront.getCurrentPosition());
-        //  leftMotorFront.setPower(0.5);
-        //   rightMotorFront.setPower(0.5);
-        //  idle();
-        robot.encoderDrive(this, .5, 19, 19, 10);
 
         telemetry.addData("Auto: ", "Drive completed, looking for color sensor");
         telemetry.update();
@@ -94,8 +79,7 @@ public class Auto_Red extends LinearOpMode{
         telemetry.addData("Color:" , "Connection Info %s ", robot.color.getConnectionInfo());
         telemetry.update();
 
-            //Logic for pressing correct button
-            //May need to be edited if we want to use the Hue values instead
+
         telemetry.addData("Color: ", "Red %d Blue %d Green %d", robot.color.red(), robot.color.blue(), robot.color.green());
         telemetry.update();
 //
@@ -107,7 +91,9 @@ public class Auto_Red extends LinearOpMode{
 //        telemetry.update();
 //        telemetry.addData("Blue ", robot.color.blue());
 //        telemetry.update();
-            if (robot.color.blue() == 1) {
+
+        //Logic for pressing the red button, when we are the red alliance (at the 1st beacon)
+            if (robot.color.red() == 1) {
                 robot.leftPush.setPosition(robot.lpushDeploy);
             } else {
                 robot.rightPush.setPosition(robot.rpushDeploy);
@@ -119,14 +105,8 @@ public class Auto_Red extends LinearOpMode{
             idle();
 
         robot.encoderDrive(this, .5, -7, -7, 10);
-            //Backing up from Beacon 1
-            //Does the Encoder value need to be negative too?
-        //leftMotorFront.setTargetPosition(-728 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(-728 + rightMotorFront.getCurrentPosition());
-        //  leftMotorFront.setPower(0.5);
-        //  rightMotorFront.setPower(0.5);
-        //  idle();
-        robot.encoderDrive(this, .5, 7.2, -7.2, 10);
+
+        robot.encoderDrive(this, .5, 10, -10, 10);
             //Turning right towards beacon 2
             //How do you put a wait, or how do you do this in encoder ticks?
         // leftMotorFront.setTargetPosition(750 + leftMotorFront.getCurrentPosition());
@@ -134,14 +114,14 @@ public class Auto_Red extends LinearOpMode{
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, 52, 52, 10);
+        robot.encoderDrive(this, .5, 57, 57, 10);
             //Driving towards beacon 2
         //leftMotorFront.setTargetPosition(5408 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(5408 + rightMotorFront.getCurrentPosition());
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, -7.2, 7.2, 10);
+        robot.encoderDrive(this, .5, -12, 12, 10);
             //Turning left at Beacon 2
         //leftMotorFront.setTargetPosition(-750 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(750 + rightMotorFront.getCurrentPosition());
@@ -172,14 +152,14 @@ public class Auto_Red extends LinearOpMode{
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, 4.8, -4.8, 10);
+        robot.encoderDrive(this, .5, 2, -2, 10);
             //Turning towards Cap ball
             //leftMotorFront.setTargetPosition(500 + leftMotorFront.getCurrentPosition());
         //rightMotorFront.setTargetPosition(-500 + rightMotorFront.getCurrentPosition());
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, -50, 50, 10);
+        robot.encoderDrive(this, .5, -55, -55, 10);
             //Moving towards Cap ball
         //  leftMotorFront.setTargetPosition(-5200 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(-5200 + rightMotorFront.getCurrentPosition());
