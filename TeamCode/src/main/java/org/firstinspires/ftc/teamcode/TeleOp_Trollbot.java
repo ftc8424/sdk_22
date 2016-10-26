@@ -72,7 +72,6 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.COLORTEST;
 public class TeleOp_Trollbot extends OpMode {
 
 
-
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private HardwareHelper robot = new HardwareHelper(TROLLBOT);
@@ -85,6 +84,7 @@ public class TeleOp_Trollbot extends OpMode {
     private double LservoUpTime = 0;
     private double RservoUpTime = 0;
     private double powerSetTime = 0;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -101,7 +101,6 @@ public class TeleOp_Trollbot extends OpMode {
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
-
 
 
     /*
@@ -131,39 +130,37 @@ public class TeleOp_Trollbot extends OpMode {
 
         telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.leftBackDrive.getCurrentPosition(),
-                robot.rightBackDrive.getCurrentPosition() );
+                robot.rightBackDrive.getCurrentPosition());
 
         telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
 
-
-        if (gamepad1.left_bumper && LservoUpTime+2 < runtime.seconds()) {
+        if (gamepad1.left_bumper && LservoUpTime + 2 < runtime.seconds()) {
             //robot.lpushStart robot.lpushDeploy
-            if ( robot.leftPush.getPosition() == robot.lpushStart) {
+            if (robot.leftPush.getPosition() == robot.lpushStart) {
                 robot.leftPush.setPosition(robot.lpushDeploy);
+
             } else {
-                robot.leftPush.setPosition(robot.lpushStart);
+                robot.leftPush.setPosition(robot.lpushStart)
             }
             LservoUpTime = runtime.seconds();
         }
-        telemetry.addData("Servo", " leftPush Set To  " + robot.leftPush.getPosition());
+        telemetry.addData("Status", "Debug 2 at: " + runtime.toString());
 
-        //telemetry.addData("Status", "Debug 2 at: " + runtime.toString());
+        telemetry.addData("Servo", " 1 rightPush Servo Set to " + robot.rightPush.getPosition());
 
-        //telemetry.addData("Servo", " 1 rightPush Servo Set to " + robot.rightPush.getPosition());
-
-        if (gamepad1.right_bumper && RservoUpTime+2 < runtime.seconds()) {
-            //telemetry.addData("Status", "Debug 3 at: " + runtime.toString());
+        if (gamepad1.right_bumper && RservoUpTime + 2 < runtime.seconds()) {
+            telemetry.addData("Status", "Debug 3 at: " + runtime.toString());
             // robot.rpushStart robot.rpushDeploy
-            if ( robot.rightPush.getPosition() == robot.rpushStart ) {
+            if (robot.rightPush.getPosition() == robot.rpushStart) {
                 robot.rightPush.setPosition(robot.rpushDeploy);
             } else {
-                robot.rightPush.setPosition(robot.rpushStart);
+                robot.rightPush.setPosition(robot.rpushStart)
             }
             RservoUpTime = runtime.seconds();
-           // telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
+            telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
         }
 
-        telemetry.addData("Servo", "rightPush Set to " + robot.rightPush.getPosition());
+        telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
 
 /*
         telemetry.addData("Status", "my2 Running: " + runtime.toString());

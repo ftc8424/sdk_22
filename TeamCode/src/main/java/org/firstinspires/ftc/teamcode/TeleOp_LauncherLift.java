@@ -38,6 +38,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.LAUNCHTEST;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.TROLLBOT;
+
 /**
  * Created by FTC8424 on 9/15/2016.
  */
@@ -48,18 +51,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="TeleOp: Launcher", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 
-public class TeleOp_Launcher extends OpMode {
+public class TeleOp_LauncherLift extends OpMode {
 
 
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
+    private HardwareHelper robot = new HardwareHelper(LAUNCHTEST);
 
-    private DcMotor launcher = null;
-    private Servo launch_lift = null;
-    double launchPower = 1.1;
     private double servoUpTime = 0;
     private double powerSetTime = 0;
+
 
     //private DcMotor leftMotorBack = null;
     //private DcMotor rightMotorFront = null;
@@ -71,14 +73,13 @@ public class TeleOp_Launcher extends OpMode {
      */
     @Override
     public void init() {
+        robot.robot_init(hardwareMap);
+        telemetry.addData("Status", "Initialized");
 
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        launcher = hardwareMap.dcMotor.get("Launcher");
+       // launcher = hardwareMap.dcMotor.get("Launcher");
+
         //leftMotorBack  = hardwareMap.dcMotor.get("left back motor);
-        launch_lift = hardwareMap.servo.get("LaunchLift");
+       // launch_lift = hardwareMap.servo.get("LaunchLift");
         //rightMotorBack  = hardwareMap.dcMotor.get("right back motor");
 
         // eg: Set the drive motor directions:
@@ -96,7 +97,7 @@ public class TeleOp_Launcher extends OpMode {
 
         //launch_lift.setPosition(0.9);
 
-        telemetry.addData("Status", "Initialized");
+
 
     }
 
@@ -157,7 +158,7 @@ public class TeleOp_Launcher extends OpMode {
 //                leftMotorFront.getCurrentPosition(),
 //                rightMotorFront.getCurrentPosition());
 
-        telemetry.addData("LaunchPower:  %.2f", launchPower);
+       /* telemetry.addData("LaunchPower:  %.2f", launchPower);
         if (gamepad1.a && powerSetTime+2 < runtime.seconds()) {
             if ( launchPower - .1 < 0 ) {
                 telemetry.addData("Launcher: %s", "At min speed");
@@ -166,17 +167,28 @@ public class TeleOp_Launcher extends OpMode {
                 launcher.setPower(launchPower);
                 powerSetTime = runtime.seconds();
             }
-        }
-        if (gamepad1.y && powerSetTime+2 < runtime.seconds()) {
-            if (launchPower + .1 > 1.0) {
-                telemetry.addData("Launcher: %s", "At max speed");
-            } else {
-                launchPower += .1;
+        }        */
+        telemetry.addData("Servo", "LaunchServo set to " + robot.launchServo.getPosition());
+        if (gamepad1.y && servoUpTime+2 < runtime.seconds()) {
+            telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
+            if ( robot.launchServo.getPosition() == robot.launchliftStart ) {
+                robot.launchServo.setPosition(robot.launchliftDeploy);
+            }
+            if (robot.launchServo.getPosition() == robot.launchliftDeploy && servoUpTime+1 > runtime.seconds());
+                    robot.launchServo.setPosition(robot.launchliftStart);
+            }
+
+
+
+        servoUpTime = runtime.seconds();
+            telemetry.addData("Status", "Debug 2 at: " + runtime.toString());
+               /*launchPower += .1;
                 launcher.setPower(launchPower);
                 powerSetTime = runtime.seconds();
+                */
             }
         }
-        if (gamepad1.x) {
+        /*if (gamepad1.x) {
             launchPower = 0.0;
             launcher.setPower(launchPower);
         }
@@ -214,7 +226,8 @@ public class TeleOp_Launcher extends OpMode {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop() {
+    public void stop()  {
+        robot.normalDrive(0, 0);
+    }
     }
 
-}
