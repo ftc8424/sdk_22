@@ -187,7 +187,7 @@ public class TeleOp_LauncherLift extends OpMode {
                 powerSetTime = runtime.seconds();
                 */
             }
-        }
+        //
         /*if (gamepad1.x) {
             launchPower = 0.0;
             launcher.setPower(launchPower);

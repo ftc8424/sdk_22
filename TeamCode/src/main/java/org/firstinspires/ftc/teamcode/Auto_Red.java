@@ -61,15 +61,15 @@ public class Auto_Red extends LinearOpMode{
 //      // send the info back to driver station using telemetry function.
 
         //Driving towards center vortex
-        robot.encoderDrive(this, .5, 25, 25, 5);
+        robot.encoderDrive(this, .25, 25, 25, 5);
         //Turning towards the beacon
-        robot.encoderDrive(this, .5, -7, 7, 5);
+        robot.encoderDrive(this, .25, -9, 9, 5);
         //Driving towards the 1st beacon
-        robot.encoderDrive(this, .5, 55, 55, 5);
+        robot.encoderDrive(this, .25, 67, 67, 5);
         //Aligning the robot at the 1st beacon
-        robot.encoderDrive(this, .5, -5, 5, 5);
+        robot.encoderDrive(this, .25, -5, 5, 5);
         //Driving towards hte first beacon
-        robot.encoderDrive(this, .5, 24, 24, 5);
+        robot.encoderDrive(this, .25, 18, 18, 5);
 
 
 
@@ -114,7 +114,7 @@ public class Auto_Red extends LinearOpMode{
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, 57, 57, 10);
+        robot.encoderDrive(this, .5, 50, 50, 10);
             //Driving towards beacon 2
         //leftMotorFront.setTargetPosition(5408 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(5408 + rightMotorFront.getCurrentPosition());
@@ -128,7 +128,7 @@ public class Auto_Red extends LinearOpMode{
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, 19, 19, 10);
+        robot.encoderDrive(this, .5, 15, 15, 10);
             //Driving Towards Beacon 2
         //leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
