@@ -49,6 +49,7 @@ public class HardwareHelper {
     public Servo    leftPush = null;       private static final String cfgLPush       = "L Push";
     public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
     public ColorSensor color = null;       private static final String cfgColor       = "color";
+    public DcMotor  manipMotor = null;    private static final String cfgmanipMotor = "Manipulator";
 
     /* Wheel ratio values for the encoders. */
     private static final double encoderInch  = 104; //2500.0 / (3 * 3.14169265);
@@ -92,7 +93,9 @@ public class HardwareHelper {
             if ( robotType == FULLROBOT ) {
                 leftMidDrive = hwMap.dcMotor.get(cfgLMidDrive);
                 rightMidDrive = hwMap.dcMotor.get(cfgRMidDrive);
+                manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
                 rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
+                manipMotor.setDirection(DcMotor.Direction.REVERSE);
                 leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

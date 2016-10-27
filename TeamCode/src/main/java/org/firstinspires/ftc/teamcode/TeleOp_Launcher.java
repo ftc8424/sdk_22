@@ -45,12 +45,12 @@ public class TeleOp_Launcher extends OpMode {
          *
          *    -- Coach Galligher
          */
-        if (gamepad1.a && launcherState > 0 && launchPress + 2 < runtime.seconds()) {
+        if (gamepad2.a && launcherState > 0 && launchPress + 2 < runtime.seconds()) {
             robot.launchMotor.setPower(0);
             launcherState = 0;
             launchPress = runtime.seconds();
         }
-        if (gamepad1.a && launcherState == 0 && launchPress + 2 < runtime.seconds()) {
+        if (gamepad2.a && launcherState == 0 && launchPress + 2 < runtime.seconds()) {
             robot.launchMotor.setPower(.1);
             launchPress = runtime.seconds();
             launcherState = 1;
@@ -66,5 +66,14 @@ public class TeleOp_Launcher extends OpMode {
 
 
         }
+        if(Math.abs(gamepad2.right_stick_y) > .01) {
+            robot.manipMotor.setPower(gamepad2.right_stick_y);
     }
+        else {
+            robot.manipMotor.setPower(0);
+        }
 }
+
+
+
+                }

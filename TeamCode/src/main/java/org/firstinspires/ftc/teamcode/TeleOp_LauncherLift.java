@@ -169,7 +169,7 @@ public class TeleOp_LauncherLift extends OpMode {
             }
         }        */
         telemetry.addData("Servo", "LaunchServo set to " + robot.launchServo.getPosition());
-        if (gamepad1.y && servoUpTime+2 < runtime.seconds()) {
+        if (gamepad2.y && servoUpTime+2 < runtime.seconds()) {
             telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
             if ( robot.launchServo.getPosition() == robot.launchliftStart ) {
                 robot.launchServo.setPosition(robot.launchliftDeploy);
