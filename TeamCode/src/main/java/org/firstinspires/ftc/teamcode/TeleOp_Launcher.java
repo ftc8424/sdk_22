@@ -15,7 +15,6 @@ public class TeleOp_Launcher extends OpMode {
     int launchPress;
     int lastStateChange;
     int launcherState;
-    DcMotor launchMotor;
     private ElapsedTime runtime = new ElapsedTime();
     private HardwareHelper robot = new HardwareHelper(LAUNCHTEST);
     @Override
@@ -45,19 +44,24 @@ public class TeleOp_Launcher extends OpMode {
          *
          *    -- Coach Galligher
          */
-        if (gamepad1.a && launcherState > 0 && launchPress + 2 < runtime.seconds()) ;
+        if (gamepad1.a && launcherState > 0 && launchPress + 2 < runtime.seconds())
         {
-            launchMotor.setPower(0);
+            robot.launchMotor.setPower(0);
             launcherState = 0;
-            if (gamepad1.a && launcherState==0 && lastStateChange == runtime.milliseconds())
-                launchMotor.setPower(.1);
-                launcherState = 1;
+            launchPress = runtime.seconds;
         }
-        gamepad1.a && launcherState > 0 && lastStateChange + 500 < runtime.milliseconds());
+            if (gamepad1.a && launcherState==0 && launchPress + 2 < runtime.seconds()){
+                robot.launchMotor.setPower(.1);
+                launchPress = runtime.seconds;
+                launcherState = 1;
+                lastStateChange = runtime.milliseconds;
 
-        if (gamepad1.a && launcherState < 5 );{
-            launchMotor.setPower(getPower() + .1);
-            lastStateChange == runtime.milliseconds()
+        }
+        if (launcherState > 0 && lastStateChange + 500 < runtime.milliseconds()) {
+
+        if (launcherState < 5 ){
+            robot.launchMotor.setPower(robot.launchMotor.getPower() + .1);
+            lastStateChange = runtime.milliseconds()
         }
 
 
