@@ -1,4 +1,5 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareHelper;
@@ -11,8 +12,10 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.LAUNCHTEST
 
 public class TeleOp_Launcher extends OpMode {
 
-
-
+    int launchPress;
+    int lastStateChange;
+    int launcherState;
+    DcMotor launchMotor;
     private ElapsedTime runtime = new ElapsedTime();
     private HardwareHelper robot = new HardwareHelper(LAUNCHTEST);
     @Override
@@ -42,10 +45,20 @@ public class TeleOp_Launcher extends OpMode {
          *
          *    -- Coach Galligher
          */
-        if (gamepad1.a = true && launchMotor > 0) {
-            SetPower(0);
-            launchMotor = 0;
-        } else if (gamepad1.a && launchMotor == 0)
+        if (gamepad1.a && launcherState > 0 && launchPress + 2 < runtime.seconds()) ;
+        {
+            launchMotor.setPower(0);
+            launcherState = 0;
+            if (gamepad1.a && launcherState==0 && lastStateChange == runtime.milliseconds())
+                launchMotor.setPower(.1);
+                launcherState = 1;
+        }
+        gamepad1.a && launcherState > 0 && lastStateChange + 500 < runtime.milliseconds());
+
+        if (gamepad1.a && launcherState < 5 );{
+            launchMotor.setPower(getPower() + .1);
+            lastStateChange == runtime.milliseconds()
+        }
+
 
     }
-}
