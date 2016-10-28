@@ -1,4 +1,7 @@
+package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,6 +12,8 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.LAUNCHTEST
 /**
  * Created by avc on 10/25/2016.
  */
+
+@TeleOp(name="TeleOp: Launcher", group="Iterative Opmode")
 
 public class TeleOp_Launcher extends OpMode {
 
