@@ -41,6 +41,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
+
 /*
  *
  * This is an example LinearOpMode that shows how to use
@@ -59,7 +61,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 public class SensorMRColor extends LinearOpMode {
 
   ColorSensor colorSensor;    // Hardware Device Object
-
+  HardwareHelper robot = new HardwareHelper(AUTOTEST);
 
   @Override
   public void runOpMode() throws InterruptedException {
@@ -80,12 +82,14 @@ public class SensorMRColor extends LinearOpMode {
 
     // bLedOn represents the state of the LED.
     boolean bLedOn = true;
+    robot.robot_init(hardwareMap);
+
 
     // get a reference to our ColorSensor object.
-    colorSensor = hardwareMap.colorSensor.get("Color");
+   // colorSensor = hardwareMap.colorSensor.get("Color");
 
     // Set the LED in the beginning
-    colorSensor.enableLed(bLedOn);
+    //colorSensor.enableLed(bLedOn);
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -98,25 +102,25 @@ public class SensorMRColor extends LinearOpMode {
       bCurrState = gamepad1.x;
 
       // check for button state transitions.
-      if ((bCurrState == true) && (bCurrState != bPrevState))  {
-
-        // button is transitioning to a pressed state. So Toggle LED
-        bLedOn = !bLedOn;
-        colorSensor.enableLed(bLedOn);
-      }
+//      if ((bCurrState == true) && (bCurrState != bPrevState))  {
+//
+//        // button is transitioning to a pressed state. So Toggle LED
+//        bLedOn = !bLedOn;
+//        colorSensor.enableLed(bLedOn);
+//      }
 
       // update previous state variable.
       bPrevState = bCurrState;
 
       // convert the RGB values to HSV values.
-      Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+      Color.RGBToHSV(robot.color.red() * 8, robot.color.green() * 8, robot.color.blue() * 8, hsvValues);
 
       // send the info back to driver station using telemetry function.
       telemetry.addData("LED", bLedOn ? "On" : "Off");
-      telemetry.addData("Clear", colorSensor.alpha());
-      telemetry.addData("Red  ", colorSensor.red());
-      telemetry.addData("Green", colorSensor.green());
-      telemetry.addData("Blue ", colorSensor.blue());
+      telemetry.addData("Clear", robot.color.alpha());
+      telemetry.addData("Red  ", robot.color.red());
+      telemetry.addData("Green", robot.color.green());
+      telemetry.addData("Blue ", robot.color.blue());
       telemetry.addData("Hue", hsvValues[0]);
 
       // change the background color to match the color detected by the RGB sensor.

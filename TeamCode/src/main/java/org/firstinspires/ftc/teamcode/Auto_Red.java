@@ -61,15 +61,15 @@ public class Auto_Red extends LinearOpMode{
 //      // send the info back to driver station using telemetry function.
 
         //Driving towards center vortex
-        robot.encoderDrive(this, .25, 25, 25, 5);
+        robot.encoderDrive(this, .5, 32.5, 32.5, 5);
         //Turning towards the beacon
-        robot.encoderDrive(this, .25, -9, 9, 5);
+        robot.encoderDrive(this, .25, -9.25, 9.25, 5);
         //Driving towards the 1st beacon
-        robot.encoderDrive(this, .25, 67, 67, 5);
+        robot.encoderDrive(this, .5, 67, 67, 5);
         //Aligning the robot at the 1st beacon
-        robot.encoderDrive(this, .25, -5, 5, 5);
+        robot.encoderDrive(this, .5, -5, 5, 5);
         //Driving towards hte first beacon
-        robot.encoderDrive(this, .25, 18, 18, 5);
+        robot.encoderDrive(this, .5, 18, 18, 5);
 
 
 
@@ -93,16 +93,24 @@ public class Auto_Red extends LinearOpMode{
 //        telemetry.update();
 
         //Logic for pressing the red button, when we are the red alliance (at the 1st beacon)
-            if (robot.color.red() == 1) {
+            if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
                 robot.leftPush.setPosition(robot.lpushDeploy);
-            } else {
+            } else if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()){
                 robot.rightPush.setPosition(robot.rpushDeploy);
+            } else if (robot.color.red() == robot.color.blue()){
+                telemetry.addData("ColorDecision: ", "Not Pressing");
+                telemetry.update();
             }
             idle();
             sleep(2000);
             robot.leftPush.setPosition(robot.lpushStart);
             robot.rightPush.setPosition(robot.rpushStart);
             idle();
+
+
+
+
+
 
         robot.encoderDrive(this, .5, -7, -7, 10);
 
@@ -135,15 +143,21 @@ public class Auto_Red extends LinearOpMode{
 
             //Logic for pressing correct button
             //May need to be edited if we want to use the Hue values instead
-        if (robot.color.red() == 1) {
+
+        if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
             robot.leftPush.setPosition(robot.lpushDeploy);
-        } else {
+        } else if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()){
             robot.rightPush.setPosition(robot.rpushDeploy);
+        } else if (robot.color.red() == robot.color.blue()){
+            telemetry.addData("ColorDecision: ", "Not Pressing");
+            telemetry.update();
         }
+        idle();
         sleep(2000);
         robot.leftPush.setPosition(robot.lpushStart);
         robot.rightPush.setPosition(robot.rpushStart);
         idle();
+
 
         robot.encoderDrive(this, .5, -10.7, -10.7, 10);
             //Backing up from Beacon 2
