@@ -181,7 +181,7 @@ public class HardwareHelper {
     caller.telemetry.addData("Encoder Drive: ", "Target Set");
         // Turn On RUN_TO_POSITION
        // if ( robotType == FULLROBOT || robotType == AUTOTEST ) {
-         //   leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         //leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
            // rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //} else {
           //  leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
