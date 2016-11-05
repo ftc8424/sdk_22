@@ -53,15 +53,15 @@ public class HardwareHelper {
 
     /* Wheel ratio values for the encoders. */
     private static final double encoderInch  = 104; //2500.0 / (3 * 3.14169265);
-    private static final double encoderRatio = 1.0;    // 3" wheels so ratio is 1:1
+    private static final double encoderRatio = 1.0; // / 1.33;    // 3" wheels so ratio is 1:1, 4 is 1/1.3
 
     /* Servo positions, adjust as necessary. */
-    public static final double lpushStart = 0.25;
-    public static final double lpushDeploy = 1;
-    public static final double rpushStart = 0.25;
+    public static final double lpushStart = 0.7;
+    public static final double lpushDeploy = 0;
+    public static final double rpushStart = 0.3;
     public static final double rpushDeploy = 1;
-    public static final double launchliftStart = 0.1;
-    public static final double launchliftDeploy = 0.25;
+    public static final double launchliftStart = 1;
+    public static final double launchliftDeploy = 0.5;
 
     /* Use this when creating the constructor, to state the type of robot we're using. */
     public enum RobotType {
@@ -117,6 +117,7 @@ public class HardwareHelper {
         }
         if ( robotType == LAUNCHTEST || robotType == FULLROBOT ) {
             launchServo = hwMap.servo.get(cfgLaunchServo);
+            launchServo.setPosition(launchliftStart);
         }
 
         /* Set the sensors based on type */
@@ -162,10 +163,9 @@ public class HardwareHelper {
         if ( robotType == FULLROBOT  ) {
             leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        } else {
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
@@ -178,25 +178,17 @@ public class HardwareHelper {
             leftMidDrive.setTargetPosition(newLeftTarget);
             rightMidDrive.setTargetPosition(newRightTarget);
         }
-    caller.telemetry.addData("Encoder Drive: ", "Target Set");
-        // Turn On RUN_TO_POSITION
-       // if ( robotType == FULLROBOT || robotType == AUTOTEST ) {
-         //leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-           // rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //} else {
-          //  leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-       // }
+        caller.telemetry.addData("Encoder Drive: ", "Target Set");
 
         // reset the timeout time and start motion.
         runtime.reset();
         rightBackDrive.setPower(Math.abs(speed));
         leftBackDrive.setPower(Math.abs(speed));
-
         if ( robotType == FULLROBOT ) {
             leftMidDrive.setPower(Math.abs(speed));
             rightMidDrive.setPower(Math.abs(speed));
         }
+
         caller.idle();
         caller.telemetry.addData("Encoder Drive: ", "Power set to %.2f", Math.abs(speed));
         caller.telemetry.update();
@@ -251,13 +243,14 @@ public class HardwareHelper {
      * @param rightPower     Power setting (-1.0 - 1.0)
      */
 
-    public void normalDrive (double leftPower, double rightPower) {
+    public void normalDrive (OpMode caller, double leftPower, double rightPower) {
         leftBackDrive.setPower(leftPower);
         rightBackDrive.setPower(rightPower);
         if ( robotType == FULLROBOT ) {
             leftMidDrive.setPower(leftPower);
             rightMidDrive.setPower(rightPower);
         }
+        caller.telemetry.addData("normalDrive:", "Power set to L:%.2f, R:%.2f", leftPower, rightPower);
     }
 }
 

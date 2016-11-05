@@ -74,7 +74,7 @@ public class TeleOp_Trollbot extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private HardwareHelper robot = new HardwareHelper(TROLLBOT);
+    private HardwareHelper robot = new HardwareHelper(FULLROBOT);
 
 //    private Servo LPush;
 //    double LPushStart = 0.1;
@@ -126,9 +126,10 @@ public class TeleOp_Trollbot extends OpMode {
 
         if (rightStickVal < 0) rightSquaredVal = -rightSquaredVal;
         if (leftStickVal < 0) leftSquaredVal = -leftSquaredVal;
-        robot.normalDrive(leftSquaredVal, rightSquaredVal);
+        telemetry.addData("NormalDrive:", "Lft Power %.2f, Rgt Power %.2f", leftSquaredVal, rightSquaredVal);
+        robot.normalDrive(this, leftSquaredVal, rightSquaredVal);
 
-        telemetry.addData("Path0", "Starting at %7d :%7d",
+        telemetry.addData("Path0", "Position at %7d :%7d",
                 robot.leftBackDrive.getCurrentPosition(),
                 robot.rightBackDrive.getCurrentPosition());
 
@@ -145,8 +146,7 @@ public class TeleOp_Trollbot extends OpMode {
             LservoUpTime = runtime.seconds();
         }
         telemetry.addData("Status", "Debug 2 at: " + runtime.toString());
-
-        telemetry.addData("Servo", " 1 rightPush Servo Set to " + robot.rightPush.getPosition());
+        telemetry.addData("Servo", " 1 leftPush Servo Set to " + robot.leftPush.getPosition());
 
         if (gamepad1.right_bumper && RservoUpTime + 2 < runtime.seconds()) {
             telemetry.addData("Status", "Debug 3 at: " + runtime.toString());
@@ -157,56 +157,10 @@ public class TeleOp_Trollbot extends OpMode {
                 robot.rightPush.setPosition(robot.rpushStart);
             }
             RservoUpTime = runtime.seconds();
-            telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
         }
 
+        telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
         telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
-
-/*
-        telemetry.addData("Status", "my2 Running: " + runtime.toString());
-        telemetry.addData("Servo", " 1 rightPush Servo Set to " + robot.rightPush.getPosition());
-        if (gamepad1.right_bumper) {
-            telemetry.addData("Status", "my3 Running: " + runtime.toString());
-          //  robot.rightPush.setPosition(robot.rpushDeploy);
-          //  robot.rightPush.setPosition(0.9);
-            if ( robot.rightPush.getPosition() == 0 ) {
-                robot.rightPush.setPosition(0.9);
-            } else {
-                robot.rightPush.setPosition(0);
-            }
-            telemetry.addData("Status", "my4 Running: " + runtime.toString());
-        }
-        telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
-*/
-
-/*
-        if (gamepad1.a) {
-            robot.normalDrive(12, 12);             // Move 12 inches
-            leftMotorFront.setTargetPosition(8000 + leftMotorFront.getCurrentPosition());
-            rightMotorFront.setTargetPosition(8000 + rightMotorFront.getCurrentPosition());
-            telemetry.addData("Path1", "Running to %7d :%7d",
-                    leftMotorFront.getTargetPosition(),
-                    rightMotorFront.getTargetPosition());
-            leftMotorFront.setPower(0.5);
-            rightMotorFront.setPower(0.5);
-
-            //Turning to align at first beacon
-            leftMotorFront.setPower(-0.5);
-            rightMotorFront.setPower(0.5);
-
-            //Backing up at first beacon
-            leftMotorFront.setTargetPosition(728 + leftMotorFront.getCurrentPosition());
-            rightMotorFront.setTargetPosition(728 + rightMotorFront.getCurrentPosition());
-
-            //Turning right to go towards second beacon. How to wait??
-            leftMotorFront.setPower(0.5);
-            rightMotorFront.setPower(-0.5);
-
-            //TimeUnit.MILLISECONDS.sleep(1000);
-            leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
-            rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
-        }
-*/
 
     }  // loop
 
@@ -216,7 +170,7 @@ public class TeleOp_Trollbot extends OpMode {
      */
     @Override
     public void stop() {
-        robot.normalDrive(0, 0);
+        robot.normalDrive(this, 0, 0);
     }
 
 }

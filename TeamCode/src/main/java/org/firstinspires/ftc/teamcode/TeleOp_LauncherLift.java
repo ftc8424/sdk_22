@@ -227,7 +227,7 @@ public class TeleOp_LauncherLift extends OpMode {
      */
     @Override
     public void stop()  {
-        robot.normalDrive(0, 0);
+        robot.normalDrive(this, 0, 0);
     }
     }
 

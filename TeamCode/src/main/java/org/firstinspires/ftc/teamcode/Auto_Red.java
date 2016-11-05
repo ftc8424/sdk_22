@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLROBOT;
 
 /**
  * Created by Devan on 10/9/2016.
@@ -20,7 +21,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
 public class Auto_Red extends LinearOpMode{
 //Trollbot is 14.5 inches
 
-    HardwareHelper robot = new HardwareHelper(AUTOTEST);
+    HardwareHelper robot = new HardwareHelper(FULLROBOT);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,6 +39,7 @@ public class Auto_Red extends LinearOpMode{
 //    // bPrevState and bCurrState represent the previous and current state of the button.
         boolean bPrevState = false;
         boolean bCurrState = false;
+        double  driveSpeed = .75;
 
 
         robot.robot_init(hardwareMap);
@@ -61,21 +63,26 @@ public class Auto_Red extends LinearOpMode{
 //      // send the info back to driver station using telemetry function.
 
         //Driving towards center vortex
-        robot.encoderDrive(this, .5, 40, 40, 5);
+        robot.encoderDrive(this, driveSpeed, 40, 40, 5);
+        //26.4
         //Turning towards the beacon
         robot.encoderDrive(this, .25, -9.75, 9.75, 5);
+        //6.5
         //Driving towards the 1st beacon
-        robot.encoderDrive(this, .5, 67, 67, 5);
+        robot.encoderDrive(this, driveSpeed, 67, 67, 5);
+        //44.6666
         //Aligning the robot at the 1st beacon
-        robot.encoderDrive(this, .5, -5, 5, 5);
+        robot.encoderDrive(this, driveSpeed, -5, 5, 5);
+        //3.33
         //Driving towards hte first beacon
-        robot.encoderDrive(this, .5, 18, 18, 5);
+        robot.encoderDrive(this, driveSpeed, 18, 18, 5);
+        //12
 
 
 
         telemetry.addData("Auto: ", "Drive completed, looking for color sensor");
         telemetry.update();
-        this.sleep(5000);
+        //this.sleep(5000);
         telemetry.addData("Color:" , "Connection Info %s ", robot.color.getConnectionInfo());
         telemetry.update();
 
@@ -112,9 +119,11 @@ public class Auto_Red extends LinearOpMode{
 
 
 
-        robot.encoderDrive(this, .5, -7, -7, 10);
+        robot.encoderDrive(this, driveSpeed, -7, -7, 10);
+        //4.66
 
-        robot.encoderDrive(this, .5, 10, -10, 10);
+        robot.encoderDrive(this, driveSpeed, 10, -10, 10);
+        //6.66
             //Turning right towards beacon 2
             //How do you put a wait, or how do you do this in encoder ticks?
         // leftMotorFront.setTargetPosition(750 + leftMotorFront.getCurrentPosition());
@@ -122,21 +131,24 @@ public class Auto_Red extends LinearOpMode{
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, 52, 52, 10);
+        robot.encoderDrive(this, driveSpeed, 52, 52, 10);
+        //34.66
             //Driving towards beacon 2
         //leftMotorFront.setTargetPosition(5408 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(5408 + rightMotorFront.getCurrentPosition());
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, -12, 12, 10);
+        robot.encoderDrive(this, driveSpeed, -12, 12, 10);
+        //8
             //Turning left at Beacon 2
         //leftMotorFront.setTargetPosition(-750 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(750 + rightMotorFront.getCurrentPosition());
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, 15, 15, 10);
+        robot.encoderDrive(this, driveSpeed, 15, 15, 10);
+        //10
             //Driving Towards Beacon 2
         //leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
@@ -159,21 +171,24 @@ public class Auto_Red extends LinearOpMode{
         idle();
 
 
-        robot.encoderDrive(this, .5, -11, -11, 10);
+        robot.encoderDrive(this, driveSpeed, -11, -11, 10);
+        //7.33
             //Backing up from Beacon 2
         //leftMotorFront.setTargetPosition(-1144 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(-1144 + rightMotorFront.getCurrentPosition());
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, 5, -5, 10);
+        robot.encoderDrive(this, driveSpeed, 5, -5, 10);
+        //3.33
             //Turning towards Cap
             //leftMotorFront.setTargetPosition(500 + leftMotorFront.getCurrentPosition());
         //rightMotorFront.setTargetPosition(-500 + rightMotorFront.getCurrentPosition());
         //  leftMotorFront.setPower(0.5);
         //  rightMotorFront.setPower(0.5);
 
-        robot.encoderDrive(this, .5, -60, -60, 10);
+        robot.encoderDrive(this, driveSpeed, -60, -60, 10);
+        //40
             //Moving towards Cap ball
         //  leftMotorFront.setTargetPosition(-5200 + leftMotorFront.getCurrentPosition());
         //  rightMotorFront.setTargetPosition(-5200 + rightMotorFront.getCurrentPosition());
