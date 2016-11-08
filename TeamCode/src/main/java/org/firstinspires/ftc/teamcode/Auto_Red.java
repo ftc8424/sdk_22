@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
-import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLROBOT;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
 
 /**
  * Created by Devan on 10/9/2016.
@@ -21,7 +21,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLROBOT;
 public class Auto_Red extends LinearOpMode{
 //Trollbot is 14.5 inches
 
-    HardwareHelper robot = new HardwareHelper(FULLROBOT);
+    HardwareHelper robot = new HardwareHelper(FULLAUTO);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -50,10 +50,9 @@ public class Auto_Red extends LinearOpMode{
         robot.color.enableLed(false);
         idle();
 
-
         telemetry.addData("Init:" ,"Waiting for start");
-            telemetry.update();
-            idle();
+        telemetry.update();
+        idle();
         waitForStart();
 
 
@@ -100,24 +99,19 @@ public class Auto_Red extends LinearOpMode{
 //        telemetry.update();
 
         //Logic for pressing the red button, when we are the red alliance (at the 1st beacon)
-            if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
-                robot.leftPush.setPosition(robot.lpushDeploy);
-            } else if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()){
-                robot.rightPush.setPosition(robot.rpushDeploy);
-            } else if (robot.color.red() == robot.color.blue()){
-                telemetry.addData("ColorDecision: ", "Not Pressing");
-                telemetry.update();
-            }
-            idle();
-            sleep(2000);
-            robot.leftPush.setPosition(robot.lpushStart);
-            robot.rightPush.setPosition(robot.rpushStart);
-            idle();
-
-
-
-
-
+        if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
+            robot.leftPush.setPosition(robot.lpushDeploy);
+        } else if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()){
+            robot.rightPush.setPosition(robot.rpushDeploy);
+        } else if (robot.color.red() == robot.color.blue()){
+            telemetry.addData("ColorDecision: ", "Not Pressing");
+            telemetry.update();
+        }
+        idle();
+        sleep(1000);
+        robot.leftPush.setPosition(robot.lpushStart);
+        robot.rightPush.setPosition(robot.rpushStart);
+        idle();
 
         robot.encoderDrive(this, driveSpeed, -7, -7, 10);
         //4.66
@@ -165,11 +159,10 @@ public class Auto_Red extends LinearOpMode{
             telemetry.update();
         }
         idle();
-        sleep(2000);
+        sleep(1000);
         robot.leftPush.setPosition(robot.lpushStart);
         robot.rightPush.setPosition(robot.rpushStart);
         idle();
-
 
         robot.encoderDrive(this, driveSpeed, -11, -11, 10);
         //7.33

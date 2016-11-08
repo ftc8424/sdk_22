@@ -11,7 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.COLORTEST;
-import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLROBOT;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLTELEOP;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.LAUNCHTEST;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.TROLLBOT;
 
@@ -65,7 +66,7 @@ public class HardwareHelper {
 
     /* Use this when creating the constructor, to state the type of robot we're using. */
     public enum RobotType {
-        FULLROBOT, LAUNCHTEST, COLORTEST, AUTOTEST, TROLLBOT,
+        FULLTELEOP, FULLAUTO, LAUNCHTEST, COLORTEST, AUTOTEST, TROLLBOT,
     }
 
     /* Private instance variables */
@@ -82,53 +83,55 @@ public class HardwareHelper {
         this.hwMap = hwMap;
 
         /* Set the drive motors in the map */
-        if ( robotType == TROLLBOT || robotType == FULLROBOT || robotType == AUTOTEST ) {
+        if ( robotType == TROLLBOT || robotType == FULLTELEOP || robotType == FULLAUTO || robotType == AUTOTEST ) {
             leftBackDrive = hwMap.dcMotor.get(cfgLBckDrive);
             rightBackDrive = hwMap.dcMotor.get(cfgRtBckDrive);
             rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            if ( robotType == FULLROBOT ) {
+            if ( robotType == FULLAUTO || robotType == FULLTELEOP ) {
                 leftMidDrive = hwMap.dcMotor.get(cfgLMidDrive);
                 rightMidDrive = hwMap.dcMotor.get(cfgRMidDrive);
                 manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
                 rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
                 manipMotor.setDirection(DcMotor.Direction.REVERSE);
-                leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                if ( robotType == FULLAUTO ) {
+                    leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    leftMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    rightMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                }
             }
         }
 
         /* Set the subsequent motors based on type */
-        if ( robotType == LAUNCHTEST || robotType == FULLROBOT  ) {
+        if ( robotType == LAUNCHTEST || robotType == FULLTELEOP || robotType == FULLAUTO ) {
             launchMotor = hwMap.dcMotor.get(cfgLaunchMotor);
         }
 
         /* Set the servos based on type */
-        if ( robotType == TROLLBOT || robotType == FULLROBOT || robotType == AUTOTEST ) {
+        if ( robotType == TROLLBOT || robotType == FULLTELEOP || robotType == FULLAUTO || robotType == AUTOTEST ) {
             leftPush = hwMap.servo.get(cfgLPush);
             rightPush = hwMap.servo.get(cfgRPush);
             rightPush.setPosition(rpushStart);
             leftPush.setPosition(lpushStart);
         }
-        if ( robotType == LAUNCHTEST || robotType == FULLROBOT ) {
+        if ( robotType == LAUNCHTEST || robotType == FULLAUTO || robotType == FULLTELEOP ) {
             launchServo = hwMap.servo.get(cfgLaunchServo);
             launchServo.setPosition(launchliftStart);
         }
 
         /* Set the sensors based on type */
-        if ( robotType == AUTOTEST || robotType == COLORTEST || robotType == FULLROBOT ) {
+        if ( robotType == AUTOTEST || robotType == COLORTEST || robotType == FULLAUTO ) {
             color = hwMap.colorSensor.get(cfgColor);
         }
 
         /* Now that hardware is mapped, set to initial positions/settings. */
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
-        if ( robotType == FULLROBOT ) {
+        if ( robotType == FULLTELEOP || robotType == FULLAUTO ) {
             leftMidDrive.setPower(0);
             rightMidDrive.setPower(0);
         }
@@ -160,7 +163,7 @@ public class HardwareHelper {
         if ( !caller.opModeIsActive() )
             return;
 
-        if ( robotType == FULLROBOT  ) {
+        if ( robotType == FULLAUTO ) {
             leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
@@ -174,7 +177,7 @@ public class HardwareHelper {
         caller.telemetry.update();
         leftBackDrive.setTargetPosition(newLeftTarget);
         rightBackDrive.setTargetPosition(newRightTarget);
-        if ( robotType == FULLROBOT ) {
+        if ( robotType == FULLAUTO ) {
             leftMidDrive.setTargetPosition(newLeftTarget);
             rightMidDrive.setTargetPosition(newRightTarget);
         }
@@ -184,7 +187,7 @@ public class HardwareHelper {
         runtime.reset();
         rightBackDrive.setPower(Math.abs(speed));
         leftBackDrive.setPower(Math.abs(speed));
-        if ( robotType == FULLROBOT ) {
+        if ( robotType == FULLAUTO ) {
             leftMidDrive.setPower(Math.abs(speed));
             rightMidDrive.setPower(Math.abs(speed));
         }
@@ -192,36 +195,29 @@ public class HardwareHelper {
         caller.idle();
         caller.telemetry.addData("Encoder Drive: ", "Power set to %.2f", Math.abs(speed));
         caller.telemetry.update();
+
         // keep looping while we are still active, and there is time left, and both motors are running.
-        DcMotor leftDrive;
-        DcMotor rightDrive;
-        if ( robotType == FULLROBOT ) {
-            leftDrive = leftMidDrive;
-            rightDrive = rightMidDrive;
-        } else {
-            leftDrive = leftBackDrive;
-            rightDrive = rightBackDrive;
-        }
-        while (caller.opModeIsActive() &&
-                (runtime.seconds() < timeoutS) &&
-                (leftDrive.isBusy() && rightDrive.isBusy())) {
+        boolean isBusy;
+        do {
+            caller.telemetry.addData("Drives", "Running to %7d :%7d",
+                    newLeftTarget, newRightTarget);
+            caller.telemetry.addData("Drives", "Currently at %7d :%7d",
+                    leftBackDrive.getCurrentPosition(),
+                    rightBackDrive.getCurrentPosition());
+            caller.telemetry.update();
 
-                // Display it for the driver.
-                caller.telemetry.addData("Drives",  "Running to %7d :%7d",
-                        newLeftTarget,  newRightTarget);
-                caller.telemetry.addData("Drives",  "Currently at %7d :%7d",
-                        leftDrive.getCurrentPosition(),
-                        rightDrive.getCurrentPosition());
-                caller.telemetry.update();
-
-                // Allow time for other processes to run.
-                caller.idle();
+            // Allow time for other processes to run.
+            caller.idle();
+            isBusy = robotType == FULLAUTO
+                    ? leftMidDrive.isBusy() || leftBackDrive.isBusy() || rightMidDrive.isBusy() || rightBackDrive.isBusy()
+                    : leftBackDrive.isBusy() || rightBackDrive.isBusy();
         }
+        while (caller.opModeIsActive() && (runtime.seconds() < timeoutS) && isBusy);
 
         // Stop all motion;
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
-        if ( robotType == FULLROBOT ) {
+        if ( robotType == FULLAUTO ) {
             leftMidDrive.setPower(0);
             rightMidDrive.setPower(0);
         }
@@ -229,7 +225,7 @@ public class HardwareHelper {
         // Turn off RUN_TO_POSITION
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if ( robotType == FULLROBOT ) {
+        if ( robotType == FULLAUTO ) {
             leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
@@ -246,11 +242,10 @@ public class HardwareHelper {
     public void normalDrive (OpMode caller, double leftPower, double rightPower) {
         leftBackDrive.setPower(leftPower);
         rightBackDrive.setPower(rightPower);
-        if ( robotType == FULLROBOT ) {
+        if ( robotType == FULLTELEOP ) {
             leftMidDrive.setPower(leftPower);
             rightMidDrive.setPower(rightPower);
         }
         caller.telemetry.addData("normalDrive:", "Power set to L:%.2f, R:%.2f", leftPower, rightPower);
     }
 }
-
