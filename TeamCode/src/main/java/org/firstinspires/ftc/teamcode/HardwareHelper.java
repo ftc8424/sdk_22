@@ -54,15 +54,15 @@ public class HardwareHelper {
 
     /* Wheel ratio values for the encoders. */
     private static final double encoderInch  = 104; //2500.0 / (3 * 3.14169265);
-    private static final double encoderRatio = 1.0; // / 1.33;    // 3" wheels so ratio is 1:1, 4 is 1/1.3
+    private static final double encoderRatio = 0.667; // / 1.33;    // 3" wheels so ratio is 1:1, 4 is 1/1.3
 
     /* Servo positions, adjust as necessary. */
     public static final double lpushStart = 0.7;
     public static final double lpushDeploy = 0;
     public static final double rpushStart = 0.3;
     public static final double rpushDeploy = 1;
-    public static final double launchliftStart = 1;
-    public static final double launchliftDeploy = 0.5;
+    public static final double launchliftStart = .75;
+    public static final double launchliftDeploy = 0.1;
 
     /* Use this when creating the constructor, to state the type of robot we're using. */
     public enum RobotType {
@@ -90,9 +90,8 @@ public class HardwareHelper {
             if ( robotType == FULLAUTO || robotType == FULLTELEOP ) {
                 leftMidDrive = hwMap.dcMotor.get(cfgLMidDrive);
                 rightMidDrive = hwMap.dcMotor.get(cfgRMidDrive);
-                manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
                 rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
-                manipMotor.setDirection(DcMotor.Direction.REVERSE);
+
                 if ( robotType == FULLAUTO ) {
                     leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -109,6 +108,13 @@ public class HardwareHelper {
         /* Set the subsequent motors based on type */
         if ( robotType == LAUNCHTEST || robotType == FULLTELEOP || robotType == FULLAUTO ) {
             launchMotor = hwMap.dcMotor.get(cfgLaunchMotor);
+            launchMotor.resetDeviceConfigurationForOpMode();
+//            launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            launchMotor.setMaxSpeed(1000);
+            launchMotor.setDirection(DcMotor.Direction.REVERSE);
+            manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
+            //manipMotor.setDirection(DcMotor.Direction.REVERSE);
         }
 
         /* Set the servos based on type */

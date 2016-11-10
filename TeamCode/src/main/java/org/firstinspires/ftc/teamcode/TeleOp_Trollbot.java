@@ -44,8 +44,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLTELEOP;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.TROLLBOT;
-import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLROBOT;
+//import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLROBOT;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.LAUNCHTEST;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.COLORTEST;
@@ -74,7 +75,7 @@ public class TeleOp_Trollbot extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private HardwareHelper robot = new HardwareHelper(FULLROBOT);
+    private HardwareHelper robot = new HardwareHelper(FULLTELEOP);
 
 //    private Servo LPush;
 //    double LPushStart = 0.1;

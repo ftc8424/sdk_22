@@ -119,36 +119,22 @@ public class Auto_Red extends LinearOpMode{
         robot.encoderDrive(this, driveSpeed, 10, -10, 10);
         //6.66
             //Turning right towards beacon 2
-            //How do you put a wait, or how do you do this in encoder ticks?
-        // leftMotorFront.setTargetPosition(750 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(-750 + rightMotorFront.getCurrentPosition());
-        //  leftMotorFront.setPower(0.5);
-        //  rightMotorFront.setPower(0.5);
+
 
         robot.encoderDrive(this, driveSpeed, 52, 52, 10);
         //34.66
             //Driving towards beacon 2
-        //leftMotorFront.setTargetPosition(5408 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(5408 + rightMotorFront.getCurrentPosition());
-        //  leftMotorFront.setPower(0.5);
-        //  rightMotorFront.setPower(0.5);
+
 
         robot.encoderDrive(this, driveSpeed, -12, 12, 10);
         //8
             //Turning left at Beacon 2
-        //leftMotorFront.setTargetPosition(-750 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(750 + rightMotorFront.getCurrentPosition());
-        //  leftMotorFront.setPower(0.5);
-        //  rightMotorFront.setPower(0.5);
+
 
         robot.encoderDrive(this, driveSpeed, 15, 15, 10);
         //10
             //Driving Towards Beacon 2
-        //leftMotorFront.setTargetPosition(1976 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(1976 + rightMotorFront.getCurrentPosition());
 
-            //Logic for pressing correct button
-            //May need to be edited if we want to use the Hue values instead
 
         if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
             robot.leftPush.setPosition(robot.lpushDeploy);
@@ -167,26 +153,17 @@ public class Auto_Red extends LinearOpMode{
         robot.encoderDrive(this, driveSpeed, -11, -11, 10);
         //7.33
             //Backing up from Beacon 2
-        //leftMotorFront.setTargetPosition(-1144 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(-1144 + rightMotorFront.getCurrentPosition());
-        //  leftMotorFront.setPower(0.5);
-        //  rightMotorFront.setPower(0.5);
+
 
         robot.encoderDrive(this, driveSpeed, 5, -5, 10);
         //3.33
             //Turning towards Cap
-            //leftMotorFront.setTargetPosition(500 + leftMotorFront.getCurrentPosition());
-        //rightMotorFront.setTargetPosition(-500 + rightMotorFront.getCurrentPosition());
-        //  leftMotorFront.setPower(0.5);
-        //  rightMotorFront.setPower(0.5);
+
 
         robot.encoderDrive(this, driveSpeed, -60, -60, 10);
         //40
             //Moving towards Cap ball
-        //  leftMotorFront.setTargetPosition(-5200 + leftMotorFront.getCurrentPosition());
-        //  rightMotorFront.setTargetPosition(-5200 + rightMotorFront.getCurrentPosition());
-        //  leftMotorFront.setPower(0.5);
-        //  rightMotorFront.setPower(0.5);
+
 
 
     }

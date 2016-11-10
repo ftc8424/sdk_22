@@ -72,6 +72,10 @@ public class FullRobot extends OpMode {
     private double LservoUpTime = 0;
     private double RservoUpTime = 0;
     private double powerSetTime = 0;
+    private double servoUpTime = 0;
+    double launchPress = 0;
+    double lastStateChange = 0;
+    int launcherState = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -123,7 +127,7 @@ public class FullRobot extends OpMode {
 
         telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
 
-        if (gamepad1.left_bumper && LservoUpTime + 2 < runtime.seconds()) {
+        if (gamepad2.left_bumper && (LservoUpTime + 2) < runtime.seconds()) {
             //robot.lpushStart robot.lpushDeploy
             if (robot.leftPush.getPosition() == robot.lpushStart) {
                 robot.leftPush.setPosition(robot.lpushDeploy);
@@ -136,7 +140,7 @@ public class FullRobot extends OpMode {
         telemetry.addData("Status", "Debug 2 at: " + runtime.toString());
         telemetry.addData("Servo", " 1 leftPush Servo Set to " + robot.leftPush.getPosition());
 
-        if (gamepad1.right_bumper && RservoUpTime + 2 < runtime.seconds()) {
+        if (gamepad2.right_bumper && (RservoUpTime + 2) < runtime.seconds()) {
             telemetry.addData("Status", "Debug 3 at: " + runtime.toString());
             // robot.rpushStart robot.rpushDeploy
             if (robot.rightPush.getPosition() == robot.rpushStart) {
@@ -149,7 +153,66 @@ public class FullRobot extends OpMode {
 
         telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
         telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
+        telemetry.addData("Servo", "LaunchServo set to " + robot.launchServo.getPosition());
 
+
+        if (gamepad2.y && (servoUpTime+2) < runtime.seconds()) {
+            telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
+            if (robot.launchServo.getPosition() == robot.launchliftStart) {
+                robot.launchServo.setPosition(robot.launchliftDeploy);
+            }
+            else {
+                robot.launchServo.setPosition(robot.launchliftStart);
+            }
+
+
+            servoUpTime = runtime.seconds();
+        }
+             /*if (robot.launchServo.getPosition() == robot.launchliftDeploy && servoUpTime+1 < runtime.seconds()) {
+                robot.launchServo.setPosition(robot.launchliftStart);
+            }
+        */
+        telemetry.addData("Status", "Launcherlift Debug 1 at: " + runtime.toString());
+        telemetry.addData("Servo", " 1 Launcherlift Push Set to " + robot.launchServo.getPosition());
+
+
+
+        telemetry.addData("Status", " launchMotor Debug 1 at: " + runtime.toString());
+        if (gamepad2.a && launcherState > 0 && (launchPress + 2) < runtime.seconds()) {
+            robot.launchMotor.setPower(0);
+            launcherState = 0;
+            launchPress = runtime.seconds();
+
+        }
+
+        telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor.getPower());
+
+        if (gamepad2.a && launcherState == 0 && (launchPress + 2) < runtime.seconds()) {
+            robot.launchMotor.setPower(1);
+            launchPress = runtime.seconds();
+            launcherState = 5;
+            lastStateChange = runtime.milliseconds();
+
+        }
+        telemetry.addData("Motor", " 2 launchMotor Push Set to " + robot.launchMotor.getPower());
+/*
+        if (launcherState > 0 && (lastStateChange + 500) < runtime.milliseconds()) {
+
+            if (launcherState < 5) {
+                robot.launchMotor.setPower(robot.launchMotor.getPower() + .1);
+                lastStateChange = runtime.milliseconds();
+                launcherState++;
+            }
+            telemetry.addData("Motor", " 3 launchMotor Push Set to " + robot.launchMotor.getPower());
+
+        }
+*/
+        if(Math.abs(gamepad2.right_stick_y) > .01) {
+            robot.manipMotor.setPower(gamepad2.right_stick_y);
+        }
+        else {
+            robot.manipMotor.setPower(0);
+        }
     }  // loop
 
 
