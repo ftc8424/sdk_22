@@ -61,20 +61,20 @@ public class Auto_Red extends LinearOpMode{
 //
 //      // send the info back to driver station using telemetry function.
 
-        //Driving towards center vortex
-        robot.encoderDrive(this, driveSpeed, 40, 40, 5);
-        //26.4
+        //Driving towards center vortex knocking off cap ball in 1 qualifier
+        robot.encoderDrive(this, driveSpeed, 61, 61, 5);
+        //40 for real autonomous
         //Turning towards the beacon
-        robot.encoderDrive(this, .25, -9.75, 9.75, 5);
+       //robot.encoderDrive(this, .25, -9.75, 9.75, 5);
         //6.5
         //Driving towards the 1st beacon
-        robot.encoderDrive(this, driveSpeed, 67, 67, 5);
+        //robot.encoderDrive(this, driveSpeed, 67, 67, 5);
         //44.6666
         //Aligning the robot at the 1st beacon
-        robot.encoderDrive(this, driveSpeed, -5, 5, 5);
+        //robot.encoderDrive(this, driveSpeed, -5, 5, 5);
         //3.33
         //Driving towards hte first beacon
-        robot.encoderDrive(this, driveSpeed, 18, 18, 5);
+        //robot.encoderDrive(this, driveSpeed, 18, 18, 5);
         //12
 
 
@@ -113,25 +113,25 @@ public class Auto_Red extends LinearOpMode{
         robot.rightPush.setPosition(robot.rpushStart);
         idle();
 
-        robot.encoderDrive(this, driveSpeed, -7, -7, 10);
+        //robot.encoderDrive(this, driveSpeed, -7, -7, 10);
         //4.66
 
-        robot.encoderDrive(this, driveSpeed, 10, -10, 10);
+        //robot.encoderDrive(this, driveSpeed, 10, -10, 10);
         //6.66
             //Turning right towards beacon 2
 
 
-        robot.encoderDrive(this, driveSpeed, 52, 52, 10);
+        //robot.encoderDrive(this, driveSpeed, 52, 52, 10);
         //34.66
             //Driving towards beacon 2
 
 
-        robot.encoderDrive(this, driveSpeed, -12, 12, 10);
+        //robot.encoderDrive(this, driveSpeed, -12, 12, 10);
         //8
             //Turning left at Beacon 2
 
 
-        robot.encoderDrive(this, driveSpeed, 15, 15, 10);
+        //robot.encoderDrive(this, driveSpeed, 15, 15, 10);
         //10
             //Driving Towards Beacon 2
 
@@ -150,17 +150,17 @@ public class Auto_Red extends LinearOpMode{
         robot.rightPush.setPosition(robot.rpushStart);
         idle();
 
-        robot.encoderDrive(this, driveSpeed, -11, -11, 10);
+        //robot.encoderDrive(this, driveSpeed, -11, -11, 10);
         //7.33
             //Backing up from Beacon 2
 
 
-        robot.encoderDrive(this, driveSpeed, 5, -5, 10);
+        //robot.encoderDrive(this, driveSpeed, 5, -5, 10);
         //3.33
             //Turning towards Cap
 
 
-        robot.encoderDrive(this, driveSpeed, -60, -60, 10);
+        //robot.encoderDrive(this, driveSpeed, -60, -60, 10);
         //40
             //Moving towards Cap ball
 
