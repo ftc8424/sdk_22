@@ -55,9 +55,9 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLTELEOP
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name="TeleOp: FullRobot", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="TeleOp: FullRobot FullSpeed", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 
-public class FullRobot extends OpMode {
+public class FullRobotFullSpeed extends OpMode {
 
 
     /* Declare OpMode members. */
@@ -76,6 +76,7 @@ public class FullRobot extends OpMode {
     double launchPress = 0;
     double lastStateChange = 0;
     int launcherState = 0;
+    double SpeedChange = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -160,18 +161,16 @@ public class FullRobot extends OpMode {
             telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
             if (robot.launchServo.getPosition() == robot.launchliftStart) {
                 robot.launchServo.setPosition(robot.launchliftDeploy);
-            }
-            else {
-                robot.launchServo.setPosition(robot.launchliftStart);
-            }
 
+
+            }
 
             servoUpTime = runtime.seconds();
         }
-             /*if (robot.launchServo.getPosition() == robot.launchliftDeploy && servoUpTime+1 < runtime.seconds()) {
+             if (robot.launchServo.getPosition() == robot.launchliftDeploy && servoUpTime+1 < runtime.seconds()) {
                 robot.launchServo.setPosition(robot.launchliftStart);
             }
-        */
+
         telemetry.addData("Status", "Launcherlift Debug 1 at: " + runtime.toString());
         telemetry.addData("Servo", " 1 Launcherlift Push Set to " + robot.launchServo.getPosition());
 
@@ -188,13 +187,23 @@ public class FullRobot extends OpMode {
         telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor.getPower());
 
         if (gamepad2.a && launcherState == 0 && (launchPress + 2) < runtime.seconds()) {
-            robot.launchMotor.setPower(.8);
+            robot.launchMotor.setPower(1);
             launchPress = runtime.seconds();
             launcherState = 5;
             lastStateChange = runtime.milliseconds();
 
         }
         telemetry.addData("Motor", " 2 launchMotor Push Set to " + robot.launchMotor.getPower());
+
+        if (gamepad2.b &&  (SpeedChange + 1) < runtime.seconds()) {
+            robot.launchMotor.setPower(1);
+            SpeedChange = runtime.seconds();
+            robot.launchMotor.setMaxSpeed( robot.launchMotor.getMaxSpeed() - 100);
+
+        }
+        telemetry.addData("LaunchMotor:", "Max Speed Set to:" + robot.launchMotor.getMaxSpeed());
+
+
 /*
         if (launcherState > 0 && (lastStateChange + 500) < runtime.milliseconds()) {
 

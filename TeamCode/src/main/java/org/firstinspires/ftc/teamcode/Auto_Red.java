@@ -62,6 +62,7 @@ public class Auto_Red extends LinearOpMode{
 //      // send the info back to driver station using telemetry function.
 
         //Driving towards center vortex knocking off cap ball in 1 qualifier
+        sleep(10000);
         robot.encoderDrive(this, driveSpeed, 61, 61, 5);
         //40 for real autonomous
         //Turning towards the beacon

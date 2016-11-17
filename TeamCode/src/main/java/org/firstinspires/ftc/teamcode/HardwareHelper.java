@@ -109,9 +109,9 @@ public class HardwareHelper {
         if ( robotType == LAUNCHTEST || robotType == FULLTELEOP || robotType == FULLAUTO ) {
             launchMotor = hwMap.dcMotor.get(cfgLaunchMotor);
             launchMotor.resetDeviceConfigurationForOpMode();
-//            launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            launchMotor.setMaxSpeed(1000);
+            launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            launchMotor.setMaxSpeed(1613);
             launchMotor.setDirection(DcMotor.Direction.FORWARD);
             manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
             //manipMotor.setDirection(DcMotor.Direction.REVERSE);
