@@ -111,7 +111,7 @@ public class HardwareHelper {
             launchMotor.resetDeviceConfigurationForOpMode();
             launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            launchMotor.setMaxSpeed(1613);
+            launchMotor.setMaxSpeed(2000);
             launchMotor.setDirection(DcMotor.Direction.FORWARD);
             manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
             //manipMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -162,8 +162,10 @@ public class HardwareHelper {
                              double speed,
                              double leftInches, double rightInches,
                              double timeoutS) throws InterruptedException {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
+        int newLeftMidTarget;
+        int newRightMidTarget;
 
         // Ensure that the opmode is still active
         if ( !caller.opModeIsActive() )
@@ -177,16 +179,20 @@ public class HardwareHelper {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
-        newRightTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch * encoderRatio);
-        caller.telemetry.addData("encoderDrive: ", "Left Target POS:  %d / Right Target POS:  %d", newLeftTarget, newRightTarget);
+        newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
+        newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch * encoderRatio);
+        newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
+        newRightMidTarget = rightMidDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch * encoderRatio);
+        caller.telemetry.addData("encoderDrive: ", "Left Back Target POS:  %d / Right Back Target POS:  %d / Left Mid Target POS: %d / Right Mid Target POS:%d" , newLeftBackTarget, newRightBackTarget, newLeftMidTarget, newRightMidTarget);
         caller.telemetry.update();
-        leftBackDrive.setTargetPosition(newLeftTarget);
-        rightBackDrive.setTargetPosition(newRightTarget);
-        if ( robotType == FULLAUTO ) {
-            leftMidDrive.setTargetPosition(newLeftTarget);
-            rightMidDrive.setTargetPosition(newRightTarget);
-        }
+        leftBackDrive.setTargetPosition(newLeftBackTarget);
+        rightBackDrive.setTargetPosition(newRightBackTarget);
+        leftMidDrive.setTargetPosition(newLeftMidTarget);
+        rightMidDrive.setTargetPosition(newRightMidTarget);
+//        if ( robotType == FULLAUTO ) {
+//            leftMidDrive.setTargetPosition(newLeftBackTarget);
+//            rightMidDrive.setTargetPosition(newRightBackTarget);
+//        }
         caller.telemetry.addData("Encoder Drive: ", "Target Set");
 
         // reset the timeout time and start motion.
@@ -205,11 +211,13 @@ public class HardwareHelper {
         // keep looping while we are still active, and there is time left, and both motors are running.
         boolean isBusy;
         do {
-            caller.telemetry.addData("Drives", "Running to %7d :%7d",
-                    newLeftTarget, newRightTarget);
-            caller.telemetry.addData("Drives", "Currently at %7d :%7d",
+            caller.telemetry.addData("Drives", "Running to %7d :%7d %7d : %7d",
+                    newLeftBackTarget, newLeftMidTarget, newRightBackTarget, newRightMidTarget);
+            caller.telemetry.addData("Drives", "Currently at %7d :%7d %7d : %7d",
                     leftBackDrive.getCurrentPosition(),
-                    rightBackDrive.getCurrentPosition());
+                    leftMidDrive.getCurrentPosition(),
+                    rightBackDrive.getCurrentPosition(),
+                    rightMidDrive.getCurrentPosition());
             caller.telemetry.update();
 
             // Allow time for other processes to run.
