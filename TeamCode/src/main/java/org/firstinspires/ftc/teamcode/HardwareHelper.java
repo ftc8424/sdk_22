@@ -113,6 +113,7 @@ public class HardwareHelper {
             launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             launchMotor.setMaxSpeed(2000);
             launchMotor.setDirection(DcMotor.Direction.FORWARD);
+            launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
             //manipMotor.setDirection(DcMotor.Direction.REVERSE);
         }
