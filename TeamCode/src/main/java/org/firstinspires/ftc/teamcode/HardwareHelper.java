@@ -93,14 +93,14 @@ public class HardwareHelper {
                 rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
 
                 if ( robotType == FULLAUTO ) {
-                    leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     leftMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     rightMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 }
             }
         }
