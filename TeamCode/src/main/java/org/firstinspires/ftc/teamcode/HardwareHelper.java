@@ -64,6 +64,7 @@ public class HardwareHelper {
     public static final double launchliftStart = .75;
     public static final double launchliftDeploy = 0.1;
 
+
     /* Use this when creating the constructor, to state the type of robot we're using. */
     public enum RobotType {
         FULLTELEOP, FULLAUTO, LAUNCHTEST, COLORTEST, AUTOTEST, TROLLBOT,
@@ -154,15 +155,17 @@ public class HardwareHelper {
      *
      * @param caller                  Reference to calling class, must be LinearOpMode
      * @param speed                   The speed of the movement
-     * @param leftInches              The target position of left motors, in inches from current
-     * @param rightInches             The target position of right motors, in inches from current
-     * @param timeoutS                The timeout in seconds to allow the move
+     * @param leftInchesBack              The target position of left motors, in inches from current
+     * @param rightInchesBack            The target position of right motors, in inches from current
+     * @param leftInchesMid             The target position of left motors, in inches from current
+     * @param rightInchesMid             The target position of right motors, in inches from current
+    * @param timeoutS                The timeout in seconds to allow the move
      * @throws InterruptedException
      */
     public void encoderDrive(LinearOpMode caller,
                              double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) throws InterruptedException {
+                             double leftInchesBack, double rightInchesBack,
+                             double leftInchesMid, double rightInchesMid, double timeoutS) throws InterruptedException {
         int newLeftBackTarget;
         int newRightBackTarget;
         int newLeftMidTarget;
@@ -180,10 +183,10 @@ public class HardwareHelper {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Determine new target position, and pass to motor controller
-        newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
-        newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch * encoderRatio);
-        newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
-        newRightMidTarget = rightMidDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch * encoderRatio);
+        newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInchesBack * encoderInch * encoderRatio);
+        newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInchesBack * encoderInch * encoderRatio);
+        newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int)Math.round(leftInchesMid * encoderInch * encoderRatio);
+        newRightMidTarget = rightMidDrive.getCurrentPosition() + (int)Math.round(rightInchesMid * encoderInch * encoderRatio);
         caller.telemetry.addData("encoderDrive: ", "Left Back Target POS:  %d / Right Back Target POS:  %d / Left Mid Target POS: %d / Right Mid Target POS:%d" , newLeftBackTarget, newRightBackTarget, newLeftMidTarget, newRightMidTarget);
         caller.telemetry.update();
         leftBackDrive.setTargetPosition(newLeftBackTarget);
@@ -191,8 +194,8 @@ public class HardwareHelper {
         leftMidDrive.setTargetPosition(newLeftMidTarget);
         rightMidDrive.setTargetPosition(newRightMidTarget);
 //        if ( robotType == FULLAUTO ) {
-//            leftMidDrive.setTargetPosition(newLeftBackTarget);
-//            rightMidDrive.setTargetPosition(newRightBackTarget);
+//            leftMidDrive.setTargetPosition(newLeftMidTarget);
+//            rightMidDrive.setTargetPosition(newRightMidTarget);
 //        }
         caller.telemetry.addData("Encoder Drive: ", "Target Set");
 
@@ -200,10 +203,12 @@ public class HardwareHelper {
         runtime.reset();
         rightBackDrive.setPower(Math.abs(speed));
         leftBackDrive.setPower(Math.abs(speed));
-        if ( robotType == FULLAUTO ) {
-            leftMidDrive.setPower(Math.abs(speed));
-            rightMidDrive.setPower(Math.abs(speed));
-        }
+        rightMidDrive.setPower(Math.abs(speed));
+        leftMidDrive.setPower(Math.abs(speed));
+//        if ( robotType == FULLAUTO ) {
+//            leftMidDrive.setPower(Math.abs(speed));
+//            rightMidDrive.setPower(Math.abs(speed));
+//        }
 
         caller.idle();
         caller.telemetry.addData("Encoder Drive: ", "Power set to %.2f", Math.abs(speed));
