@@ -80,9 +80,9 @@ public class Auto_Blue extends LinearOpMode {
         */
         //pressing beacon 2 when we are blue alliance
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
-            robot.rightPush.setPosition(robot.rpushDeploy);
-        } else if (robot.color.red() > 0 && robot.color.red() > robot.color.red()){
             robot.leftPush.setPosition(robot.lpushDeploy);
+        } else if (robot.color.red() > 0 && robot.color.red() > robot.color.red()){
+            robot.rightPush.setPosition(robot.rpushDeploy);
         } else if (robot.color.blue() == robot.color.red()){
             telemetry.addData("ColorDecision: ", "Not Pressing");
             telemetry.update();
@@ -93,9 +93,10 @@ public class Auto_Blue extends LinearOpMode {
         robot.rightPush.setPosition(robot.rpushStart);
         idle();
 
-        /* robot.encoderDrive(this, driveSpeed, 6, 6, 6, 6, 2);
+        /* moving forward 6 in. in 2 sec. and starting launcher
+        robot.encoderDrive(this, driveSpeed, 6, 6, 6, 6, 2);
         robot.autoLaunch();
-        */
+        */          
 
 
     }
