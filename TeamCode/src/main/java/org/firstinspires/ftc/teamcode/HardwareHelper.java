@@ -83,8 +83,13 @@ public class HardwareHelper {
         robotType = type;
     }
 
-
-    public void autoLauncher(LinearOpMode caller) throws InterruptedException{
+    public void autoLauncher(LinearOpMode caller,
+                             double speed,
+                             double ballNumber,
+                             double timeoutS) throws InterruptedException {
+    }
+    
+    public void autolauncher(LinearOpMode caller) throws InterruptedException {
         robot.robot_init(caller.hardwareMap);
 
         robot.launchMotor.setPower(1);

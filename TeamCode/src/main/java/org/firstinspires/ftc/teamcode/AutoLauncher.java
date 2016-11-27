@@ -7,8 +7,8 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
 
 // Created by FTC8424 on 11/16/2016.
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Launcher", group = "Sensor")
-
 public class AutoLauncher extends LinearOpMode {
+
     HardwareHelper robot = new HardwareHelper(FULLAUTO);
 
     private double servoUpTime = 0;
