@@ -62,37 +62,31 @@ public class Auto_Red extends LinearOpMode{
 //        Color.RGBToHSV(colorSensor.red(), colorSensor.green(), colorSensor.blue(), hsvValues);
 //
 //      // send the info back to driver station using telemetry function.
+        // Move forward to shoot
+        robot.encoderDrive(this, driveSpeed,-5, -5,10);
+        // shooting
+        robot.autolauncher(this);
+        // Backing up
+        robot.encoderDrive(this, driveSpeed, -35,-35,10);
+        // Figure out right turn for 135 deg.
+        robot.encoderDrive(this,driveSpeed, 30, -30, 10);
 
-        //Driving towards center vortex knocking off cap ball in 1 qualifier
-        //robot.encoderDrive(this, driveSpeed, 40, 40, 40, 40, 1.5 );
+//    robot.encoderDrive(this, driveSpeed, -9.75, 9.75, 10);
+        //Moving to beacon
+        robot.encoderDrive(this,driveSpeed, 67, 67, 10);
 
-        // 40, 1.5
-        //40 for real autonomous
 
-        //Turning towards the beacon
-//        sleep(1000);
-       //robot.encoderDrive(this, driveSpeed, -9.75, 9.75,-9.75, 9.75,  0.37);
-//        //6.5
-//        //Driving towards the 1st beacon
-//        robot.encoderDrive(this, driveSpeed, 67, 67, 67, 67, 2.1);
-        //44.6666
         //Aligning the robot at the 1st beacon
-//       robot.encoderDrive(this, driveSpeed, 5, -5, 5, -5, 0.19);
-//        //3.33
-//        //Driving towards hte first beacon
-       robot.encoderDrive(this, driveSpeed, -18, -18,-18, -18, 0.68);
-//        //12
+       robot.encoderDrive(this, driveSpeed, 5, -5, 5);
+
+        //Driving towards the first beacon
+       robot.encoderDrive(this, driveSpeed, -18, -18, 5);
+        //12
 
 
 
-//        telemetry.addData("Auto: ", "Drive completed, looking for color sensor");
-//        telemetry.update();
-//        //this.sleep(5000);
-//        telemetry.addData("Color:" , "Connection Info %s ", robot.color.getConnectionInfo());
-//        telemetry.update();
-//
-//
-//        telemetry.addData("Color: ", "Red %d Blue %d Green %d", robot.color.red(), robot.color.blue(), robot.color.green());
+
+        telemetry.addData("Color: ", "Red %d Blue %d Green %d", robot.color.red(), robot.color.blue(), robot.color.green());
 //        telemetry.update();
 //
 //        telemetry.addData("Clear", robot.color.alpha());
@@ -105,70 +99,71 @@ public class Auto_Red extends LinearOpMode{
 //        telemetry.update();
 
         //Logic for pressing the red button, when we are the red alliance (at the 1st beacon)
-//        if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
-//            robot.leftPush.setPosition(robot.lpushDeploy);
-//        } else if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()){
-//            robot.rightPush.setPosition(robot.rpushDeploy);
-//        } else if (robot.color.red() == robot.color.blue()){
-//            telemetry.addData("ColorDecision: ", "Not Pressing");
-//            telemetry.update();
-//        }
-//        idle();
-//        sleep(1000);
-//        robot.leftPush.setPosition(robot.lpushStart);
-//        robot.rightPush.setPosition(robot.rpushStart);
-//        idle();
+        if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
+            robot.leftPush.setPosition(robot.lpushDeploy);
+        } else if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()){
+            robot.rightPush.setPosition(robot.rpushDeploy);
+        } else if (robot.color.red() == robot.color.blue()){
+            telemetry.addData("ColorDecision: ", "Not Pressing");
+            telemetry.update();
+        }
+        idle();
+        sleep(1000);
+        robot.leftPush.setPosition(robot.lpushStart);
+        robot.rightPush.setPosition(robot.rpushStart);
+        idle();
 
-//        robot.encoderDrive(this, driveSpeed, -7, -7, 10);
+        //Backing away from Beacon 1
+        robot.encoderDrive(this, driveSpeed, -7, -7, 5);
 //        //4.66
-//
-//        robot.encoderDrive(this, driveSpeed, 10, -10, 10);
+        //Turning right towards beacon 2
+        robot.encoderDrive(this, driveSpeed, 10, -10, 10);
 //        //6.66
-//            //Turning right towards beacon 2
 //
 //
-//        robot.encoderDrive(this, driveSpeed, 52, 52, 10);
+        // Drive to beacon 2
+        robot.encoderDrive(this, driveSpeed, 52, 52, 10);
 //        //34.66
-//            //Driving towards beacon 2
 //
 //
-//        robot.encoderDrive(this, driveSpeed, -12, 12, 10);
+        //Turn left @ Beacon 2
+        robot.encoderDrive(this, driveSpeed, -12, 12, 10);
 //        //8
-//            //Turning left at Beacon 2
 //
-//
-//        robot.encoderDrive(this, driveSpeed, 15, 15, 10);
+        // Forward to Beacon 2
+        robot.encoderDrive(this, driveSpeed, 15, 15, 10);
 //        //10
-            //Driving Towards Beacon 2
 
 
-//        if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
-//            robot.leftPush.setPosition(robot.lpushDeploy);
-//        } else if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()){
-//            robot.rightPush.setPosition(robot.rpushDeploy);
-//        } else if (robot.color.red() == robot.color.blue()){
-//            telemetry.addData("ColorDecision: ", "Not Pressing");
-//            telemetry.update();
-//        }
-//        idle();
-//        sleep(1000);
-//        robot.leftPush.setPosition(robot.lpushStart);
-//        robot.rightPush.setPosition(robot.rpushStart);
-//        idle();
+        // Logic for pressing red, when we are red
+        if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
+            robot.leftPush.setPosition(robot.lpushDeploy);
+        } else if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()){
+            robot.rightPush.setPosition(robot.rpushDeploy);
+        } else if (robot.color.red() == robot.color.blue()){
+            telemetry.addData("ColorDecision: ", "Not Pressing");
+            telemetry.update();
+        }
+        idle();
+        sleep(1000);
+        robot.leftPush.setPosition(robot.lpushStart);
+        robot.rightPush.setPosition(robot.rpushStart);
+        idle();
 
-//        robot.encoderDrive(this, driveSpeed, -11, -11, 10);
-//        //7.33
-//            //Backing up from Beacon 2
-//
-//
-//        robot.encoderDrive(this, driveSpeed, 5, -5, 10);
-//        //3.33
-//            //Turning towards Cap
-//
-//
-//        robot.encoderDrive(this, driveSpeed, -60, -60, 10);
-        //40
-            //Moving towards Cap ball
+        robot.encoderDrive(this, driveSpeed, -11, -11, 5);
+            //Backing up from Beacon 2
+
+        robot.encoderDrive(this, driveSpeed, 5, -5,10);
+        //3.33
+            //Turning towards Cap
+
+
+        robot.encoderDrive(this, driveSpeed, -60, -60, 10);
+        //40            //Moving towards Cap ball
+
+        robot.encoderDrive(this, driveSpeed, -24, 24, 10);
+
+        robot.encoderDrive(this, driveSpeed, 65, 65, 10);
 
 
 

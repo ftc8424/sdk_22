@@ -83,19 +83,14 @@ public class HardwareHelper {
         robotType = type;
     }
 
-    public void autoLauncher(LinearOpMode caller,
-                             double speed,
-                             double ballNumber,
-                             double timeoutS) throws InterruptedException {
-    }
+
     
     public void autolauncher(LinearOpMode caller) throws InterruptedException {
-        robot.robot_init(caller.hardwareMap);
 
         robot.launchMotor.setPower(1);
         caller.telemetry.addData("Motor", "LaunchPower Set to " + robot.launchMotor.getCurrentPosition());
 
-        caller.sleep(2500);
+        caller.sleep(1000);
         if ( !caller.opModeIsActive() ) return;
         robot.launchServo.setPosition(robot.launchliftDeploy);
         caller.sleep(500);
@@ -124,8 +119,8 @@ public class HardwareHelper {
                 if ( robotType == FULLAUTO ) {
                     leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     leftMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     rightMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -183,19 +178,17 @@ public class HardwareHelper {
      *
      * @param caller                  Reference to calling class, must be LinearOpMode
      * @param speed                   The speed of the movement
-     * @param leftInchesBack              The target position of left motors, in inches from current
-     * @param rightInchesBack            The target position of right motors, in inches from current
-     * @param leftInchesMid             The target position of left motors, in inches from current
-     * @param rightInchesMid             The target position of right motors, in inches from current
+     * @param leftInches              The target position of left motors, in inches from current
+     * @param rightInches           The target position of right motors, in inches from current
+     *
     * @param timeoutS                The timeout in seconds to allow the move
      * @throws InterruptedException
      */
     public void encoderDrive(LinearOpMode caller,
                              double speed,
-                             double leftInchesBack, double rightInchesBack,
-                             double leftInchesMid, double rightInchesMid, double timeoutS) throws InterruptedException {
-        int newLeftBackTarget;
-        int newRightBackTarget;
+                             double leftInches, double rightInches,
+                             double timeoutS) throws InterruptedException {
+
         int newLeftMidTarget;
         int newRightMidTarget;
 
@@ -207,30 +200,23 @@ public class HardwareHelper {
             leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         // Determine new target position, and pass to motor controller
-        newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInchesBack * encoderInch * encoderRatio);
-        newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInchesBack * encoderInch * encoderRatio);
-        newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int)Math.round(leftInchesMid * encoderInch * encoderRatio);
-        newRightMidTarget = rightMidDrive.getCurrentPosition() + (int)Math.round(rightInchesMid * encoderInch * encoderRatio);
-        caller.telemetry.addData("encoderDrive: ", "Left Back Target POS:  %d / Right Back Target POS:  %d / Left Mid Target POS: %d / Right Mid Target POS:%d" , newLeftBackTarget, newRightBackTarget, newLeftMidTarget, newRightMidTarget);
+
+        newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
+        newRightMidTarget = rightMidDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch * encoderRatio);
+        caller.telemetry.addData("encoderDrive: ", " Left Mid Target POS: %d / Right Mid Target POS:%d" ,  newLeftMidTarget, newRightMidTarget);
         caller.telemetry.update();
-        leftBackDrive.setTargetPosition(newLeftBackTarget);
-        rightBackDrive.setTargetPosition(newRightBackTarget);
+
         leftMidDrive.setTargetPosition(newLeftMidTarget);
         rightMidDrive.setTargetPosition(newRightMidTarget);
-//        if ( robotType == FULLAUTO ) {
-//            leftMidDrive.setTargetPosition(newLeftMidTarget);
-//            rightMidDrive.setTargetPosition(newRightMidTarget);
-//        }
         caller.telemetry.addData("Encoder Drive: ", "Target Set");
 
         // reset the timeout time and start motion.
         runtime.reset();
-        rightBackDrive.setPower(Math.abs(speed));
-        leftBackDrive.setPower(Math.abs(speed));
+        rightBackDrive.setPower(rightInches < 0 ? -1 : 1 * Math.abs(speed));
+        leftBackDrive.setPower(leftInches < 0 ? -1 : 1 * Math.abs(speed));
         rightMidDrive.setPower(Math.abs(speed));
         leftMidDrive.setPower(Math.abs(speed));
 //        if ( robotType == FULLAUTO ) {
@@ -245,20 +231,16 @@ public class HardwareHelper {
         // keep looping while we are still active, and there is time left, and both motors are running.
         boolean isBusy;
         do {
-            caller.telemetry.addData("Drives", "Running to %7d :%7d %7d : %7d",
-                    newLeftBackTarget, newLeftMidTarget, newRightBackTarget, newRightMidTarget);
-            caller.telemetry.addData("Drives", "Currently at %7d :%7d %7d : %7d",
-                    leftBackDrive.getCurrentPosition(),
+            caller.telemetry.addData("Drives", "Running to %7d : %7d",
+                     newLeftMidTarget, newRightMidTarget);
+            caller.telemetry.addData("Drives", "Currently at %7d : %7d",
                     leftMidDrive.getCurrentPosition(),
-                    rightBackDrive.getCurrentPosition(),
                     rightMidDrive.getCurrentPosition());
             caller.telemetry.update();
 
             // Allow time for other processes to run.
             caller.idle();
-            isBusy = robotType == FULLAUTO
-                    ? leftMidDrive.isBusy() || leftBackDrive.isBusy() || rightMidDrive.isBusy() || rightBackDrive.isBusy()
-                    : leftBackDrive.isBusy() || rightBackDrive.isBusy();
+            isBusy = (Math.abs(leftMidDrive.getCurrentPosition() - newLeftMidTarget) >= 5) && (Math.abs(rightMidDrive.getCurrentPosition() - newRightMidTarget) >= 5);
         }
         while (caller.opModeIsActive() && (runtime.seconds() < timeoutS) && isBusy);
 
@@ -271,11 +253,12 @@ public class HardwareHelper {
         }
 
         // Turn off RUN_TO_POSITION
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         if ( robotType == FULLAUTO ) {
             leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
     }
