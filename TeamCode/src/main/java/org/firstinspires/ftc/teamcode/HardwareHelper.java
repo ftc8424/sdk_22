@@ -87,17 +87,11 @@ public class HardwareHelper {
     public void autoLauncher(LinearOpMode caller) throws InterruptedException{
         robot.robot_init(caller.hardwareMap);
 
-        caller.telemetry.addData("Init:", "Waiting for start");
-        caller.telemetry.update();
-        caller.idle();
-        caller.waitForStart();
-
         robot.launchMotor.setPower(1);
         caller.telemetry.addData("Motor", "LaunchPower Set to " + robot.launchMotor.getCurrentPosition());
 
         caller.sleep(2500);
         if ( !caller.opModeIsActive() ) return;
-        caller.telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
         robot.launchServo.setPosition(robot.launchliftDeploy);
         caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
@@ -108,7 +102,6 @@ public class HardwareHelper {
         caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
         robot.launchServo.setPosition(robot.launchliftStart);
-        caller.sleep(3000);
     }
     public void robot_init(HardwareMap hwMap) {
         this.hwMap = hwMap;
