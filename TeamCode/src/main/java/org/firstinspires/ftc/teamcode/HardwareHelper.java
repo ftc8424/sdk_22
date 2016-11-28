@@ -52,13 +52,6 @@ public class HardwareHelper {
     public ColorSensor color = null;       private static final String cfgColor       = "color";
     public DcMotor  manipMotor = null;    private static final String cfgmanipMotor = "Manipulator";
 
-    //this is for AutoLauncher
-    HardwareHelper robot = new HardwareHelper(FULLAUTO);
-
-    /* Wheel ratio values for the encoders. */
-    private static final double encoderInch  = 104; //2500.0 / (3 * 3.14169265);
-    private static final double encoderRatio = 0.667; // / 1.33;    // 3" wheels so ratio is 1:1, 4 is 1/1.3
-
     /* Servo positions, adjust as necessary. */
     public static final double lpushStart = 0.7;
     public static final double lpushDeploy = 0;
@@ -74,6 +67,11 @@ public class HardwareHelper {
     }
 
     /* Private instance variables */
+
+    /* Wheel ratio values for the encoders. */
+    private static final double encoderInch  = 104; //2500.0 / (3 * 3.14169265);
+    private static final double encoderRatio = 0.667; // / 1.33;    // 3" wheels so ratio is 1:1, 4 is 1/1.3
+
     private RobotType robotType;
     private HardwareMap hwMap = null;
     private ElapsedTime runtime = new ElapsedTime();
@@ -83,26 +81,26 @@ public class HardwareHelper {
         robotType = type;
     }
 
-
     
-    public void autolauncher(LinearOpMode caller) throws InterruptedException {
+    public void autoLauncher(LinearOpMode caller) throws InterruptedException {
 
-        robot.launchMotor.setPower(1);
-        caller.telemetry.addData("Motor", "LaunchPower Set to " + robot.launchMotor.getCurrentPosition());
+        launchMotor.setPower(1);
+        caller.telemetry.addData("Motor", "LaunchPower Set to " + launchMotor.getCurrentPosition());
 
         caller.sleep(1000);
         if ( !caller.opModeIsActive() ) return;
-        robot.launchServo.setPosition(robot.launchliftDeploy);
+        launchServo.setPosition(launchliftDeploy);
         caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
-        robot.launchServo.setPosition(robot.launchliftStart);
+        launchServo.setPosition(launchliftStart);
         caller.sleep(750);
         if ( !caller.opModeIsActive() ) return;
-        robot.launchServo.setPosition(robot.launchliftDeploy);
+        launchServo.setPosition(launchliftDeploy);
         caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
-        robot.launchServo.setPosition(robot.launchliftStart);
+        launchServo.setPosition(launchliftStart);
     }
+
     public void robot_init(HardwareMap hwMap) {
         this.hwMap = hwMap;
 

@@ -1,19 +1,9 @@
 package org.firstinspires.ftc.teamcode;
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
 //
-import com.qualcomm.ftcrobotcontroller.R;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LED;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
-import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
+        import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
 
 /**
  * Created by Devan on 10/9/2016.
@@ -65,7 +55,7 @@ public class Auto_Red extends LinearOpMode{
         // Move forward to shoot
         robot.encoderDrive(this, driveSpeed,-5, -5,10);
         // shooting
-        robot.autolauncher(this);
+        robot.autoLauncher(this);
         // Backing up
         robot.encoderDrive(this, driveSpeed, -35,-35,10);
         // Figure out right turn for 135 deg.
