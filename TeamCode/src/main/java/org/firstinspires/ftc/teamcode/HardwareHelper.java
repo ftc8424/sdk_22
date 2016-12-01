@@ -87,18 +87,20 @@ public class HardwareHelper {
         launchMotor.setPower(1);
         caller.telemetry.addData("Motor", "LaunchPower Set to " + launchMotor.getCurrentPosition());
 
-        caller.sleep(1000);
+        caller.sleep(1500);
+        if ( !caller.opModeIsActive() ) return;
+        launchServo.setPosition(launchliftDeploy);
+//        launchMotor.setPower(0.75);
+        caller.sleep(500);
+        if ( !caller.opModeIsActive() ) return;
+        launchServo.setPosition(launchliftStart);
+        caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);
         caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftStart);
-        caller.sleep(750);
-        if ( !caller.opModeIsActive() ) return;
-        launchServo.setPosition(launchliftDeploy);
-        caller.sleep(500);
-        if ( !caller.opModeIsActive() ) return;
-        launchServo.setPosition(launchliftStart);
+        launchMotor.setPower(0);
     }
 
     public void robot_init(HardwareMap hwMap) {
@@ -189,14 +191,17 @@ public class HardwareHelper {
 
         int newLeftMidTarget;
         int newRightMidTarget;
+        double timeOut = Math.abs(leftInches)/12 * 750;
 
         // Ensure that the opmode is still active
         if ( !caller.opModeIsActive() )
             return;
 
         if ( robotType == FULLAUTO ) {
-            leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftMidDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightMidDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
 
@@ -212,11 +217,8 @@ public class HardwareHelper {
         caller.telemetry.addData("Encoder Drive: ", "Target Set");
 
         // reset the timeout time and start motion.
-        runtime.reset();
-        rightBackDrive.setPower(rightInches < 0 ? -1 : 1 * Math.abs(speed));
-        leftBackDrive.setPower(leftInches < 0 ? -1 : 1 * Math.abs(speed));
-        rightMidDrive.setPower(Math.abs(speed));
-        leftMidDrive.setPower(Math.abs(speed));
+
+
 //        if ( robotType == FULLAUTO ) {
 //            leftMidDrive.setPower(Math.abs(speed));
 //            rightMidDrive.setPower(Math.abs(speed));
@@ -228,7 +230,14 @@ public class HardwareHelper {
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         boolean isBusy;
+        runtime.reset();
         do {
+            rightBackDrive.setPower(rightInches < 0 ? -1 : 1 * Math.abs(speed));
+            leftBackDrive.setPower(leftInches < 0 ? -1 : 1 * Math.abs(speed));
+            rightMidDrive.setPower(rightInches < 0 ? -1 : 1 * Math.abs(speed));
+            leftMidDrive.setPower(leftInches < 0 ? -1 : 1 * Math.abs(speed));
+            //rightMidDrive.setPower(Math.abs(speed));
+            //leftMidDrive.setPower(Math.abs(speed));
             caller.telemetry.addData("Drives", "Running to %7d : %7d",
                      newLeftMidTarget, newRightMidTarget);
             caller.telemetry.addData("Drives", "Currently at %7d : %7d",
@@ -238,10 +247,10 @@ public class HardwareHelper {
 
             // Allow time for other processes to run.
             caller.idle();
-            isBusy = (Math.abs(leftMidDrive.getCurrentPosition() - newLeftMidTarget) >= 5) && (Math.abs(rightMidDrive.getCurrentPosition() - newRightMidTarget) >= 5);
+            //isBusy = (Math.abs(leftMidDrive.getCurrentPosition() - newLeftMidTarget) >= 5) && (Math.abs(rightMidDrive.getCurrentPosition() - newRightMidTarget) >= 5);
         }
-        while (caller.opModeIsActive() && (runtime.seconds() < timeoutS) && isBusy);
-
+        //while (caller.opModeIsActive() && (runtime.seconds() < timeoutS) && isBusy);
+        while(runtime.milliseconds() < timeOut);
         // Stop all motion;
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
