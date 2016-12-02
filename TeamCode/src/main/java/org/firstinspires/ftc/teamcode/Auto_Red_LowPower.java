@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Devan on 10/9/2016.
  */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Red", group = "Sensor")
-public class Auto_Red extends LinearOpMode{
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Red_LowPower", group = "Sensor")
+public class Auto_Red_LowPower extends LinearOpMode{
 //Trollbot is 14.5 inches
 
     HardwareHelper robot = new HardwareHelper(FULLAUTO);
@@ -53,25 +53,27 @@ public class Auto_Red extends LinearOpMode{
 //
 //      // send the info back to driver station using telemetry function.
         // Move forward to shoot
-        robot.encoderDrive(this, driveSpeed,-5, -5,10);
+        //robot.encoderDrive(this, driveSpeed,-3, -3,10);
         // shooting
-        robot.autoLauncher(this);
+        robot.autoLauncher(this, 0.95);
         // Backing up
-        robot.encoderDrive(this, driveSpeed, -35,-35,10);
+        robot.encoderDrive(this, driveSpeed, -13,-13,10);
         // Figure out right turn for 135 deg.
-        robot.encoderDrive(this,driveSpeed, 30, -30, 10);
+        robot.encoderDrive(this,driveSpeed, 18, -18, 10);
+        robot.encoderDrive(this, driveSpeed, -6, 6, 5);
+
 
 //    robot.encoderDrive(this, driveSpeed, -9.75, 9.75, 10);
         //Moving to beacon
-        robot.encoderDrive(this,driveSpeed, 67, 67, 10);
+        robot.encoderDrive(this,driveSpeed, 31, 31, 10);
 
 
         //Aligning the robot at the 1st beacon
-       robot.encoderDrive(this, driveSpeed, 5, -5, 5);
+       robot.encoderDrive(this, driveSpeed, -4, 4, 5);
 
         //Driving towards the first beacon
-       robot.encoderDrive(this, driveSpeed, -18, -18, 5);
-        //12
+       robot.encoderDrive(this, driveSpeed, 9.25, 9.25, 5);
+        //1
 
 
 
@@ -107,21 +109,21 @@ public class Auto_Red extends LinearOpMode{
         robot.encoderDrive(this, driveSpeed, -7, -7, 5);
 //        //4.66
         //Turning right towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 10, -10, 10);
+        robot.encoderDrive(this, driveSpeed, 11, -11, 10);
 //        //6.66
 //
 //
         // Drive to beacon 2
-        robot.encoderDrive(this, driveSpeed, 52, 52, 10);
+        robot.encoderDrive(this, driveSpeed, 30, 30, 10);
 //        //34.66
 //
 //
         //Turn left @ Beacon 2
-        robot.encoderDrive(this, driveSpeed, -12, 12, 10);
+        robot.encoderDrive(this, driveSpeed, -11, 11, 10);
 //        //8
 //
         // Forward to Beacon 2
-        robot.encoderDrive(this, driveSpeed, 15, 15, 10);
+        robot.encoderDrive(this, driveSpeed, 7, 7, 10);
 //        //10
 
 

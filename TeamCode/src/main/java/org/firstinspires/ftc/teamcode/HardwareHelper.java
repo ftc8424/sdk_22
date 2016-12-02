@@ -82,19 +82,19 @@ public class HardwareHelper {
     }
 
     
-    public void autoLauncher(LinearOpMode caller) throws InterruptedException {
+    public void autoLauncher(LinearOpMode caller, double power) throws InterruptedException {
 
-        launchMotor.setPower(1);
+        launchMotor.setPower(power);
         caller.telemetry.addData("Motor", "LaunchPower Set to " + launchMotor.getCurrentPosition());
 
-        caller.sleep(1500);
+        caller.sleep(1750);
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);
 //        launchMotor.setPower(0.75);
         caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftStart);
-        caller.sleep(500);
+        caller.sleep(750);
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);
         caller.sleep(500);
