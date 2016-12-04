@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-//
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -7,10 +6,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
 
 /**
+ * Created by FTC8424 on 12/3/2016.
+ */
+
+
+
+/**
  * Created by Devan on 10/9/2016.
  */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Blue_LowPower", group = "Sensor")
-public class Auto_Blue_LowPower extends LinearOpMode{
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Red_HighPower_Short", group = "Sensor")
+public class Auto_Red_HighPower_Short extends LinearOpMode {
 //Trollbot is 14.5 inches
 
     HardwareHelper robot = new HardwareHelper(FULLAUTO);
@@ -56,7 +61,7 @@ public class Auto_Blue_LowPower extends LinearOpMode{
         // Move forward to shoot
         //robot.encoderDrive(this, driveSpeed,-3, -3,10);
         // shooting
-        robot.autoLauncher(this, 1);
+        robot.autoLauncher(this, 0.65);
         // Backing up
         robot.encoderDrive(this, driveSpeed, -13,-13,10);
         // Figure out right turn for 135 deg.
@@ -74,7 +79,7 @@ public class Auto_Blue_LowPower extends LinearOpMode{
         robot.encoderDrive(this, driveSpeed, 7, -7, 5);
 
         //Driving towards the first beacon
-       robot.encoderDrive(this, driveSpeed, 50, 50, 5);
+        robot.encoderDrive(this, driveSpeed, 50, 50, 5);
         //1
 //
 //
@@ -163,3 +168,4 @@ public class Auto_Blue_LowPower extends LinearOpMode{
 
     }
 }
+

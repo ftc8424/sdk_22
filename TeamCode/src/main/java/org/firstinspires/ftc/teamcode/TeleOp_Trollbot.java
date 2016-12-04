@@ -135,6 +135,8 @@ public class TeleOp_Trollbot extends OpMode {
 
         telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
 
+/*    Not needed on current Trollbot, has no servos.
+
         if (gamepad1.left_bumper && LservoUpTime + 2 < runtime.seconds()) {
             //robot.lpushStart robot.lpushDeploy
             if (robot.leftPush.getPosition() == robot.lpushStart) {
@@ -158,9 +160,10 @@ public class TeleOp_Trollbot extends OpMode {
             }
             RservoUpTime = runtime.seconds();
         }
+        telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
+*/
 
         telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
-        telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
 
     }  // loop
 

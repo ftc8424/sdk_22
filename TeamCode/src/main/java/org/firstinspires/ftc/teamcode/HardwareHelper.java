@@ -48,12 +48,12 @@ public class HardwareHelper {
     public DcMotor  launchMotor = null;    private static final String cfgLaunchMotor = "Launcher";
     public Servo    launchServo = null;    private static final String cfgLaunchServo = "LaunchServo";
     public Servo    leftPush = null;       private static final String cfgLPush       = "L Push";
-    public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
+        public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
     public ColorSensor color = null;       private static final String cfgColor       = "color";
     public DcMotor  manipMotor = null;    private static final String cfgmanipMotor = "Manipulator";
 
     /* Servo positions, adjust as necessary. */
-    public static final double lpushStart = 0.7;
+   public static final double lpushStart = 0.7;
     public static final double lpushDeploy = 0;
     public static final double rpushStart = 0.3;
     public static final double rpushDeploy = 1;
@@ -111,7 +111,7 @@ public class HardwareHelper {
             leftBackDrive = hwMap.dcMotor.get(cfgLBckDrive);
             rightBackDrive = hwMap.dcMotor.get(cfgRtBckDrive);
             rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-            if ( robotType == FULLAUTO || robotType == FULLTELEOP ) {
+            if ( robotType == FULLAUTO || robotType == FULLTELEOP || robotType == TROLLBOT ) {
                 leftMidDrive = hwMap.dcMotor.get(cfgLMidDrive);
                 rightMidDrive = hwMap.dcMotor.get(cfgRMidDrive);
                 rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -143,7 +143,8 @@ public class HardwareHelper {
         }
 
         /* Set the servos based on type */
-        if ( robotType == TROLLBOT || robotType == FULLTELEOP || robotType == FULLAUTO || robotType == AUTOTEST ) {
+        // Took our trollbot from here
+        if (  robotType == FULLTELEOP || robotType == FULLAUTO || robotType == AUTOTEST ) {
             leftPush = hwMap.servo.get(cfgLPush);
             rightPush = hwMap.servo.get(cfgRPush);
             rightPush.setPosition(rpushStart);
@@ -280,7 +281,7 @@ public class HardwareHelper {
     public void normalDrive (OpMode caller, double leftPower, double rightPower) {
         leftBackDrive.setPower(leftPower);
         rightBackDrive.setPower(rightPower);
-        if ( robotType == FULLTELEOP ) {
+        if ( robotType == FULLTELEOP || robotType == TROLLBOT) {
             leftMidDrive.setPower(leftPower);
             rightMidDrive.setPower(rightPower);
         }
