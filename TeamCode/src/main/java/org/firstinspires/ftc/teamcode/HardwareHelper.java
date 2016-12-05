@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,7 +16,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.LAUNCHTEST
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.TROLLBOT;
 
 /**
- * Created by gorpong on 10/13/2016.
+ * Created by FTC8424 on 10/13/2016.
  *
  * This is the initial helper class for the hardware componnets of E-Cubed (FTC8424) robot.
  * It is NOT an OpMode or any of the others, it's a helper class that has the hardware
@@ -48,12 +47,12 @@ public class HardwareHelper {
     public DcMotor  launchMotor = null;    private static final String cfgLaunchMotor = "Launcher";
     public Servo    launchServo = null;    private static final String cfgLaunchServo = "LaunchServo";
     public Servo    leftPush = null;       private static final String cfgLPush       = "L Push";
-        public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
+    public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
     public ColorSensor color = null;       private static final String cfgColor       = "color";
     public DcMotor  manipMotor = null;    private static final String cfgmanipMotor = "Manipulator";
 
     /* Servo positions, adjust as necessary. */
-   public static final double lpushStart = 0.7;
+    public static final double lpushStart = 0.7;
     public static final double lpushDeploy = 0;
     public static final double rpushStart = 0.3;
     public static final double rpushDeploy = 1;
@@ -66,7 +65,9 @@ public class HardwareHelper {
         FULLTELEOP, FULLAUTO, LAUNCHTEST, COLORTEST, AUTOTEST, TROLLBOT,
     }
 
-    /* Private instance variables */
+    /*
+     * Private instance variables
+     */
 
     /* Wheel ratio values for the encoders. */
     private static final double encoderInch  = 104; //2500.0 / (3 * 3.14169265);
@@ -77,12 +78,35 @@ public class HardwareHelper {
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Constructor */
+
+    /**
+     * Constructor for HardwareHelper, pass in the enumerated type RobotType based on the type of
+     * OpMode we are running (e.g., a Trollbot; TeleOp for the full robot with all sensors, servos,
+     * motors, etc.; Testing autonomous with only partial motor configurations, etc.  This is then
+     * used throughout the rest of the HardwareHelper methods to make them dynamically figure out
+     * what to do (e.g., if encoderDrive() is called and we have four motors based on the
+     * enumerated type, then send power to all motors, otherwise just those that are on the
+     * minimum robot).
+     *
+     * @param type    The enumerated type of the robot
+     */
     public HardwareHelper(RobotType type) {
         robotType = type;
     }
 
-    
-
+    /**
+     * This is the initialization routine for every OpMode in the system.  It uses the RobotType
+     * as passed in the contrustor to determine which elements of the physical robot to go
+     * and get from the hardware map.  It also expects to be sent the hardware map that is used
+     * by the specific OpMode (not sure if there is only a single HardwareMap per the FTC
+     * Robot Controller, or if each OpMode has its own, so just pass in whatever your OpMode
+     * has and robot_init() will take care of it).
+     *
+     * This method goes and instantiates every element in the hardware map that is appropriate
+     * for the type of robot we are and then sets the initial configuration options for them.
+     *
+     * @param hwMap    The hardware map entry from the OpMode.
+     */
     public void robot_init(HardwareMap hwMap) {
         this.hwMap = hwMap;
 
@@ -95,16 +119,29 @@ public class HardwareHelper {
                 leftMidDrive = hwMap.dcMotor.get(cfgLMidDrive);
                 rightMidDrive = hwMap.dcMotor.get(cfgRMidDrive);
                 rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
+            }
 
-                if ( robotType == FULLAUTO ) {
-                    leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    leftMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    rightMidDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            /*
+             * If autonomous, then reset encoders and set mode to be with encoders
+             * NOTE:  This should really throw an exception or something, but all it does
+             * is silently ignore if the resetting of the encoders didn't work and blindly
+             * sets the mode to be RUN_USING_ENCODER.  Can't really call telemetry because
+             * don't have a caller to know which should build the telemetry and send.  Badness
+             * will ensue when the actual autonomous runs and hopefully this note will help
+             * folks figure out the failed reset might be at fault.
+             */
+            boolean resetOk = false;
+            if ( robotType == AUTOTEST || robotType == FULLAUTO ) {
+                resetOk = waitForReset(leftBackDrive, rightBackDrive, 2000);
+                if ( robotType == FULLAUTO )
+                    resetOk = resetOk && waitForReset(leftMidDrive, rightMidDrive, 2000);
+                if (resetOk) {
+                    leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    if ( robotType == FULLAUTO ) {
+                        leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    }
                 }
             }
         }
@@ -123,7 +160,6 @@ public class HardwareHelper {
         }
 
         /* Set the servos based on type */
-        // Took our trollbot from here
         if (  robotType == FULLTELEOP || robotType == FULLAUTO || robotType == AUTOTEST ) {
             leftPush = hwMap.servo.get(cfgLPush);
             rightPush = hwMap.servo.get(cfgRPush);
@@ -155,7 +191,8 @@ public class HardwareHelper {
      * period of time, so it will stop if they get to the desired position, if the time runs out
      * or if the OpMode is cancelled.
      *
-     * Originally written in PushbotAutoDriveByEncoder_Linear.java from FtcRobotController area.
+     * Originally written in PushbotAutoDriveByEncoder_Linear.java from FtcRobotController area,
+     * modified by FTC8424 for defensive encoder moves.
      *
      * @param caller                  Reference to calling class, must be LinearOpMode
      * @param speed                   The speed of the movement
@@ -239,7 +276,7 @@ public class HardwareHelper {
                 .addData("PowerSet: ", "%.4f", Math.abs(speed));
         caller.telemetry.update();
 
-        // keep looping while we are still active, and there is time left, and both motors are running.
+        // keep looping while we are still active, and there is time left, and motors haven't made position.
         boolean isBusy;
         int lmCurPos;
         int rmCurPos;
@@ -257,6 +294,7 @@ public class HardwareHelper {
                     .addData("POS ", "%7d : %7d : %7d : %7d",
                             newLeftMidTarget, newRightMidTarget,
                             newLeftBackTarget, newRightBackTarget);
+            caller.telemetry.update();
             lbCurPos = leftBackDrive.getCurrentPosition();
             rbCurPos = rightBackDrive.getCurrentPosition();
             if ( robotType == FULLAUTO ) {
@@ -304,7 +342,7 @@ public class HardwareHelper {
     public void normalDrive (OpMode caller, double leftPower, double rightPower) {
         leftBackDrive.setPower(leftPower);
         rightBackDrive.setPower(rightPower);
-        if ( robotType == FULLTELEOP || robotType == TROLLBOT) {
+        if ( robotType == FULLTELEOP || robotType == TROLLBOT ) {
             leftMidDrive.setPower(leftPower);
             rightMidDrive.setPower(rightPower);
         }
@@ -413,6 +451,10 @@ public class HardwareHelper {
         launchMotor.setPower(0);
     }
 
+    /****************************************************************************************
+     * Private methods follow.
+     ****************************************************************************************/
+
     /**
      * Sets the target encoder position for this particular motor and waits to ensure that the
      * position was properly set.  If it didn't set correctly, within the timeOut (in milliseconds)
@@ -439,19 +481,18 @@ public class HardwareHelper {
      * times to do the actual work and combines the return values to give an overall return of
      * true only if all four motors were properly reset.
      *
-     * @param caller The caller opmode
      * @param m1    Motor 1 to reset
      * @param m2    Motor 2 to reset
      * @param m3    Motor 3 to reset
      * @param m4    Motor 4 to reset
-     * @param timeOut The time to wait, in milliseonds, for a valid reset
+     * @param msTimeOut The time to wait, in milliseonds, for a valid reset
      * @return      Whether the reset was successful or not
      */
-    private boolean waitForReset(LinearOpMode caller, DcMotor m1, DcMotor m2, DcMotor m3, DcMotor m4, long timeOut) {
+    private boolean waitForReset(DcMotor m1, DcMotor m2, DcMotor m3, DcMotor m4, long msTimeOut) {
         boolean resetOk = false;
 
-        resetOk = waitForReset(caller, m1, m2, timeOut);
-        return resetOk && waitForReset(caller, m3, m4, timeOut);
+        resetOk = waitForReset(m1, m2, msTimeOut/2);
+        return resetOk && waitForReset(m3, m4, msTimeOut/2);
     }
 
     /**
@@ -460,19 +501,18 @@ public class HardwareHelper {
      * it will return false.  This is the true method that does stuff, the other method with the
      * 4 motor signature just calls this method multiple times.
      *
-     * @param caller    The caller OpMode
      * @param m1        Motor 1 to reset
      * @param m2        Motor 2 to reset
-     * @param timeOut   The time to wait, in milliseconds, for a valid reset
+     * @param msTimeOut   The time to wait, in milliseconds, for a valid reset
      * @return          Whether the reset was successful or not
      */
-    private boolean waitForReset (LinearOpMode caller, DcMotor m1, DcMotor m2, long timeOut) {
+    private boolean waitForReset(DcMotor m1, DcMotor m2, long msTimeOut) {
         m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int m1Pos = m1.getCurrentPosition();
         int m2Pos = m2.getCurrentPosition();
-        double stopTime = runtime.milliseconds() + timeOut;
-        while ( caller.opModeIsActive() && (m1Pos != 0 || m2Pos != 0) && runtime.milliseconds() < stopTime ) {
+        double stopTime = runtime.milliseconds() + msTimeOut;
+        while ( (m1Pos != 0 || m2Pos != 0) && runtime.milliseconds() < stopTime ) {
             m1Pos = m1.getCurrentPosition();
             m2Pos = m2.getCurrentPosition();
         }
