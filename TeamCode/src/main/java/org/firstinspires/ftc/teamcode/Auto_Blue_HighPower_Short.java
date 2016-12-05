@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -15,6 +16,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
  * Created by Devan on 10/9/2016.
  */
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Blue_HighPower_Short", group = "Sensor")
+@Disabled
 public class Auto_Blue_HighPower_Short extends LinearOpMode {
 //Trollbot is 14.5 inches
 
@@ -61,7 +63,7 @@ public class Auto_Blue_HighPower_Short extends LinearOpMode {
         // Move forward to shoot
         //robot.encoderDrive(this, driveSpeed,-3, -3,10);
         // shooting
-        robot.autoLauncher(this, 0.65);
+        robot.autoLauncher(this);
         // Backing up
         robot.encoderDrive(this, driveSpeed, -13,-13,10);
         // Figure out right turn for 135 deg.

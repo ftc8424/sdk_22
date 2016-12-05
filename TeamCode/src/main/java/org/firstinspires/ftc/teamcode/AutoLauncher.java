@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
 
 // Created by FTC8424 on 11/16/2016.
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto_Launcher", group = "Sensor")
+@Autonomous(name = "Auto_Launcher", group = "Sensor")
+@Disabled
 public class AutoLauncher extends LinearOpMode {
 
     HardwareHelper robot = new HardwareHelper(FULLAUTO);
