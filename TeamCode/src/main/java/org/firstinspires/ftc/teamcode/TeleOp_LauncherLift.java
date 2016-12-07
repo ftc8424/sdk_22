@@ -49,7 +49,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.TROLLBOT;
  * Just a test for the launcher code with different speeds
  */
 
-@TeleOp(name="TeleOp: LauncherLift", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="LauncherLift", group="Tests")  // @Autonomous(...) is the other common choice
 
 public class TeleOp_LauncherLift extends OpMode {
 

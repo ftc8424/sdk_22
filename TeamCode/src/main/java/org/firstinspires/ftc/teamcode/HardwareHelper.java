@@ -451,6 +451,50 @@ public class HardwareHelper {
         launchMotor.setPower(0);
     }
 
+    /**
+     * Waits for the encoders to be reset on the 4 motors, and returns a boolean as to whether
+     * the motors have reset or not.  Calls waitForReset() with two motor method signature multiple
+     * times to do the actual work and combines the return values to give an overall return of
+     * true only if all four motors were properly reset.
+     *
+     * @param m1    Motor 1 to reset
+     * @param m2    Motor 2 to reset
+     * @param m3    Motor 3 to reset
+     * @param m4    Motor 4 to reset
+     * @param msTimeOut The time to wait, in milliseonds, for a valid reset
+     * @return      Whether the reset was successful or not
+     */
+    public boolean waitForReset(DcMotor m1, DcMotor m2, DcMotor m3, DcMotor m4, long msTimeOut) {
+        boolean resetOk = false;
+
+        resetOk = waitForReset(m1, m2, msTimeOut/2);
+        return resetOk && waitForReset(m3, m4, msTimeOut/2);
+    }
+
+    /**
+     * Waits for the encoders to be reset on the 2 motors and returns a boolean as to whether
+     * the motors have reset or not.  If they haven't reset in the timeOut milliseconds, then
+     * it will return false.  This is the true method that does stuff, the other method with the
+     * 4 motor signature just calls this method multiple times.
+     *
+     * @param m1        Motor 1 to reset
+     * @param m2        Motor 2 to reset
+     * @param msTimeOut   The time to wait, in milliseconds, for a valid reset
+     * @return          Whether the reset was successful or not
+     */
+    public boolean waitForReset(DcMotor m1, DcMotor m2, long msTimeOut) {
+        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int m1Pos = m1.getCurrentPosition();
+        int m2Pos = m2.getCurrentPosition();
+        double stopTime = runtime.milliseconds() + msTimeOut;
+        while ( (m1Pos != 0 || m2Pos != 0) && runtime.milliseconds() < stopTime ) {
+            m1Pos = m1.getCurrentPosition();
+            m2Pos = m2.getCurrentPosition();
+        }
+        return m1Pos == 0 && m2Pos == 0;
+    }
+
     /****************************************************************************************
      * Private methods follow.
      ****************************************************************************************/
@@ -474,48 +518,5 @@ public class HardwareHelper {
             m1Pos = m1.getTargetPosition();
         }
         return m1Pos == target;
-    }
-    /**
-     * Waits for the encoders to be reset on the 4 motors, and returns a boolean as to whether
-     * the motors have reset or not.  Calls waitForReset() with two motor method signature multiple
-     * times to do the actual work and combines the return values to give an overall return of
-     * true only if all four motors were properly reset.
-     *
-     * @param m1    Motor 1 to reset
-     * @param m2    Motor 2 to reset
-     * @param m3    Motor 3 to reset
-     * @param m4    Motor 4 to reset
-     * @param msTimeOut The time to wait, in milliseonds, for a valid reset
-     * @return      Whether the reset was successful or not
-     */
-    private boolean waitForReset(DcMotor m1, DcMotor m2, DcMotor m3, DcMotor m4, long msTimeOut) {
-        boolean resetOk = false;
-
-        resetOk = waitForReset(m1, m2, msTimeOut/2);
-        return resetOk && waitForReset(m3, m4, msTimeOut/2);
-    }
-
-    /**
-     * Waits for the encoders to be reset on the 2 motors and returns a boolean as to whether
-     * the motors have reset or not.  If they haven't reset in the timeOut milliseconds, then
-     * it will return false.  This is the true method that does stuff, the other method with the
-     * 4 motor signature just calls this method multiple times.
-     *
-     * @param m1        Motor 1 to reset
-     * @param m2        Motor 2 to reset
-     * @param msTimeOut   The time to wait, in milliseconds, for a valid reset
-     * @return          Whether the reset was successful or not
-     */
-    private boolean waitForReset(DcMotor m1, DcMotor m2, long msTimeOut) {
-        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int m1Pos = m1.getCurrentPosition();
-        int m2Pos = m2.getCurrentPosition();
-        double stopTime = runtime.milliseconds() + msTimeOut;
-        while ( (m1Pos != 0 || m2Pos != 0) && runtime.milliseconds() < stopTime ) {
-            m1Pos = m1.getCurrentPosition();
-            m2Pos = m2.getCurrentPosition();
-        }
-        return m1Pos == 0 && m2Pos == 0;
     }
 }

@@ -13,7 +13,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.LAUNCHTEST
  * Created by avc on 10/25/2016.
  */
 
-@TeleOp(name="TeleOp: Launcher", group="Iterative Opmode")
+@TeleOp(name="Launcher", group="Tests")
 
 public class TeleOp_Launcher extends OpMode {
 

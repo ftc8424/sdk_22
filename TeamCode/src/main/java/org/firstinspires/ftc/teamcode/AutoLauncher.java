@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
 
 // Created by FTC8424 on 11/16/2016.
-@Autonomous(name = "Auto_Launcher", group = "Sensor")
+@Autonomous(name = "Auto_Launcher", group = "Tests")
 @Disabled
 public class AutoLauncher extends LinearOpMode {
 
