@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.HashMap;
 
@@ -76,10 +77,13 @@ public class EncoderTests extends OpMode {
         motorEncoder.put("RMM-Start", 0);
         motorEncoder.put("RMM-End", 0);
         robot.robot_init(hardwareMap);
-        telemetry.addData("Status", "Initialized and encoders %s reset",
-                robot.waitForReset(robot.leftBackDrive, robot.rightBackDrive,
-                        robot.leftMidDrive, robot.rightMidDrive, 2000)
-                ? "ARE" : "ARE NOT");
+        boolean resetOk =  robot.waitForReset(robot.leftBackDrive, robot.rightBackDrive,
+                robot.leftMidDrive, robot.rightMidDrive, 2000);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftMidDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftMidDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        telemetry.addData("Status", "Initialized and encoders %s reset", resetOk ? "ARE" : "ARE NOT");
     }
 
     /*
@@ -88,7 +92,7 @@ public class EncoderTests extends OpMode {
 
     @Override
     public void init_loop() {
-        telemetry.addData("Status", "Waiting for Play: ", runtime.toString());
+        //telemetry.addData("Status", "Waiting for Play: ", runtime.toString());
     }
 
     /*
@@ -114,7 +118,10 @@ public class EncoderTests extends OpMode {
                     launchPress = runtime.milliseconds();
                     motorState = 1;
                 } else if ( gamepad1.y && launchPress + 10000 < runtime.milliseconds() ) {
-                    robot.normalDrive(this, 1.0, 1.0);
+                    robot.leftBackDrive.setPower(1.0);
+                    robot.leftMidDrive.setPower(1.0);
+                    robot.rightBackDrive.setPower(1.0);
+                    robot.rightMidDrive.setPower(1.0);
                     launchPress = runtime.milliseconds();
                     motorState = 3;
                 }
@@ -154,11 +161,11 @@ public class EncoderTests extends OpMode {
                 if ( launchStart + 10000 < runtime.milliseconds() ) {
                     motorTimes.put("Drives-End", runtime.milliseconds());
                     robot.normalDrive(this, 0.0, 0.0);
-                    motorState = 0;
                     motorEncoder.put("LB-End", robot.leftBackDrive.getCurrentPosition());
                     motorEncoder.put("RB-End", robot.rightBackDrive.getCurrentPosition());
                     motorEncoder.put("LMM-End", robot.leftMidDrive.getCurrentPosition());
                     motorEncoder.put("RMM-End", robot.rightMidDrive.getCurrentPosition());
+                    motorState = 0;
                 }
         }
         telemetry.addData("LM-Runtime:", "%d in %.2f secs",

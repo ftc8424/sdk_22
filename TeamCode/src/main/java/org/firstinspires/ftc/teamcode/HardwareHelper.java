@@ -69,15 +69,18 @@ public class HardwareHelper {
      * Private instance variables
      */
 
-    /* Wheel ratio values for the encoders. */
-    private static final double encoderInch  = 104; //2500.0 / (3 * 3.14169265);
-    private static final double encoderRatio = 0.667; // / 1.33;    // 3" wheels so ratio is 1:1, 4 is 1/1.3
+    /* Wheel ratio values for the encoders (see end of this file for calculations). */
+    private static final int   COUNTS_PER_SECOND_MAX = 2800;  // AndyMark NeveRest 40:1/20:1
+    private static final double COUNTS_PER_MOTOR_REV = 1120;  // AndyMark NeveRest 40:1 CPR
+    private static final double DRIVE_GEAR_REDUCTION = 1.0;   // No gears, just motor shafts
+    private static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth
+    private static final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+                                                   (WHEEL_DIAMETER_INCHES * 3.14159265);
 
+    /* Other privates for things such as the runtime, the hardware Map, etc. */
     private RobotType robotType;
     private HardwareMap hwMap = null;
     private ElapsedTime runtime = new ElapsedTime();
-
-    /* Constructor */
 
     /**
      * Constructor for HardwareHelper, pass in the enumerated type RobotType based on the type of
@@ -152,7 +155,7 @@ public class HardwareHelper {
             launchMotor.resetDeviceConfigurationForOpMode();
             launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            launchMotor.setMaxSpeed(3000);
+            launchMotor.setMaxSpeed(COUNTS_PER_SECOND_MAX);
             launchMotor.setDirection(DcMotor.Direction.FORWARD);
             launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
@@ -227,14 +230,14 @@ public class HardwareHelper {
          * Determine new target position and pass to motor controller
          */
         if ( robotType == FULLAUTO ) {
-            newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int) Math.round(leftInches * encoderInch * encoderRatio);
-            newRightMidTarget = rightMidDrive.getCurrentPosition() + (int) Math.round(rightInches * encoderInch * encoderRatio);
+            newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
+            newRightMidTarget = rightMidDrive.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
         } else {
             newLeftMidTarget = 0;
             newRightMidTarget = 0;
         }
-        newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch * encoderRatio);
-        newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch * encoderRatio);
+        newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
+        newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
         caller.telemetry.addLine("encoderDrive-MID:")
                 .addData("Left Tgt POS: ", newLeftMidTarget)
                 .addData("Right Tgt POS:" ,  newRightMidTarget);
@@ -520,3 +523,29 @@ public class HardwareHelper {
         return m1Pos == target;
     }
 }
+
+/************************************************************************************************
+ * For encoder math, here is the information from AndyMark's web site, so it will be key in
+ * setting up the setMaxSpeed() when in PID mode, as well as when figuring out the counts per
+ * inch mode.
+ *
+ *    NeveRest 40:1 Motors:
+ *    ---------------------
+ *          7 pulses per revolution of hall effect encoder, and a 40:1 gearbox, so 7*40 ==
+ *        280 pulses per revolution of the encoder, there are 4 revolutions of encoder to output
+ *       1120 pulses per revolution of the OUTPUT SHAFT (e.g., the motor shaft)
+ *        150 revolutions per minute of output shaft (RPM), so (1120 * 150) / 60 ==
+ *       2800 pulses per second is the max Speed setting of the encoders on this motor
+ *
+ *    NeveRest 20:1 Motors:
+ *    ----------------------
+ *          7 pulses per revolution of hall effect encoder, and a 20:1 gearbox, so 7*20 ==
+ *        140 pulses per revolution of the encoder, there are 4 revolutions of encoder to output
+ *        560 pulses per revolution of the OUTPUT SHAFT (e.g., the motor shaft)
+ *        300 revolutions per minute of output shaft (RPM), so (560 * 300) / 60 ==
+ *       2800 pulses per second is the max Speed setting of the encoders on this motor
+ *
+ * So, for these two motors, the encoder COUNTS_PER_MOTOR_REV above would be 1,120 for the 40:1
+ * and 560 for the 20:1, and the COUNTS_PER_SECOND_MAX above would be 2800 for both.
+ *
+ *************************************************************************************************/
