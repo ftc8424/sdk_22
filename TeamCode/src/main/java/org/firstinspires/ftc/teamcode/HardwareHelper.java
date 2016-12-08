@@ -238,13 +238,13 @@ public class HardwareHelper {
         }
         newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
         newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
-        caller.telemetry.addLine("encoderDrive-MID:")
-                .addData("Left Tgt POS: ", newLeftMidTarget)
-                .addData("Right Tgt POS:" ,  newRightMidTarget);
-        caller.telemetry.addLine("EncoderDrive-BCK:")
-                .addData("Left Tgt POS: ", newLeftBackTarget)
-                .addData("Right Tgt POS: ", newRightBackTarget);
-        caller.telemetry.update();
+//        caller.telemetry.addLine("encoderDrive-MID:")
+//                .addData("Left Tgt POS: ", newLeftMidTarget)
+//                .addData("Right Tgt POS:" ,  newRightMidTarget);
+//        caller.telemetry.addLine("EncoderDrive-BCK:")
+//                .addData("Left Tgt POS: ", newLeftBackTarget)
+//                .addData("Right Tgt POS: ", newRightBackTarget);
+//        caller.telemetry.update();
 
         boolean lmEncoderSet = false;
         boolean rmEncoderSet = false;
@@ -260,12 +260,12 @@ public class HardwareHelper {
             lmEncoderSet = true;
             rmEncoderSet = true;
         }
-        caller.telemetry.addLine("EncoderSet:")
-                .addData("LB: ", lbEncoderSet)
-                .addData("RB: ", rbEncoderSet)
-                .addData("LM: ", lmEncoderSet)
-                .addData("RM: ", rmEncoderSet);
-        caller.telemetry.update();
+//        caller.telemetry.addLine("EncoderSet:")
+//                .addData("LB: ", lbEncoderSet)
+//                .addData("RB: ", rbEncoderSet)
+//                .addData("LM: ", lmEncoderSet)
+//                .addData("RM: ", rmEncoderSet);
+//        caller.telemetry.update();
         if ( ! (lmEncoderSet && lbEncoderSet && rmEncoderSet && rbEncoderSet) ) {
             caller.telemetry.addLine("Encoders CANNOT be set, aborting OpMode");
             caller.telemetry.update();
@@ -275,9 +275,9 @@ public class HardwareHelper {
 
         // reset the timeout time and start motion.
 
-        caller.telemetry.addLine("Encoder Drive: ")
-                .addData("PowerSet: ", "%.4f", Math.abs(speed));
-        caller.telemetry.update();
+//        caller.telemetry.addLine("Encoder Drive: ")
+//                .addData("PowerSet: ", "%.4f", Math.abs(speed));
+//        caller.telemetry.update();
 
         // keep looping while we are still active, and there is time left, and motors haven't made position.
         boolean isBusy;
@@ -293,11 +293,11 @@ public class HardwareHelper {
                 rightMidDrive.setPower(Math.abs(speed));
                 leftMidDrive.setPower(Math.abs(speed));
             }
-            caller.telemetry.addLine("Drives-TO ")
-                    .addData("POS ", "%7d : %7d : %7d : %7d",
-                            newLeftMidTarget, newRightMidTarget,
-                            newLeftBackTarget, newRightBackTarget);
-            caller.telemetry.update();
+//            caller.telemetry.addLine("Drives-TO ")
+//                    .addData("POS ", "%7d : %7d : %7d : %7d",
+//                            newLeftMidTarget, newRightMidTarget,
+//                            newLeftBackTarget, newRightBackTarget);
+//            caller.telemetry.update();
             lbCurPos = leftBackDrive.getCurrentPosition();
             rbCurPos = rightBackDrive.getCurrentPosition();
             if ( robotType == FULLAUTO ) {
@@ -307,10 +307,10 @@ public class HardwareHelper {
                 lmCurPos = Integer.MAX_VALUE;
                 rmCurPos = Integer.MAX_VALUE;
             }
-            caller.telemetry.addLine("Drives-CUR ")
-                    .addData("POS ", "%7d : %7d : %7d : %7d",
-                            lmCurPos, rmCurPos, lbCurPos, rbCurPos);
-            caller.telemetry.update();
+//            caller.telemetry.addLine("Drives-CUR ")
+//                    .addData("POS ", "%7d : %7d : %7d : %7d",
+//                            lmCurPos, rmCurPos, lbCurPos, rbCurPos);
+//            caller.telemetry.update();
             isBusy = (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPos - newRightBackTarget) >= 5);
             if ( robotType == FULLAUTO )
                 isBusy = isBusy && (Math.abs(lmCurPos - newLeftMidTarget) >= 5) && (Math.abs(rmCurPos - newRightMidTarget) >= 5);

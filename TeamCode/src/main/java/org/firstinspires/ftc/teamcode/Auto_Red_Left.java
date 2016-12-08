@@ -22,7 +22,7 @@ public class Auto_Red_Left extends LinearOpMode {
         // bPrevState and bCurrState represent the previous and current state of the button.
         boolean bPrevState = false;
         boolean bCurrState = false;
-        double  driveSpeed = .5;
+        double  driveSpeed = .75;
 
 
         robot.robot_init(hardwareMap);
@@ -38,30 +38,29 @@ public class Auto_Red_Left extends LinearOpMode {
         // Shoot the particles as the first thing
         robot.autoLauncher(this);
         //forwards 18 in
-        robot.encoderDrive(this, driveSpeed, 18, 18, 3);
+        robot.encoderDrive(this, driveSpeed, -23, -23, 3);
         //turning left to beacon
-        robot.encoderDrive(this, driveSpeed, -6, 6, 5);
+        robot.encoderDrive(this, driveSpeed, 18, -18, 5);
         //towards beacon
-        robot.encoderDrive(this, driveSpeed, 29, 29, 10);
+        robot.encoderDrive(this, driveSpeed, 50, 50, 10);
         //aligning towards beacon
         robot.encoderDrive(this, driveSpeed, -5 , 5, 2);
         //towards the beacon
-        robot.encoderDrive(this, driveSpeed, 10, 10, 10);
+        robot.encoderDrive(this, driveSpeed, 7, 7, 10);
 
         //Pressing blue button, when we are blue alliance
         String button;
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
-           robot.rightPush.setPosition(robot.lpushDeploy);
+           robot.rightPush.setPosition(robot.rpushDeploy);
             button = "Right/Blue";
         } else if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
-            robot.leftPush.setPosition(robot.rpushDeploy);
+            robot.leftPush.setPosition(robot.lpushDeploy);
             button = "Left/Red";
         } else {
             button = String.format("Not Pressing: Blue %d / Red %d",
                     robot.color.blue(), robot.color.red());
         }
-        telemetry.addLine("ColorDecision:")
-                .addData("Pressing: %s", button);
+        telemetry.addData("Pressing: %s", button);
         telemetry.update();
         sleep(1000);
         if ( !opModeIsActive() ) return;
@@ -72,28 +71,27 @@ public class Auto_Red_Left extends LinearOpMode {
         //backing up from beacon 1
         robot.encoderDrive(this, driveSpeed, -7, -7, 10);
         //Turning right towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 10, -10, 10);
+        robot.encoderDrive(this, driveSpeed, 13, -13, 10);
         //Driving towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 48, 48, 10);
+        robot.encoderDrive(this, driveSpeed, 43, 43, 10);
         //Turning left at Beacon 2
-        robot.encoderDrive(this, driveSpeed, -10, 10, 10);
+        robot.encoderDrive(this, driveSpeed, -13, 13, 10);
         //Driving Towards Beacon 2
-        robot.encoderDrive(this, driveSpeed, 7, 7, 10);
+        robot.encoderDrive(this, driveSpeed, 9, 9, 10);
 
         //pressing beacon 2 when we are blue alliance
         button = "Not Pressing";
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
-            robot.rightPush.setPosition(robot.lpushDeploy);
+            robot.rightPush.setPosition(robot.rpushDeploy);
             button = "Right/Blue";
         } else if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
-            robot.leftPush.setPosition(robot.rpushDeploy);
+            robot.leftPush.setPosition(robot.lpushDeploy);
             button = "Left/Red";
         } else {
             button = String.format("Not Pressing: Blue %d / Red %d",
                     robot.color.blue(), robot.color.red());
         }
-        telemetry.addLine("ColorDecision")
-                .addData("Pressing: %s", button);
+        telemetry.addData("Pressing: %s", button);
         telemetry.update();
         sleep(1000);
         if ( !opModeIsActive() ) return;
