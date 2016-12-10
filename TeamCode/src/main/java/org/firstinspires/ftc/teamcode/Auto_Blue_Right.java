@@ -36,17 +36,17 @@ public class Auto_Blue_Right extends LinearOpMode {
         waitForStart();
 
         // Shoot the particles as the first thing
-        robot.autoLauncher(this);
+        //robot.autoLauncher(this);
         //forwards 18 in
         robot.encoderDrive(this, driveSpeed, -23, -23, 3);
         //turning left to beacon
         robot.encoderDrive(this, driveSpeed, -18, 18, 5);
         //towards beacon
-        robot.encoderDrive(this, driveSpeed, 50, 50, 10);
+        robot.encoderDrive(this, driveSpeed, 38, 38, 10);
         //aligning towards beacon
-        robot.encoderDrive(this, driveSpeed, 5 , -5, 2);
+        robot.encoderDrive(this, driveSpeed, 6 , -6, 2);
         //towards the beacon
-        robot.encoderDrive(this, driveSpeed, 7, 7, 10);
+        robot.encoderDrive(this, driveSpeed, 21, 21, 10);
 
         //Pressing blue button, when we are blue alliance
         String button;
@@ -91,6 +91,11 @@ public class Auto_Blue_Right extends LinearOpMode {
             button = String.format("Not Pressing: Blue %d / Red %d",
                     robot.color.blue(), robot.color.red());
         }
+
+        robot.encoderDrive(this, driveSpeed, -7, -7, 10);
+        robot.encoderDrive(this, driveSpeed, -5, 5, 10);
+        robot.encoderDrive(this, driveSpeed, -53, -53, 10);
+
         telemetry.addData("Pressing: %s", button);
         telemetry.update();
         sleep(1000);

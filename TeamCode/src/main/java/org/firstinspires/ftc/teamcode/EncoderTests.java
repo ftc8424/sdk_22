@@ -83,6 +83,7 @@ public class EncoderTests extends OpMode {
         robot.leftMidDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftMidDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.launchMotor.setMaxSpeed(3000);
         telemetry.addData("Status", "Initialized and encoders %s reset", resetOk ? "ARE" : "ARE NOT");
     }
 
@@ -168,7 +169,8 @@ public class EncoderTests extends OpMode {
                     motorState = 0;
                 }
         }
-        telemetry.addData("LM-Runtime:", "%d in %.2f secs",
+        telemetry.addData("LM-Power:", "%.2f", robot.launchMotor.getPower())
+                .addData("LM-Runtime:", "%d in %.2f secs",
                         motorEncoder.get("LM-End") - motorEncoder.get("LM-Start"),
                         (motorTimes.get("LM-End") - motorTimes.get("LM-Start")) / 1000.0)
                 .addData("Drives Runtime:", "%.2f secs",

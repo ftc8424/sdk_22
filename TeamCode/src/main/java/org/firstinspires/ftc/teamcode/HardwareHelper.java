@@ -58,6 +58,9 @@ public class HardwareHelper {
     public static final double rpushDeploy = 1;
     public static final double launchliftStart = .75;
     public static final double launchliftDeploy = 0.1;
+    private static double prevLStime = 0;
+    private static int prevLSEncoder = 0;
+
 
 
     /* Use this when creating the constructor, to state the type of robot we're using. */
@@ -76,6 +79,7 @@ public class HardwareHelper {
     private static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth
     private static final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                    (WHEEL_DIAMETER_INCHES * 3.14159265);
+    private static final int    COUNTS_PER_LAUNCHER  = 1060;  // AndyMark NeveRest 20:1, ideal
 
     /* Other privates for things such as the runtime, the hardware Map, etc. */
     private RobotType robotType;
@@ -113,12 +117,14 @@ public class HardwareHelper {
     public void robot_init(HardwareMap hwMap) {
         this.hwMap = hwMap;
 
-        /* Set the drive motors in the map */
+        prevLStime = 0;
+        prevLSEncoder = 0;
+         /* Set the drive motors in the map */
         if ( robotType == TROLLBOT || robotType == FULLTELEOP || robotType == FULLAUTO || robotType == AUTOTEST ) {
             leftBackDrive = hwMap.dcMotor.get(cfgLBckDrive);
             rightBackDrive = hwMap.dcMotor.get(cfgRtBckDrive);
             rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-            if ( robotType == FULLAUTO || robotType == FULLTELEOP || robotType == TROLLBOT ) {
+            if ( robotType == FULLAUTO || robotType == FULLTELEOP ) {
                 leftMidDrive = hwMap.dcMotor.get(cfgLMidDrive);
                 rightMidDrive = hwMap.dcMotor.get(cfgRMidDrive);
                 rightMidDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -345,11 +351,11 @@ public class HardwareHelper {
     public void normalDrive (OpMode caller, double leftPower, double rightPower) {
         leftBackDrive.setPower(leftPower);
         rightBackDrive.setPower(rightPower);
-        if ( robotType == FULLTELEOP || robotType == TROLLBOT ) {
+        if ( robotType == FULLTELEOP ) {
             leftMidDrive.setPower(leftPower);
             rightMidDrive.setPower(rightPower);
         }
-        caller.telemetry.addData("normalDrive:", "Power set to L:%.2f, R:%.2f", leftPower, rightPower);
+        caller.telemetry.addData("normalDrive:", "Power set to L:%.2f, R:%.2f", leftBackDrive.getPower(), rightBackDrive.getPower());
     }
 
     /**
@@ -369,20 +375,27 @@ public class HardwareHelper {
      */
     public double startLauncher() {
         double batteryVoltage = getVoltage();
-        double power = 0.0;
-
-        if ( batteryVoltage < 12.7 ) {
-            power = 1.0;
-        }else if ( batteryVoltage < 12.8 ) {
-            power = 0.90;
-        } else if ( batteryVoltage < 12.9 ) {
-            power = 0.85;
-        } else if ( batteryVoltage < 13.0 ) {
-            power = 0.75;
-        } else {
-            power = 0.65;       // Battery is pretty high, so we need to adjust power
-        }
-        launchMotor.setPower(power);
+//        double power = 0.0;
+//
+//        if ( batteryVoltage < 11.4 ) {
+//            power = 1.0;
+//        }
+//        else if (batteryVoltage < 12){
+//            power = 0.9;
+//        }
+//        else if (batteryVoltage < 12.3){
+//            power = 0.85;
+//        }
+//        else if ( batteryVoltage < 12.8 ) {
+//            power = 0.80;
+//        } else if ( batteryVoltage < 12.9 ) {
+//            power = 0.75;
+//        } else if ( batteryVoltage < 13.0 ) {
+//            power = 0.70;
+//        } else {
+//            power = 0.60;       // Battery is pretty high, so we need to adjust power
+//        }
+        launchMotor.setPower(0.65);
         return batteryVoltage;
     }
 
@@ -407,19 +420,28 @@ public class HardwareHelper {
         caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
                 volts, launchMotor.getPower());
         caller.telemetry.update();
-
-        long sleepTime;
-        if ( volts < 12.4 )
-                sleepTime = 2500;
-        else if ( volts < 12.6 )
-                sleepTime = 2000;
-        else if ( volts < 12.8 )
-                sleepTime = 1900;
-        else
-            sleepTime = 1750;
-        caller.telemetry.addData("Launch Motor", "Waiting %.2f Secs to spin-up", sleepTime / 1000.0);
-        caller.telemetry.update();
-        caller.sleep(sleepTime);
+        int speed = adjustLaunchSpeed(caller);
+        while (caller.opModeIsActive() && speed != 0) {
+            if ( speed == -1 ) {
+                launchMotor.setPower(launchMotor.getPower() + 0.05);
+            } else if ( speed == 1 && launchMotor.getPower() > 0.2 ){
+                launchMotor.setPower(launchMotor.getPower() - 0.05);
+            }
+            speed = adjustLaunchSpeed(caller);
+        }
+            ;
+//        long sleepTime;
+//        if ( volts < 12.4 )
+//                sleepTime = 2500;
+//        else if ( volts < 12.6 )
+//                sleepTime = 2000;
+//        else if ( volts < 12.8 )
+//                sleepTime = 1900;
+//        else
+//            sleepTime = 1750;
+//        caller.telemetry.addData("Launch Motor", "Waiting %.2f Secs to spin-up", sleepTime / 1000.0);
+//        caller.telemetry.update();
+//        caller.sleep(sleepTime);
         caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
                 volts, launchMotor.getPower());
         caller.telemetry.update();
@@ -454,19 +476,64 @@ public class HardwareHelper {
         launchMotor.setPower(0);
     }
 
-    /**
-     * Waits for the encoders to be reset on the 4 motors, and returns a boolean as to whether
-     * the motors have reset or not.  Calls waitForReset() with two motor method signature multiple
-     * times to do the actual work and combines the return values to give an overall return of
-     * true only if all four motors were properly reset.
+   /**
+     * Adjust the speed of the launch motor to get what we want out of the launcher before
+     * we start launching.  We will return true if we are within our tolerance of where we
+     * want to be, which is approximately 1,060 encoder ticks per second.
      *
-     * @param m1    Motor 1 to reset
-     * @param m2    Motor 2 to reset
-     * @param m3    Motor 3 to reset
-     * @param m4    Motor 4 to reset
-     * @param msTimeOut The time to wait, in milliseonds, for a valid reset
-     * @return      Whether the reset was successful or not
+     * @return
+     * @throws InterruptedException
      */
+    static int times = 0;
+    public int adjustLaunchSpeed(LinearOpMode caller) throws InterruptedException {
+
+        if (launchMotor.getPower() == 0) {
+            prevLStime = 0;
+            prevLSEncoder = 0;
+            return -10;
+        }
+        double currLStime = runtime.milliseconds();
+        int currentLSEncoder = launchMotor.getCurrentPosition();
+        if(prevLStime == 0){
+            prevLStime = currLStime;
+            prevLSEncoder = currentLSEncoder;
+            return -10;
+        }
+        double elapsed = currLStime - prevLStime;
+        if ( elapsed < 2500 ) {
+            return -10;
+        }
+        double encoderdif = Math.abs(currentLSEncoder) - Math.abs(prevLSEncoder);
+        long TicksAvg = Math.round(encoderdif / (elapsed/1000));
+        caller.telemetry.addData("Times Through", ++times);
+        caller.telemetry.addData("ENCODER DIFF:", encoderdif);
+        caller.telemetry.addData("TicksAvg:", TicksAvg);
+        caller.telemetry.addData("Power:", "%.2f", launchMotor.getPower());
+        caller.telemetry.addData("Returning: ", TicksAvg > COUNTS_PER_LAUNCHER ? 1 : -1);
+        caller.telemetry.update();
+        if ( Math.abs(TicksAvg - COUNTS_PER_LAUNCHER) <= 5 ) {
+            return 0;
+        } else {
+            return TicksAvg > COUNTS_PER_LAUNCHER ? 1 : -1;
+        }
+    }
+
+
+
+
+        /**
+         * Waits for the encoders to be reset on the 4 motors, and returns a boolean as to whether
+         * the motors have reset or not.  Calls waitForReset() with two motor method signature multiple
+         * times to do the actual work and combines the return values to give an overall return of
+         * true only if all four motors were properly reset.
+         *
+         * @param m1    Motor 1 to reset
+         * @param m2    Motor 2 to reset
+         * @param m3    Motor 3 to reset
+         * @param m4    Motor 4 to reset
+         * @param msTimeOut The time to wait, in milliseonds, for a valid reset
+         * @return      Whether the reset was successful or not
+         */
     public boolean waitForReset(DcMotor m1, DcMotor m2, DcMotor m3, DcMotor m4, long msTimeOut) {
         boolean resetOk = false;
 
@@ -518,6 +585,7 @@ public class HardwareHelper {
         int m1Pos = m1.getTargetPosition();
         double stopTime = runtime.milliseconds() + timeOut;
         while ( caller.opModeIsActive() && m1Pos != target && runtime.milliseconds() < stopTime ) {
+            m1.setTargetPosition(target);
             m1Pos = m1.getTargetPosition();
         }
         return m1Pos == target;
