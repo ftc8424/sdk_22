@@ -60,6 +60,11 @@ public class HardwareHelper {
     public static final double launchliftDeploy = 0.1;
     private static double prevLStime = 0;
     private static int prevLSEncoder = 0;
+    private static final int Samplesize = 10;
+    private static int[] encTicks = new int[Samplesize];
+    private static double[] encTime = new double [Samplesize];
+    private static int encIndex = 0;
+
 
 
 
@@ -85,6 +90,10 @@ public class HardwareHelper {
     private RobotType robotType;
     private HardwareMap hwMap = null;
     private ElapsedTime runtime = new ElapsedTime();
+
+
+
+
 
     /**
      * Constructor for HardwareHelper, pass in the enumerated type RobotType based on the type of
@@ -224,6 +233,8 @@ public class HardwareHelper {
 
         if ( !caller.opModeIsActive() )
             return;
+
+
 
         leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -399,6 +410,24 @@ public class HardwareHelper {
         return batteryVoltage;
     }
 
+    private boolean getTicks() {
+        int ticks = Math.abs(launchMotor.getCurrentPosition());
+        double  time = runtime.milliseconds();
+        int last = (encIndex == 0) ? Samplesize-1 : encIndex - 1;
+
+        if (encTicks[last] - ticks == 0 )
+            return false;
+
+        encTicks[encIndex] = ticks - encTicks[last] ;
+        encTime[encIndex] = time ;
+
+        encIndex = (encIndex == Samplesize-1) ? 0 : encIndex + 1;
+        return true;
+
+
+
+}
+
     /**
      * Run the launcher to shoot two balls in Autonomous.  Written by Kim Tan and Mohana Chavan.
      * It launches the motor, allows 1.75 seconds to get up to speed, shoots a ball, allows another
@@ -409,25 +438,22 @@ public class HardwareHelper {
      * automatically set based on the voltage of the main battery.  It also automatically adjusts
      * the wait time before launching based on the voltage of the battery.
      *
-     * @param caller  The "this" from caller, so I can run telemetry
+     * @param caller  he "this" from caller, so I can run telemetry
      * @throws InterruptedException     If the sleep call is interrupted
      */
     public void autoLauncher(LinearOpMode caller) throws InterruptedException {
 
         if ( !caller.opModeIsActive() ) return;
 
+
         double volts = startLauncher();
-        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
-                volts, launchMotor.getPower());
-        caller.telemetry.update();
-        int speed = adjustLaunchSpeed(caller);
-        while (caller.opModeIsActive() && speed != 0) {
-            if ( speed == -1 ) {
-                launchMotor.setPower(launchMotor.getPower() + 0.05);
-            } else if ( speed == 1 && launchMotor.getPower() > 0.2 ){
-                launchMotor.setPower(launchMotor.getPower() - 0.05);
-            }
-            speed = adjustLaunchSpeed(caller);
+//        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
+//                volts, launchMotor.getPower());
+//        caller.telemetry.update();
+        while (caller.opModeIsActive() &&  ! adjustLaunchSpeed(caller)) {
+            caller.telemetry.addData("Launch Motor", " Power at %.2f", launchMotor.getPower());
+            caller.telemetry.update();
+
         }
             ;
 //        long sleepTime;
@@ -442,9 +468,9 @@ public class HardwareHelper {
 //        caller.telemetry.addData("Launch Motor", "Waiting %.2f Secs to spin-up", sleepTime / 1000.0);
 //        caller.telemetry.update();
 //        caller.sleep(sleepTime);
-        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
-                volts, launchMotor.getPower());
-        caller.telemetry.update();
+//        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
+//                volts, launchMotor.getPower());
+//        caller.telemetry.update();
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);      // Shoot the first ball
         caller.sleep(500);
@@ -455,24 +481,17 @@ public class HardwareHelper {
          * Before shoot the second, let the power get back up to speed
          */
 
-        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
-                volts, launchMotor.getPower());
-        caller.telemetry.update();
-        caller.sleep(750);
-        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
-                volts, launchMotor.getPower());
-        caller.telemetry.update();
+
+        while (caller.opModeIsActive() &&  ! adjustLaunchSpeed(caller)) {
+            caller.telemetry.addData("Launch Motor", " Power at %.2f", launchMotor.getPower());
+            caller.telemetry.update();
+        }
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);
-        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
-                volts, launchMotor.getPower());
-        caller.telemetry.update();
         caller.sleep(500);
-        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
-                volts, launchMotor.getPower());
-        caller.telemetry.update();
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftStart);
+
         launchMotor.setPower(0);
     }
 
@@ -484,39 +503,33 @@ public class HardwareHelper {
      * @return
      * @throws InterruptedException
      */
-    static int times = 0;
-    public int adjustLaunchSpeed(LinearOpMode caller) throws InterruptedException {
+    public boolean adjustLaunchSpeed(LinearOpMode caller) throws InterruptedException {
 
-        if (launchMotor.getPower() == 0) {
-            prevLStime = 0;
-            prevLSEncoder = 0;
-            return -10;
+        if (!getTicks())
+            return false;
+        int total = 0;
+        for (int i = 0; i < Samplesize; i++) {
+            total = total + encTicks[i];
         }
-        double currLStime = runtime.milliseconds();
-        int currentLSEncoder = launchMotor.getCurrentPosition();
-        if(prevLStime == 0){
-            prevLStime = currLStime;
-            prevLSEncoder = currentLSEncoder;
-            return -10;
-        }
-        double elapsed = currLStime - prevLStime;
-        if ( elapsed < 2500 ) {
-            return -10;
-        }
-        double encoderdif = Math.abs(currentLSEncoder) - Math.abs(prevLSEncoder);
-        long TicksAvg = Math.round(encoderdif / (elapsed/1000));
-        caller.telemetry.addData("Times Through", ++times);
-        caller.telemetry.addData("ENCODER DIFF:", encoderdif);
-        caller.telemetry.addData("TicksAvg:", TicksAvg);
-        caller.telemetry.addData("Power:", "%.2f", launchMotor.getPower());
-        caller.telemetry.addData("Returning: ", TicksAvg > COUNTS_PER_LAUNCHER ? 1 : -1);
-        caller.telemetry.update();
-        if ( Math.abs(TicksAvg - COUNTS_PER_LAUNCHER) <= 5 ) {
-            return 0;
+
+        int TicksAvg = total / Samplesize;
+        int last = (encIndex == 0) ? Samplesize-1 : encIndex - 1;
+
+        if (Math.abs(encTicks[last] - TicksAvg) <= 100) {
+            if (Math.abs((TicksAvg - COUNTS_PER_LAUNCHER)) <= 100) {
+                return true;
+            } else if (TicksAvg > COUNTS_PER_LAUNCHER) {
+                launchMotor.setPower(launchMotor.getPower() - 0.05);
+                return false;
+            } else {
+                launchMotor.setPower(launchMotor.getPower() + 0.05);
+                return false;
+            }
         } else {
-            return TicksAvg > COUNTS_PER_LAUNCHER ? 1 : -1;
+            return false;
         }
     }
+
 
 
 
