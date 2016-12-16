@@ -43,23 +43,20 @@ public class Auto_Blue_Left extends LinearOpMode {
 
         //Autonomous starting on the 4th square from the red corner vortex
         //Moving forward to shoot at vortex
-        robot.encoderDrive(this, 0.5, -20, -20, 5);
-        //shooting 2 balls in to vortex
-        robot.autoLauncher(this);
-        //Moving forward to center itself inside of the nearest mat
-        robot.encoderDrive(this, driveSpeed, -8, -8, 5);
-        //45 degree turn aligning itself to
-        robot.encoderDrive(this, driveSpeed, 6, -6, 5);
-        //Driving towards the corner vortex
-        robot.encoderDrive(this, 0.6, -30, -30, 3);
+        robot.encoderDrive(this, 0.5, -10, -10, 5);
+        robot.encoderDrive(this, 0.5, 6, -6, 5);
+        robot.encoderDrive(this, 0.5, -19, -19, 5);
+        robot.encoderDrive(this, 0.5, 6, -6, 5);
+
+        robot.encoderDrive(this, 0.5, -30, -30, 3);
         // 135 degree turn to start to line up for beacon press
         robot.encoderDrive(this, driveSpeed, 19.5, -19.5, 10);
         //Moving forwards toward beacon
-        robot.encoderDrive(this, driveSpeed, 36, 36, 6);
+        robot.encoderDrive(this, driveSpeed, 39, 39, 6);
         //Turning to align at
-        robot.encoderDrive(this, driveSpeed, 5.5, -5.5, 10);
+        robot.encoderDrive(this, driveSpeed, 4.5, -4.5, 10);
         //Moving towards beacon
-        robot.encoderDrive(this, driveSpeed, 15, 15, 10);
+        robot.encoderDrive(this, driveSpeed, 12, 12, 10);
 
 
         //Pressing blue button, when we are blue alliance
@@ -81,16 +78,57 @@ public class Auto_Blue_Left extends LinearOpMode {
 
         robot.leftPush.setPosition(robot.lpushStart);
         robot.rightPush.setPosition(robot.rpushStart);
+
+
+
+
+//        robot.encoderDrive(this, 0.5, -20, -20, 5);
+//        //shooting 2 balls in to vortex
+//        //robot.autoLauncher(this);
+//        //Moving forward to center itself inside of the nearest mat
+////        robot.encoderDrive(this, 0.65, -8, -8, 5);
+//        //45 degree turn aligning itself to
+//        robot.encoderDrive(this, driveSpeed, 6, -6, 5);
+//        //Driving towards the corner vortex
+//        robot.encoderDrive(this, driveSpeed, -30, -30, 3);
+//        // 135 degree turn to start to line up for beacon press
+//        robot.encoderDrive(this, driveSpeed, 19.5, -19.5, 10);
+//        //Moving forwards toward beacon
+//        robot.encoderDrive(this, driveSpeed, 36, 36, 6);
+//        //Turning to align at
+//        robot.encoderDrive(this, driveSpeed, 5.5, -5.5, 10);
+//        //Moving towards beacon
+//        robot.encoderDrive(this, driveSpeed, 15, 15, 10);
+//
+//
+//        //Pressing blue button, when we are blue alliance
+//        if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
+//            robot.leftPush.setPosition(robot.lpushDeploy);
+//            button = "Left/Blue";
+//        } else if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
+//            robot.rightPush.setPosition(robot.rpushDeploy);
+//            button = "Right/Blue";
+//        } else {
+//            button = String.format("Not Pressing: Blue %d / Red %d",
+//                    robot.color.blue(), robot.color.red());
+//        }
+//        telemetry.addData("Pressing: %s", button);
+//        telemetry.update();
+//        sleep(1000);
+//        if ( !opModeIsActive() ) return;
+//
+//        robot.leftPush.setPosition(robot.lpushStart);
+//        robot.rightPush.setPosition(robot.rpushStart);
         //backing up from beacon 1
         robot.encoderDrive(this, 0.5, -7, -7, 10);
         //Turning right towards beacon 2
-        robot.encoderDrive(this, driveSpeed, -12.5, 12.5, 10);
+        robot.encoderDrive(this, driveSpeed, -12, 12, 10);
         //Driving towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 46, 46, 10);
+        robot.encoderDrive(this, driveSpeed, 44, 44, 10);
         //Turning left at Beacon 2
-        robot.encoderDrive(this, driveSpeed, 12.5, -12.5, 10);
+        robot.encoderDrive(this, driveSpeed, 13, -13, 10);
         //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, 10, 10, 10);
+        robot.encoderDrive(this, driveSpeed, 9, 9, 10);
 
 
         //Pressing blue button, when we are blue alliance
