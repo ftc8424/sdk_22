@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -58,13 +59,13 @@ public class HardwareHelper {
     public static final double rpushDeploy = 1;
     public static final double launchliftStart = .75;
     public static final double launchliftDeploy = 0.1;
-    private static double prevLStime = 0;
-    private static int prevLSEncoder = 0;
-    private static final int Samplesize = 10;
-    private static int[] encTicks = new int[Samplesize];
-    private static double[] encTime = new double [Samplesize];
-    private static int encIndex = 0;
-
+    private static final int Samplesize = 250;
+    private int[] encTicks = new int[Samplesize];
+    private double[] encTime = new double [Samplesize];
+    private int encIndex = 0;
+    private double launchStarted = 0;
+    private int launchEncoderStart = 0;
+    private boolean isLauncherRunning = false;
 
 
 
@@ -90,8 +91,6 @@ public class HardwareHelper {
     private RobotType robotType;
     private HardwareMap hwMap = null;
     private ElapsedTime runtime = new ElapsedTime();
-
-
 
 
 
@@ -126,8 +125,11 @@ public class HardwareHelper {
     public void robot_init(HardwareMap hwMap) {
         this.hwMap = hwMap;
 
-        prevLStime = 0;
-        prevLSEncoder = 0;
+        isLauncherRunning = false;
+        initLaunchArray();
+        prevEncoderSaved = 0;
+        prevTimeSaved = 0;
+
          /* Set the drive motors in the map */
         if ( robotType == TROLLBOT || robotType == FULLTELEOP || robotType == FULLAUTO || robotType == AUTOTEST ) {
             leftBackDrive = hwMap.dcMotor.get(cfgLBckDrive);
@@ -378,55 +380,35 @@ public class HardwareHelper {
         return hwMap.voltageSensor.iterator().next().getVoltage();
     }
 
+    /*
+     * Variables that are only used in the launcher stabilization methods.
+     */
+    private int prevEncoderSaved = 0;
+    private double prevTimeSaved = 0;
+
     /**
-     * Start the launch motor.  Set the power based on the current voltage of the battery and
-     * return that voltage to the caller.
+     * Stop the launcher, and reset any variables as part of the launcher
+     */
+    public void stopLauncher() {
+        launchMotor.setPower(0.0);
+        isLauncherRunning = false;
+    }
+
+    /**
+     * Start the launch motor and reset the variables for the automatic launch stabilization.
+     * Grab the voltage of the battery and return that voltage to the caller.
      *
      * @return  the current voltage of the 12V main battery
      */
     public double startLauncher() {
         double batteryVoltage = getVoltage();
-//        double power = 0.0;
-//
-//        if ( batteryVoltage < 11.4 ) {
-//            power = 1.0;
-//        }
-//        else if (batteryVoltage < 12){
-//            power = 0.9;
-//        }
-//        else if (batteryVoltage < 12.3){
-//            power = 0.85;
-//        }
-//        else if ( batteryVoltage < 12.8 ) {
-//            power = 0.80;
-//        } else if ( batteryVoltage < 12.9 ) {
-//            power = 0.75;
-//        } else if ( batteryVoltage < 13.0 ) {
-//            power = 0.70;
-//        } else {
-//            power = 0.60;       // Battery is pretty high, so we need to adjust power
-//        }
+        // Clear out the timing and encoder ticks arrays
+        initLaunchArray();
         launchMotor.setPower(0.65);
+        isLauncherRunning = true;
         return batteryVoltage;
     }
 
-    private boolean getTicks() {
-        int ticks = Math.abs(launchMotor.getCurrentPosition());
-        double  time = runtime.milliseconds();
-        int last = (encIndex == 0) ? Samplesize-1 : encIndex - 1;
-
-        if (encTicks[last] - ticks == 0 )
-            return false;
-
-        encTicks[encIndex] = ticks - encTicks[last] ;
-        encTime[encIndex] = time ;
-
-        encIndex = (encIndex == Samplesize-1) ? 0 : encIndex + 1;
-        return true;
-
-
-
-}
 
     /**
      * Run the launcher to shoot two balls in Autonomous.  Written by Kim Tan and Mohana Chavan.
@@ -473,15 +455,18 @@ public class HardwareHelper {
 //        caller.telemetry.update();
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);      // Shoot the first ball
-        caller.sleep(500);
-        if ( !caller.opModeIsActive() ) return;
+        initLaunchArray();
+        double stopIn = runtime.milliseconds() + 500;   // Stop in half a second
+        do {
+            adjustLaunchSpeed(caller);                  // allow launcher to stabilize again
+        }
+        while ( caller.opModeIsActive() && runtime.milliseconds() < stopIn );
+        //caller.sleep(500);
         launchServo.setPosition(launchliftStart);
 
         /*
-         * Before shoot the second, let the power get back up to speed
+         * Before shoot the second, let the power get back up to speed, should be fast
          */
-
-
         while (caller.opModeIsActive() &&  ! adjustLaunchSpeed(caller)) {
             caller.telemetry.addData("Launch Motor", " Power at %.2f", launchMotor.getPower());
             caller.telemetry.update();
@@ -491,8 +476,50 @@ public class HardwareHelper {
         caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftStart);
+        stopLauncher();
+    }
 
-        launchMotor.setPower(0);
+    /**
+     * Initialize the variables used in the automatic Launch motor stabilization code.  This should
+     * be run at any time we start the launch motor *and* any time that the power to the motor is
+     * adjusted, so that when we check to see if it's stabilized we're dealing with fresh buckets
+     * each time.
+     */
+    private void initLaunchArray() {
+        for (int i = 0; i < Samplesize; i++) {
+            encTicks[i] = 0;
+            encTime[i] = 0;
+        }
+        encIndex = 0;
+        prevEncoderSaved = launchMotor.getCurrentPosition();
+        prevTimeSaved = runtime.milliseconds();
+    }
+
+    /**
+     * Get the ticks from the launch encoder and save those in the next available bucket, if
+     * necessary.  This is a key component in the automatic launch motor stabilization procedures.
+     * It won't save anything if the value for the encoder ticks hasn't changed, which happens
+     * in a regular OpMode about once in every three tries.
+     *
+     * It saves the delta in encoder ticks and time from the previous time getTicks() was
+     * successfully called and returns whether it saved a value or not.
+     *
+     * @return    true if a value was saved in the bucket, false otherwise
+     */
+    private boolean getTicks() {
+        if ( ! isLauncherRunning ) return false;
+        int curEncoder = Math.abs(launchMotor.getCurrentPosition());
+        double  curTime = runtime.milliseconds();
+
+        if (prevEncoderSaved - curEncoder == 0 )
+            return false;
+
+        encTime[encIndex] = curTime - prevTimeSaved;
+        encTicks[encIndex] = Math.abs(curEncoder - prevEncoderSaved);
+        prevEncoderSaved = curEncoder;
+        prevTimeSaved = curTime;
+        encIndex = (encIndex == Samplesize-1) ? 0 : encIndex + 1;
+        return true;
     }
 
    /**
@@ -500,39 +527,48 @@ public class HardwareHelper {
      * we start launching.  We will return true if we are within our tolerance of where we
      * want to be, which is approximately 1,060 encoder ticks per second.
      *
-     * @return
+     * @return  true if we're at optimum power, false if we're not (and adjusting)
      * @throws InterruptedException
      */
-    public boolean adjustLaunchSpeed(LinearOpMode caller) throws InterruptedException {
+    public boolean adjustLaunchSpeed(OpMode caller) throws InterruptedException {
 
         if (!getTicks())
             return false;
-        int total = 0;
+        int totalTicks = 0;
+        double totalTime  = 0;
+        int count = 0;
         for (int i = 0; i < Samplesize; i++) {
-            total = total + encTicks[i];
+            totalTicks = totalTicks + encTicks[i];
+            totalTime  = totalTime  + encTime[i];
+            if ( encTicks[i] > 0 ) count++;
         }
 
-        int TicksAvg = total / Samplesize;
         int last = (encIndex == 0) ? Samplesize-1 : encIndex - 1;
+        int TicksAvg = totalTicks / count;
+        long TimeAvg = Math.round(totalTime / count);
+        double timeInSecs = TimeAvg / 1000.0;
+        long ticksInSecs = Math.round(TicksAvg / timeInSecs);
+        caller.telemetry.addData("adjustLaunchSpeed", "TicksAvg %d, TimeAvg %d, timeInSecs %.2f, ticksInSecs: %d, Count: %d",
+                TicksAvg, TimeAvg, timeInSecs, ticksInSecs, count);
 
-        if (Math.abs(encTicks[last] - TicksAvg) <= 100) {
-            if (Math.abs((TicksAvg - COUNTS_PER_LAUNCHER)) <= 100) {
+        if ( count <= (Samplesize / 2) ) return false;    // Not large enough, keep going.
+
+        if (Math.abs(encTicks[encIndex] - TicksAvg) <= 100) {
+            if (Math.abs(ticksInSecs - COUNTS_PER_LAUNCHER) <= 100) {
                 return true;
-            } else if (TicksAvg > COUNTS_PER_LAUNCHER) {
+            } else if (ticksInSecs > COUNTS_PER_LAUNCHER && launchMotor.getPower() > 0.1) {
                 launchMotor.setPower(launchMotor.getPower() - 0.05);
+                initLaunchArray();    // Clear out buckets, so we can see if new power is right
                 return false;
             } else {
                 launchMotor.setPower(launchMotor.getPower() + 0.05);
+                initLaunchArray();    // Clear out buckets, so we can see if new power is right
                 return false;
             }
         } else {
             return false;
         }
     }
-
-
-
-
 
         /**
          * Waits for the encoders to be reset on the 4 motors, and returns a boolean as to whether

@@ -37,20 +37,30 @@ public class LauncherSpeedTest extends OpMode {
     @Override
     public void init() {
         robot.robot_init(hardwareMap);
-        robot.launchMotor.setMaxSpeed(3000);
+        //robot.launchMotor.setMaxSpeed(3000);
     }
 
     @Override
     public void loop() {
+        double voltage = 0;
 
         if (gamepad2.a && (launchPress + 2) < runtime.seconds()) {
             if ( robot.launchMotor.getPower() > 0.0 ) {
-                robot.launchMotor.setPower(0);
+                robot.stopLauncher();
             } else {
-                robot.launchMotor.setPower(0.65);
+                voltage = robot.startLauncher();
             }
             launchPress = runtime.seconds();
         }
+        telemetry.addData("Battery:" , "Voltage: %.2f", voltage);
+        boolean launcherIsReady = false;
+        try {
+            launcherIsReady = robot.adjustLaunchSpeed(this);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        telemetry.addData("Launcher Power:", "Launcher %s ready, Power set to %.2f",
+                launcherIsReady ? "IS" : "IS NOT", robot.launchMotor.getPower());
 
         if (gamepad2.x && (decreaseSpeed +2) < runtime.seconds()){
             robot.launchMotor.setPower(robot.launchMotor.getPower() - 0.1);
@@ -80,7 +90,10 @@ public class LauncherSpeedTest extends OpMode {
         telemetry.addData("LaunchPower", robot.launchMotor.getPower());
         int curEncoderValue = robot.launchMotor.getCurrentPosition();
         double curEncoderTime = runtime.milliseconds();
-        telemetry.addData("LaunchEncoder", "%.2f / %.2f", (float)Math.abs(PrevEncoderValue - curEncoderValue), (float)Math.abs(curEncoderTime - PrevEncoderTime));
+        telemetry.addData("LaunchEncoder", "Current %d / Previous %d / Diff %d",
+                Math.abs(curEncoderValue), Math.abs(PrevEncoderValue), Math.abs(curEncoderValue - PrevEncoderValue));
+        telemetry.addData("LaunchTiming", "Current %.0f / Previous %.0f / Diff %.0f",
+                curEncoderTime, PrevEncoderTime, curEncoderTime-PrevEncoderTime);
         PrevEncoderTime = curEncoderTime;
         PrevEncoderValue = curEncoderValue;
 
