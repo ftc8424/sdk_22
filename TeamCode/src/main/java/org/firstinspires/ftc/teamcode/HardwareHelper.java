@@ -53,9 +53,9 @@ public class HardwareHelper {
     public DcMotor  manipMotor = null;    private static final String cfgmanipMotor = "Manipulator";
 
     /* Servo positions, adjust as necessary. */
-    public static final double lpushStart = 0.7;
+    public static final double lpushStart = 0.6;
     public static final double lpushDeploy = 0;
-    public static final double rpushStart = 0.3;
+    public static final double rpushStart = 0.4;
     public static final double rpushDeploy = 1;
     public static final double launchliftStart = .75;
     public static final double launchliftDeploy = 0.1;
@@ -125,10 +125,7 @@ public class HardwareHelper {
     public void robot_init(HardwareMap hwMap) {
         this.hwMap = hwMap;
 
-        isLauncherRunning = false;
-        initLaunchArray();
-        prevEncoderSaved = 0;
-        prevTimeSaved = 0;
+
 
          /* Set the drive motors in the map */
         if ( robotType == TROLLBOT || robotType == FULLTELEOP || robotType == FULLAUTO || robotType == AUTOTEST ) {
@@ -202,8 +199,14 @@ public class HardwareHelper {
         if ( robotType == FULLTELEOP || robotType == FULLAUTO ) {
             leftMidDrive.setPower(0);
             rightMidDrive.setPower(0);
+
         }
+        isLauncherRunning = false;
+        initLaunchArray();
+        prevEncoderSaved = 0;
+        prevTimeSaved = 0;
     }
+
 
     /**
      * Drive by the encoders, running to a position relative to the current position based
@@ -456,11 +459,12 @@ public class HardwareHelper {
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);      // Shoot the first ball
         initLaunchArray();
-        double stopIn = runtime.milliseconds() + 500;   // Stop in half a second
-        do {
-            adjustLaunchSpeed(caller);                  // allow launcher to stabilize again
-        }
-        while ( caller.opModeIsActive() && runtime.milliseconds() < stopIn );
+        caller.sleep(400);
+        //double stopIn = runtime.milliseconds() + 500;   // Stop in half a second
+        // allow launcher to stabilize again
+
+
+
         //caller.sleep(500);
         launchServo.setPosition(launchliftStart);
 
@@ -473,7 +477,7 @@ public class HardwareHelper {
         }
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);
-        caller.sleep(500);
+        caller.sleep(400);
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftStart);
         stopLauncher();
@@ -550,10 +554,11 @@ public class HardwareHelper {
         long ticksInSecs = Math.round(TicksAvg / timeInSecs);
         caller.telemetry.addData("adjustLaunchSpeed", "TicksAvg %d, TimeAvg %d, timeInSecs %.2f, ticksInSecs: %d, Count: %d",
                 TicksAvg, TimeAvg, timeInSecs, ticksInSecs, count);
+        caller.telemetry.update();
 
         if ( count <= (Samplesize / 2) ) return false;    // Not large enough, keep going.
 
-        if (Math.abs(encTicks[encIndex] - TicksAvg) <= 100) {
+        if (Math.abs(encTicks[0] - TicksAvg) <= 100) {
             if (Math.abs(ticksInSecs - COUNTS_PER_LAUNCHER) <= 100) {
                 return true;
             } else if (ticksInSecs > COUNTS_PER_LAUNCHER && launchMotor.getPower() > 0.1) {
