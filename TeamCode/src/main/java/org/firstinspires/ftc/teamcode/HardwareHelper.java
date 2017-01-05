@@ -554,19 +554,19 @@ public class HardwareHelper {
         long ticksInSecs = Math.round(TicksAvg / timeInSecs);
         caller.telemetry.addData("adjustLaunchSpeed", "TicksAvg %d, TimeAvg %d, timeInSecs %.2f, ticksInSecs: %d, Count: %d",
                 TicksAvg, TimeAvg, timeInSecs, ticksInSecs, count);
-        caller.telemetry.update();
+        if ( LinearOpMode.class.isInstance(caller) ) caller.telemetry.update();
 
         if ( count <= (Samplesize / 2) ) return false;    // Not large enough, keep going.
 
-        if (Math.abs(encTicks[0] - TicksAvg) <= 100) {
-            if (Math.abs(ticksInSecs - COUNTS_PER_LAUNCHER) <= 100) {
+        if (Math.abs(encTicks[count-1] - TicksAvg) <= 100) {
+            if (Math.abs(ticksInSecs - COUNTS_PER_LAUNCHER) <= 50) {
                 return true;
             } else if (ticksInSecs > COUNTS_PER_LAUNCHER && launchMotor.getPower() > 0.1) {
-                launchMotor.setPower(launchMotor.getPower() - 0.05);
+                launchMotor.setPower(launchMotor.getPower() - 0.025);
                 initLaunchArray();    // Clear out buckets, so we can see if new power is right
                 return false;
             } else {
-                launchMotor.setPower(launchMotor.getPower() + 0.05);
+                launchMotor.setPower(launchMotor.getPower() + 0.025);
                 initLaunchArray();    // Clear out buckets, so we can see if new power is right
                 return false;
             }
