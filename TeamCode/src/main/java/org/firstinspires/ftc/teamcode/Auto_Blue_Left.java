@@ -31,7 +31,7 @@ public class Auto_Blue_Left extends LinearOpMode {
         double  driveSpeed = .75;
 
 
-        robot.robot_init(hardwareMap);
+
 
         robot.color.enableLed(true);
         sleep(1000L);
@@ -45,6 +45,7 @@ public class Auto_Blue_Left extends LinearOpMode {
         //Moving forward to shoot at vortex
         robot.encoderDrive(this, 0.5, -10, -10, 5);
         robot.encoderDrive(this, 0.5, 6, -6, 5);
+        robot.autoLauncher(this);
         robot.encoderDrive(this, 0.5, -19, -19, 5);
         robot.encoderDrive(this, 0.5, 6, -6, 5);
 
@@ -52,11 +53,11 @@ public class Auto_Blue_Left extends LinearOpMode {
         // 135 degree turn to start to line up for beacon press
         robot.encoderDrive(this, driveSpeed, 19.5, -19.5, 10);
         //Moving forwards toward beacon
-        robot.encoderDrive(this, driveSpeed, 39, 39, 6);
+        robot.encoderDrive(this, driveSpeed, 37.5, 37.5, 6);
         //Turning to align at
         robot.encoderDrive(this, driveSpeed, 4.5, -4.5, 10);
         //Moving towards beacon
-        robot.encoderDrive(this, driveSpeed, 12, 12, 10);
+        robot.encoderDrive(this, driveSpeed, 14.5, 14.5, 10);
 
 
         //Pressing blue button, when we are blue alliance

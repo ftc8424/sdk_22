@@ -42,11 +42,11 @@ public class Auto_Red_Left extends LinearOpMode {
         //turning left to beacon
         robot.encoderDrive(this, driveSpeed, 18, -18, 5);
         //towards beacon
-        robot.encoderDrive(this, driveSpeed, 50, 50, 10);
+        robot.encoderDrive(this, driveSpeed, 40, 40, 10);
         //aligning towards beacon
-        robot.encoderDrive(this, driveSpeed, -5 , 5, 2);
+        robot.encoderDrive(this, driveSpeed, -7 , 7, 2);
         //towards the beacon
-        robot.encoderDrive(this, driveSpeed, 7, 7, 10);
+        robot.encoderDrive(this, driveSpeed, 12, 12, 10);
 
         //Pressing blue button, when we are blue alliance
         String button;
@@ -77,7 +77,7 @@ public class Auto_Red_Left extends LinearOpMode {
         //Turning left at Beacon 2
         robot.encoderDrive(this, driveSpeed, -13, 13, 10);
         //Driving Towards Beacon 2
-        robot.encoderDrive(this, driveSpeed, 9, 9, 10);
+        robot.encoderDrive(this, driveSpeed, 11, 11, 10);
 
         //pressing beacon 2 when we are blue alliance
         button = "Not Pressing";

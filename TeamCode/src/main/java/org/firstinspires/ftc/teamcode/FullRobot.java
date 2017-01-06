@@ -174,13 +174,19 @@ public class FullRobot extends OpMode {
         telemetry.addData("Status", " launchMotor Debug 1 at: " + runtime.toString());
         if (gamepad2.a && (launchPress + 2) < runtime.seconds()) {
             if ( robot.launchMotor.getPower() > 0.0 ) {
-                robot.launchMotor.setPower(0);
+                robot.stopLauncher();
             } else {
                 robot.startLauncher();
             }
             launchPress = runtime.seconds();
         }
         telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor.getPower());
+        try {
+            boolean ready = robot.adjustLaunchSpeed(this);
+            telemetry.addData("Launcher:", "%s Ready", ready ? "IS" : "IS NOT");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         if(Math.abs(gamepad2.right_stick_y) > .01) {
             robot.manipMotor.setPower(gamepad2.right_stick_y);

@@ -57,7 +57,7 @@ public class HardwareHelper {
     public static final double lpushDeploy = 0;
     public static final double rpushStart = 0.4;
     public static final double rpushDeploy = 1;
-    public static final double launchliftStart = .75;
+    public static final double launchliftStart = .80;
     public static final double launchliftDeploy = 0.1;
     private static final int Samplesize = 250;
     private int[] encTicks = new int[Samplesize];
@@ -405,6 +405,7 @@ public class HardwareHelper {
      */
     public double startLauncher() {
         double batteryVoltage = getVoltage();
+
         // Clear out the timing and encoder ticks arrays
         initLaunchArray();
         launchMotor.setPower(0.65);
@@ -412,6 +413,15 @@ public class HardwareHelper {
         return batteryVoltage;
     }
 
+    public double startLauncher(double power) {
+        double batteryVoltage = getVoltage();
+
+        // Clear out the timing and encoder ticks arrays
+        initLaunchArray();
+        launchMotor.setPower(power);
+        isLauncherRunning = true;
+        return batteryVoltage;
+    }
 
     /**
      * Run the launcher to shoot two balls in Autonomous.  Written by Kim Tan and Mohana Chavan.
@@ -436,6 +446,7 @@ public class HardwareHelper {
 //                volts, launchMotor.getPower());
 //        caller.telemetry.update();
         while (caller.opModeIsActive() &&  ! adjustLaunchSpeed(caller)) {
+
             caller.telemetry.addData("Launch Motor", " Power at %.2f", launchMotor.getPower());
             caller.telemetry.update();
 
@@ -535,44 +546,44 @@ public class HardwareHelper {
      * @throws InterruptedException
      */
     public boolean adjustLaunchSpeed(OpMode caller) throws InterruptedException {
-
-        if (!getTicks())
-            return false;
-        int totalTicks = 0;
-        double totalTime  = 0;
-        int count = 0;
-        for (int i = 0; i < Samplesize; i++) {
-            totalTicks = totalTicks + encTicks[i];
-            totalTime  = totalTime  + encTime[i];
-            if ( encTicks[i] > 0 ) count++;
-        }
-
-        int last = (encIndex == 0) ? Samplesize-1 : encIndex - 1;
-        int TicksAvg = totalTicks / count;
-        long TimeAvg = Math.round(totalTime / count);
-        double timeInSecs = TimeAvg / 1000.0;
-        long ticksInSecs = Math.round(TicksAvg / timeInSecs);
-        caller.telemetry.addData("adjustLaunchSpeed", "TicksAvg %d, TimeAvg %d, timeInSecs %.2f, ticksInSecs: %d, Count: %d",
-                TicksAvg, TimeAvg, timeInSecs, ticksInSecs, count);
-        caller.telemetry.update();
-
-        if ( count <= (Samplesize / 2) ) return false;    // Not large enough, keep going.
-
-        if (Math.abs(encTicks[0] - TicksAvg) <= 100) {
-            if (Math.abs(ticksInSecs - COUNTS_PER_LAUNCHER) <= 100) {
-                return true;
-            } else if (ticksInSecs > COUNTS_PER_LAUNCHER && launchMotor.getPower() > 0.1) {
-                launchMotor.setPower(launchMotor.getPower() - 0.05);
-                initLaunchArray();    // Clear out buckets, so we can see if new power is right
-                return false;
-            } else {
-                launchMotor.setPower(launchMotor.getPower() + 0.05);
-                initLaunchArray();    // Clear out buckets, so we can see if new power is right
-                return false;
-            }
-        } else {
-            return false;
-        }
+        return true;
+//        if (!getTicks())
+//            return false;
+//        int totalTicks = 0;
+//        double totalTime  = 0;
+//        int count = 0;
+//        for (int i = 0; i < Samplesize; i++) {
+//            totalTicks = totalTicks + encTicks[i];
+//            totalTime  = totalTime  + encTime[i];
+//            if ( encTicks[i] > 0 ) count++;
+//        }
+//
+//        int last = (encIndex == 0) ? Samplesize-1 : encIndex - 1;
+//        int TicksAvg = totalTicks / count;
+//        long TimeAvg = Math.round(totalTime / count);
+//        double timeInSecs = TimeAvg / 1000.0;
+//        long ticksInSecs = Math.round(TicksAvg / timeInSecs);
+//        caller.telemetry.addData("adjustLaunchSpeed", "TicksAvg %d, TimeAvg %d, timeInSecs %.2f, ticksInSecs: %d, Count: %d",
+//                TicksAvg, TimeAvg, timeInSecs, ticksInSecs, count);
+//        caller.telemetry.update();
+//
+//        if ( count <= (Samplesize / 2) ) return false;    // Not large enough, keep going.
+//
+//        if (Math.abs(encTicks[0] - TicksAvg) <= 100) {
+//            if (Math.abs(ticksInSecs - COUNTS_PER_LAUNCHER) <= 100) {
+//                return true;
+//            } else if (ticksInSecs > COUNTS_PER_LAUNCHER && launchMotor.getPower() > 0.1) {
+//                launchMotor.setPower(launchMotor.getPower() - 0.05);
+//                initLaunchArray();    // Clear out buckets, so we can see if new power is right
+//                return false;
+//            } else {
+//                launchMotor.setPower(launchMotor.getPower() + 0.05);
+//                initLaunchArray();    // Clear out buckets, so we can see if new power is right
+//                return false;
+//            }
+//        } else {
+//            return false;
+//        }
     }
 
         /**
