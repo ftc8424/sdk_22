@@ -37,7 +37,7 @@ public class TeleOp_Launcher extends OpMode {
             launchPress = runtime.seconds();
         }
         if (gamepad2.a && launcherState == 0 && launchPress + 2 < runtime.seconds()) {
-            robot.launchMotor.setPower(.1);
+            robot.launchMotor.setPower(.65);
             launchPress = runtime.seconds();
             launcherState = 1;
             lastStateChange = runtime.milliseconds();

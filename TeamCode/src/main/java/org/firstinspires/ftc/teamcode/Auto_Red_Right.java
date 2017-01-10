@@ -46,11 +46,11 @@ public class Auto_Red_Right extends LinearOpMode {
         //Moving forward to shoot at vortex
         robot.encoderDrive(this, driveSpeed, -20, -20, 5);
         //shooting 2 balls in to vortex
-        robot.autoLauncher(this);
+        robot.autoLauncher(this, 0.58);
         //Moving forward to center itself inside of the nearest mat
-        robot.encoderDrive(this, driveSpeed, -7, -7, 5);
+        //robot.encoderDrive(this, driveSpeed, -7, -7, 5);
         //45 degree turn aligning itself to
-        robot.encoderDrive(this, driveSpeed, -6, 6, 5);
+       // robot.encoderDrive(this, driveSpeed, -6, 6, 5);
         //Driving towards the corner vortex
         robot.encoderDrive(this, driveSpeed, -37, -37, 3);
         // 135 degree turn to start to line up for beacon press

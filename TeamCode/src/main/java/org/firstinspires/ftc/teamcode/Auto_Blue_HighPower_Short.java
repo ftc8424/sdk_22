@@ -63,7 +63,7 @@ public class Auto_Blue_HighPower_Short extends LinearOpMode {
         // Move forward to shoot
         //robot.encoderDrive(this, driveSpeed,-3, -3,10);
         // shooting
-        robot.autoLauncher(this);
+        robot.autoLauncher(this, 0.65);
         // Backing up
         robot.encoderDrive(this, driveSpeed, -13,-13,10);
         // Figure out right turn for 135 deg.

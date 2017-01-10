@@ -36,7 +36,7 @@ public class Auto_Red_Left extends LinearOpMode {
         waitForStart();
 
         // Shoot the particles as the first thing
-        robot.autoLauncher(this);
+        robot.autoLauncher(this, 0.58);
         //forwards 18 in
         robot.encoderDrive(this, driveSpeed, -23, -23, 3);
         //turning left to beacon

@@ -74,6 +74,7 @@ public class FullRobot extends OpMode {
     private double powerSetTime = 0;
     private double servoUpTime = 0;
     private double launchPress = 0;
+    private double decreaseSpeed = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -179,6 +180,16 @@ public class FullRobot extends OpMode {
                 robot.startLauncher();
             }
             launchPress = runtime.seconds();
+        }
+        if (gamepad2.x && (decreaseSpeed +1) < runtime.seconds()){
+            robot.launchMotor.setPower(robot.launchMotor.getPower() - 0.05);
+            decreaseSpeed = runtime.seconds();
+        }
+
+
+        if (gamepad2.b && (decreaseSpeed +1) < runtime.seconds()) {
+            robot.launchMotor.setPower(robot.launchMotor.getPower() + 0.05);
+            decreaseSpeed = runtime.seconds();
         }
         telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor.getPower());
         try {

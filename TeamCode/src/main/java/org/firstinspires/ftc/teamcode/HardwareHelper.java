@@ -436,12 +436,12 @@ public class HardwareHelper {
      * @param caller  he "this" from caller, so I can run telemetry
      * @throws InterruptedException     If the sleep call is interrupted
      */
-    public void autoLauncher(LinearOpMode caller) throws InterruptedException {
+    public void autoLauncher(LinearOpMode caller, double power) throws InterruptedException {
 
         if ( !caller.opModeIsActive() ) return;
 
 
-        double volts = startLauncher();
+        double volts = startLauncher(power);
 //        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
 //                volts, launchMotor.getPower());
 //        caller.telemetry.update();
@@ -452,25 +452,25 @@ public class HardwareHelper {
 
         }
             ;
-//        long sleepTime;
-//        if ( volts < 12.4 )
-//                sleepTime = 2500;
-//        else if ( volts < 12.6 )
-//                sleepTime = 2000;
-//        else if ( volts < 12.8 )
-//                sleepTime = 1900;
-//        else
-//            sleepTime = 1750;
-//        caller.telemetry.addData("Launch Motor", "Waiting %.2f Secs to spin-up", sleepTime / 1000.0);
-//        caller.telemetry.update();
-//        caller.sleep(sleepTime);
-//        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
-//                volts, launchMotor.getPower());
-//        caller.telemetry.update();
+        long sleepTime;
+        if ( volts < 12.4 )
+               sleepTime = 2500;
+        else if ( volts < 12.6 )
+                sleepTime = 2000;
+        else if ( volts < 12.8 )
+                sleepTime = 1900;
+        else
+            sleepTime = 1750;
+        caller.telemetry.addData("Launch Motor", "Waiting %.2f Secs to spin-up", sleepTime / 1000.0);
+        caller.telemetry.update();
+        caller.sleep(sleepTime);
+        caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
+                volts, launchMotor.getPower());
+        caller.telemetry.update();
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);      // Shoot the first ball
         initLaunchArray();
-        caller.sleep(400);
+        caller.sleep(500);
         //double stopIn = runtime.milliseconds() + 500;   // Stop in half a second
         // allow launcher to stabilize again
 
@@ -478,7 +478,8 @@ public class HardwareHelper {
 
         //caller.sleep(500);
         launchServo.setPosition(launchliftStart);
-
+        launchMotor.setPower(launchMotor.getPower() + 0.1);
+        caller.sleep(2200);
         /*
          * Before shoot the second, let the power get back up to speed, should be fast
          */
@@ -488,7 +489,7 @@ public class HardwareHelper {
         }
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftDeploy);
-        caller.sleep(400);
+        caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
         launchServo.setPosition(launchliftStart);
         stopLauncher();

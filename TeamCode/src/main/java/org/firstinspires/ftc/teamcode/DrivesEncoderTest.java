@@ -37,7 +37,7 @@ public class DrivesEncoderTest extends LinearOpMode {
             telemetry.update();
         }
 
-        robot.autoLauncher(this);       // see values
+        robot.autoLauncher(this,  0.65);       // see values
 
         telemetry.addLine("ENCVALUES");
         while ( opModeIsActive() ) {
