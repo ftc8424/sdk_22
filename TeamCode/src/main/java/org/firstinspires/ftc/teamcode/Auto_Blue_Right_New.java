@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
 
 /**
- * Created by Mohana on 1/9/2017.
+ * Created by Mohana on 1/10/2017.
  */
-@Autonomous(name = "Auto Blue Left New", group = "BlueSide")
-public class Auto_Blue_Left_New extends LinearOpMode {
+@Autonomous(name = "Auto Blue Right New", group = "BlueSide")
+public class Auto_Blue_Right_New extends LinearOpMode {
     HardwareHelper robot = new HardwareHelper(FULLAUTO);
     private ElapsedTime runtime = new ElapsedTime();
     @Override
@@ -20,18 +20,21 @@ public class Auto_Blue_Left_New extends LinearOpMode {
         // bPrevState and bCurrState represent the previous and current state of the button.
         boolean bPrevState = false;
         boolean bCurrState = false;
-        double driveSpeed = .75;
-        telemetry.addData("Init:" ,"Waiting for start");
-        telemetry.update();
+        double  driveSpeed = .75;
+
+
+
         robot.color.enableLed(true);
         sleep(1000L);
         robot.color.enableLed(false);
+
+        telemetry.addData("Init:" ,"Waiting for start");
+        telemetry.update();
         waitForStart();
 
-
-        //Set up at a 45 degree angle
-        //Moving forward toward beacon
-        robot.encoderDrive(this, driveSpeed, -75, -75, 15);
+        //Set at 45 degree angle
+        //Moving toward beacon
+        robot.encoderDrive(this, driveSpeed, -55, -55, 10);
         //45 degree turn
         robot.encoderDrive(this, driveSpeed, 19.5, -19.5, 10);
         robot.encoderDrive(this, driveSpeed, 16, 16, 10);
@@ -101,8 +104,4 @@ public class Auto_Blue_Left_New extends LinearOpMode {
         robot.encoderDrive(this, driveSpeed, -20, -20, 10);
 
     }
-
-
-
 }
-
