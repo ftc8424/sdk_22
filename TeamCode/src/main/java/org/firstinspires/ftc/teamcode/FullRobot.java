@@ -181,15 +181,15 @@ public class FullRobot extends OpMode {
             }
             launchPress = runtime.seconds();
         }
-        if (gamepad2.x && (decreaseSpeed +1) < runtime.seconds()){
+        if (gamepad2.x && (decreaseSpeed +500) < runtime.milliseconds()){
             robot.launchMotor.setPower(robot.launchMotor.getPower() - 0.05);
-            decreaseSpeed = runtime.seconds();
+            decreaseSpeed = runtime.milliseconds();
         }
 
 
-        if (gamepad2.b && (decreaseSpeed +1) < runtime.seconds()) {
+        if (gamepad2.b && (decreaseSpeed +500) < runtime.milliseconds()) {
             robot.launchMotor.setPower(robot.launchMotor.getPower() + 0.05);
-            decreaseSpeed = runtime.seconds();
+            decreaseSpeed = runtime.milliseconds();
         }
         telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor.getPower());
         try {

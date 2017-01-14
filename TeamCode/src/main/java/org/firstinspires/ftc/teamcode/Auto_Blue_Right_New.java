@@ -34,10 +34,10 @@ public class Auto_Blue_Right_New extends LinearOpMode {
 
         //Set at 45 degree angle
         //Moving toward beacon
-        robot.encoderDrive(this, driveSpeed, -55, -55, 10);
+        robot.encoderDrive(this, driveSpeed, 55, 55, 10);
         //45 degree turn
-        robot.encoderDrive(this, driveSpeed, 19.5, -19.5, 10);
-        robot.encoderDrive(this, driveSpeed, 16, 16, 10);
+        robot.encoderDrive(this, driveSpeed, 7, -7, 10);
+        robot.encoderDrive(this, driveSpeed, 13, 13, 10);
         //Logic for pressing beacon when we are blue alliance
         String button;
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
