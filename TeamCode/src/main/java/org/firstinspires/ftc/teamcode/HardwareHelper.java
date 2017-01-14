@@ -53,8 +53,8 @@ public class HardwareHelper {
     public DcMotor  manipMotor = null;    private static final String cfgmanipMotor = "Manipulator";
 
     /* Servo positions, adjust as necessary. */
-    public static final double lpushStart = 0.6;
-    public static final double lpushDeploy = 0;
+    public static final double lpushStart = 1.0;
+    public static final double lpushDeploy = 0.6F;
     public static final double rpushStart = 0.4;
     public static final double rpushDeploy = 1;
     public static final double launchliftStart = .80;

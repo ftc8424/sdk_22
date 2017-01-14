@@ -31,11 +31,10 @@ public class Auto_Red_Left_New extends LinearOpMode {
         robot.color.enableLed(false);
         waitForStart();
 
-        //45 degree angle position
-        robot.encoderDrive(this, driveSpeed, 99, 99, 15);
+        robot.encoderDrive(this, driveSpeed, 55, 55, 10);
         //45 degree turn
-        robot.encoderDrive(this, driveSpeed, -9.4, 9.4, 10);
-        robot.encoderDrive(this, driveSpeed, 8, 8, 10);
+        robot.encoderDrive(this, driveSpeed, 7, -7, 10);
+        robot.encoderDrive(this, driveSpeed, 13, 13, 10);
         //logic for pressing button
         String button;
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
@@ -62,11 +61,11 @@ public class Auto_Red_Left_New extends LinearOpMode {
         //Turning right towards beacon 2
         robot.encoderDrive(this, driveSpeed, 13, -13, 10);
         //Driving towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 46, 46, 10);
+        robot.encoderDrive(this, driveSpeed, 44, 44, 10);
         //Turning left at Beacon 2
         robot.encoderDrive(this, driveSpeed, -13, 13, 10);
         //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, -7, -7, 10);
+        robot.encoderDrive(this, driveSpeed, 9, 9, 10);
 
         button = "Not Pressing";
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
