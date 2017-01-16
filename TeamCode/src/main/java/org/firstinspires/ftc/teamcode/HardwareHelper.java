@@ -478,7 +478,7 @@ public class HardwareHelper {
 
         //caller.sleep(500);
         launchServo.setPosition(launchliftStart);
-        launchMotor.setPower(launchMotor.getPower() + 0.1);
+        launchMotor.setPower(launchMotor.getPower() + 0.2);
         caller.sleep(2200);
         /*
          * Before shoot the second, let the power get back up to speed, should be fast
