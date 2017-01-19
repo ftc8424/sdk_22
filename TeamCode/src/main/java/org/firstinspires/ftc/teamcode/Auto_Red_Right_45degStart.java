@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -20,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
  * Created by Mohana on 1/9/2017.
  */
 @Autonomous(name = "Auto Red Right 45degStart", group = "RedSide")
+@Disabled
 public class Auto_Red_Right_45degStart extends LinearOpMode {
     HardwareHelper robot = new HardwareHelper(FULLAUTO);
     private ElapsedTime runtime = new ElapsedTime();

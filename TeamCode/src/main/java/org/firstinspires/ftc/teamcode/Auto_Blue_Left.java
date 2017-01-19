@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,6 +17,7 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.FULLAUTO;
  * Created by Devan on 10/9/2016.
  */
 @Autonomous(name = "Auto Blue Left", group = "BlueSide")
+@Disabled
 public class Auto_Blue_Left extends LinearOpMode {
 
     HardwareHelper robot = new HardwareHelper(FULLAUTO);
