@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -41,20 +42,21 @@ import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.TROLLBOT;
 public class HardwareHelper {
 
     /* Public OpMode members, things they can use */
-    public DcMotor  leftMidDrive = null;   private static final String cfgLMidDrive  = "L Mid";
-    public DcMotor  rightMidDrive = null;  private static final String cfgRMidDrive  = "R Mid";
-    public DcMotor  leftBackDrive = null;  private static final String cfgLBckDrive  = "L Back";
-    public DcMotor  rightBackDrive = null; private static final String cfgRtBckDrive = "R Back";
+    public DcMotor  leftMidDrive = null;   private static final String cfgLMidDrive   = "L Mid";
+    public DcMotor  rightMidDrive = null;  private static final String cfgRMidDrive   = "R Mid";
+    public DcMotor  leftBackDrive = null;  private static final String cfgLBckDrive   = "L Back";
+    public DcMotor  rightBackDrive = null; private static final String cfgRtBckDrive  = "R Back";
     public DcMotor  launchMotor = null;    private static final String cfgLaunchMotor = "Launcher";
     public Servo    launchServo = null;    private static final String cfgLaunchServo = "LaunchServo";
     public Servo    leftPush = null;       private static final String cfgLPush       = "L Push";
     public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
     public ColorSensor color = null;       private static final String cfgColor       = "color";
-    public DcMotor  manipMotor = null;    private static final String cfgmanipMotor = "Manipulator";
+    public DcMotor  manipMotor = null;    private static final  String cfgmanipMotor  = "Manipulator";
+    public GyroSensor gyro = null;    private static final      String cfgGyro        = "gyro";
 
     /* Servo positions, adjust as necessary. */
     public static final double lpushStart = 1.0;
-    public static final double lpushDeploy = 0.6F;
+    public static final double lpushDeploy = 0.6;
     public static final double rpushStart = 0.4;
     public static final double rpushDeploy = 1;
     public static final double launchliftStart = .80;
@@ -140,13 +142,13 @@ public class HardwareHelper {
 
             /*
              * If autonomous, then reset encoders and set mode to be with encoders
-             * NOTE:  This should really throw an exception or something, but all it does
-             * is silently ignore if the resetting of the encoders didn't work and blindly
-             * sets the mode to be RUN_USING_ENCODER.  Can't really call telemetry because
-             * don't have a caller to know which should build the telemetry and send.  Badness
-             * will ensue when the actual autonomous runs and hopefully this note will help
-             * folks figure out the failed reset might be at fault.
-             */
+                    * NOTE:  This should really throw an exception or something, but all it does
+                    * is silently ignore if the resetting of the encoders didn't work and blindly
+                    * sets the mode to be RUN_USING_ENCODER.  Can't really call telemetry because
+                    * don't have a caller to know which should build the telemetry and send.  Badness
+                    * will ensue when the actual autonomous runs and hopefully this note will help
+                    * folks figure out the failed reset might be at fault.
+                    */
             boolean resetOk = false;
             if ( robotType == AUTOTEST || robotType == FULLAUTO ) {
                 resetOk = waitForReset(leftBackDrive, rightBackDrive, 2000);
@@ -191,6 +193,11 @@ public class HardwareHelper {
         /* Set the sensors based on type */
         if ( robotType == AUTOTEST || robotType == COLORTEST || robotType == FULLAUTO ) {
             color = hwMap.colorSensor.get(cfgColor);
+        }
+
+        /* Get the Gyro */
+        if (robotType == FULLAUTO ) {
+            gyro = hwMap.gyroSensor.get(cfgGyro);
         }
 
         /* Now that hardware is mapped, set to initial positions/settings. */
