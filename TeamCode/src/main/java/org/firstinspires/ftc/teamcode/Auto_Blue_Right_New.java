@@ -37,7 +37,7 @@ public class Auto_Blue_Right_New extends LinearOpMode {
         robot.encoderDrive(this, driveSpeed, 60, 60, 10);
         //45 degree turn
         robot.encoderDrive(this, driveSpeed, 6.5, -6.5, 10);
-        robot.encoderDrive(this, driveSpeed, 6, 6, 10);
+        robot.encoderDrive(this, driveSpeed, 6.75, 6.75, 10);
         //Logic for pressing beacon when we are blue alliance
         String button;
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
@@ -97,7 +97,7 @@ public class Auto_Blue_Right_New extends LinearOpMode {
         //backing up from beacon 2
         robot.encoderDrive(this, driveSpeed, -7, -7, 8);
         //aligning (turning) to shoot
-        robot.encoderDrive(this, driveSpeed, -6.5, 6.5, 5);
+        robot.encoderDrive(this, driveSpeed, -6, 6, 5);
         //shooting
         robot.autoLauncher(this, 0.52);
         //forward to capball and parking on center

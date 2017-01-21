@@ -93,7 +93,7 @@ public class Auto_Red_Left_New extends LinearOpMode {
         //aligning (turning) to shoot
         robot.encoderDrive(this, driveSpeed, 7, -7, 5);
         //shooting
-        robot.autoLauncher(this, 0.52);
+        robot.autoLauncher(this, 0.5);
         //forward to capball and parking on center
         robot.encoderDrive(this, driveSpeed, -60, -60, 10);
 

@@ -21,6 +21,7 @@ public class Gyro_Sensor extends LinearOpMode{
         robot.robot_init(hardwareMap);
         // Hardware Device Object
         double  driveSpeed = .75;
+        ModernRoboticsI2cGyro gyro;
         int xVal, yVal = 0;     // Gyro rate Values
         int largeHeading = 0;              // Gyro integrated heading
         int currentHeading = 1;
@@ -28,7 +29,7 @@ public class Gyro_Sensor extends LinearOpMode{
         //boolean curResetState  = false;
 
 
-
+//        gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
         robot.gyro.calibrate();
 
         // make sure the gyro is calibrated.
@@ -49,11 +50,23 @@ public class Gyro_Sensor extends LinearOpMode{
         yVal = robot.gyro.rawY();
 
 
-        telemetry.addData(">", "Press A & B to reset Heading.");
+        //telemetry.addData(">", "Press A & B to reset Heading.");
         telemetry.addData("2", "X val %03d", xVal);
         telemetry.addData("3", "Y val %03d", yVal);
         telemetry.update();
+        sleep(2000);
         idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+
+//        xVal = robot.gyro.rawX();
+//        yVal = robot.gyro.rawY();
+//
+//
+//        //telemetry.addData(">", "Press A & B to reset Heading.");
+//        telemetry.addData("2", "X val %03d", xVal);
+//        telemetry.addData("3", "Y val %03d", yVal);
+//        telemetry.update();
+//        sleep(2000);
+//        idle();
 
         }
 }

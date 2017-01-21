@@ -40,7 +40,7 @@ public class Auto_Red_Right_New extends LinearOpMode {
         robot.encoderDrive(this, driveSpeed, 102, 102, 15);
         //45 degree turn
         robot.encoderDrive(this, driveSpeed, -4, 4, 10);
-        robot.encoderDrive(this, driveSpeed, 5, 5, 10);
+        robot.encoderDrive(this, driveSpeed, 3, 3, 10);
         //Logic for pressing beacon when we are blue alliance
         String button;
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
@@ -65,13 +65,13 @@ public class Auto_Red_Right_New extends LinearOpMode {
         //backing up from beacon 1
         robot.encoderDrive(this, 0.5, -7, -7, 10);
         //Turning right towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 13, -13, 10);
+        robot.encoderDrive(this, driveSpeed, 12.5, -12.5, 10);
         //Driving towards beacon 2
         robot.encoderDrive(this, driveSpeed, 46, 46, 10);
         //Turning left at Beacon 2
         robot.encoderDrive(this, driveSpeed, -13, 13, 10);
         //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, 9, 9, 10);
+        robot.encoderDrive(this, driveSpeed, 6, 6, 10);
         //Pressing blue button, when we are blue alliance
         button = "Not Pressing";
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
@@ -93,39 +93,12 @@ public class Auto_Red_Right_New extends LinearOpMode {
         robot.rightPush.setPosition(robot.rpushStart);
 
         //backing up from beacon 1
-        robot.encoderDrive(this, driveSpeed, -7, -7, 10);
-        //Turning right towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 13, -13, 10);
-        //Driving towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 46, 46, 10);
-        //Turning left at Beacon 2
-        robot.encoderDrive(this, driveSpeed, -13, 13, 10);
-        //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, 7, 7, 10);
-
-        //Pressing red button, when we are red alliance
-        button = "Not Pressing";
-        if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
-            robot.rightPush.setPosition(robot.rpushDeploy);
-            button = "Right/Blue";
-        } else if (robot.color.red() > 0 && robot.color.red() > robot.color.blue()) {
-            robot.leftPush.setPosition(robot.lpushDeploy);
-            button = "Left/Red";
-        } else {
-            button = String.format("Not Pressing: Blue %d / Red %d",
-
-                    robot.color.blue(), robot.color.red());
-        }
-
-        //Resetting button pushers to starting position
-        robot.leftPush.setPosition(robot.lpushStart);
-        robot.rightPush.setPosition(robot.rpushStart);
 
 
         //backing up from beacon 2
         robot.encoderDrive(this, driveSpeed, -7, -7, 8);
         //aligning (turning) to shoot
-        robot.encoderDrive(this, driveSpeed, 7.5, -7.5, 5);
+        robot.encoderDrive(this, driveSpeed, 6.5, -6.5, 5);
         //shooting
         robot.autoLauncher(this, 0.52);
         //forward to capball and parking on center

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.ftccommon.DbgLog;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -52,7 +53,7 @@ public class HardwareHelper {
     public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
     public ColorSensor color = null;       private static final String cfgColor       = "color";
     public DcMotor  manipMotor = null;    private static final  String cfgmanipMotor  = "Manipulator";
-    public GyroSensor gyro = null;    private static final      String cfgGyro        = "gyro";
+    public ModernRoboticsI2cGyro gyro = null;    private static final      String cfgGyro        = "gyro";
 
     /* Servo positions, adjust as necessary. */
     public static final double lpushStart = 1.0;
@@ -197,7 +198,7 @@ public class HardwareHelper {
 
         /* Get the Gyro */
         if (robotType == FULLAUTO ) {
-            gyro = hwMap.gyroSensor.get(cfgGyro);
+            gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get(cfgGyro);
         }
 
         /* Now that hardware is mapped, set to initial positions/settings. */
@@ -485,7 +486,7 @@ public class HardwareHelper {
 
         //caller.sleep(500);
         launchServo.setPosition(launchliftStart);
-        launchMotor.setPower(launchMotor.getPower() + 0.2);
+        launchMotor.setPower(launchMotor.getPower() + 0.1);
         caller.sleep(2200);
         /*
          * Before shoot the second, let the power get back up to speed, should be fast
