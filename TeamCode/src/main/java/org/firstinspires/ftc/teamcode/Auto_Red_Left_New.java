@@ -31,10 +31,11 @@ public class Auto_Red_Left_New extends LinearOpMode {
         robot.color.enableLed(false);
         waitForStart();
 
-        robot.encoderDrive(this, driveSpeed, 69, 69, 10);
+        robot.encoderDrive(this, driveSpeed, 65, 65, 10);
         //45 degree turn
-        robot.encoderDrive(this, driveSpeed, -6.5, 6.5, 10);
-        robot.encoderDrive(this, driveSpeed, 1, 1, 10);
+        sleep(1000);
+        robot.encoderDrive(this, driveSpeed, -6.9, 6.9, 10);
+        robot.encoderDrive(this, driveSpeed, 17, 17, 10);
         //logic for pressing button
         String button;
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
@@ -57,15 +58,15 @@ public class Auto_Red_Left_New extends LinearOpMode {
 
 
 
-        robot.encoderDrive(this, driveSpeed, -7, -7, 10);
+        robot.encoderDrive(this, driveSpeed, -8.5, -8.5, 10);
         //Turning right towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 12.5, -12.5, 10);
+        robot.encoderDrive(this, driveSpeed, 12, -12, 10);
         //Driving towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 44, 44, 10);
+        robot.encoderDrive(this, driveSpeed, 45, 45, 10);
         //Turning left at Beacon 2
-        robot.encoderDrive(this, driveSpeed, -12.5, 12.5, 10);
+        robot.encoderDrive(this, driveSpeed, -12, 12, 10);
         //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, 4, 4, 10);
+        robot.encoderDrive(this, driveSpeed, 6, 6, 10);
 
         button = "Not Pressing";
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
@@ -91,7 +92,7 @@ public class Auto_Red_Left_New extends LinearOpMode {
         //backing up from beacon 2
         robot.encoderDrive(this, driveSpeed, -9, -9, 8);
         //aligning (turning) to shoot
-        robot.encoderDrive(this, driveSpeed, 7, -7, 5);
+        robot.encoderDrive(this, driveSpeed, 6.5, -6.5, 5);
         //shooting
         robot.autoLauncher(this, 0.5);
         //forward to capball and parking on center

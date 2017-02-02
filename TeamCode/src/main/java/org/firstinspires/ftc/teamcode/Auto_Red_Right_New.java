@@ -37,10 +37,12 @@ public class Auto_Red_Right_New extends LinearOpMode {
 
         //Set up at a 45 degree angle
         //Moving forward toward beacon
-        robot.encoderDrive(this, driveSpeed, 102, 102, 15);
+        robot.encoderDrive(this, driveSpeed, 33, 33, 15);
         //45 degree turn
+        robot.encoderDrive(this, driveSpeed, -2.9, 2.9, 15);
+        robot.encoderDrive(this, driveSpeed, 56, 56, 15);
         robot.encoderDrive(this, driveSpeed, -4, 4, 10);
-        robot.encoderDrive(this, driveSpeed, 3, 3, 10);
+        robot.encoderDrive(this, driveSpeed, 8, 8, 10);
         //Logic for pressing beacon when we are blue alliance
         String button;
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
@@ -63,15 +65,15 @@ public class Auto_Red_Right_New extends LinearOpMode {
 
 
         //backing up from beacon 1
-        robot.encoderDrive(this, 0.5, -7, -7, 10);
+        robot.encoderDrive(this, 0.5, -7.5, -7.5, 10);
         //Turning right towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 12.5, -12.5, 10);
+        robot.encoderDrive(this, driveSpeed, 13, -13, 10);
         //Driving towards beacon 2
-        robot.encoderDrive(this, driveSpeed, 46, 46, 10);
+        robot.encoderDrive(this, driveSpeed, 45.25, 45.25, 10);
         //Turning left at Beacon 2
         robot.encoderDrive(this, driveSpeed, -13, 13, 10);
         //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, 6, 6, 10);
+        robot.encoderDrive(this, driveSpeed, 5.25, 5.25, 10);
         //Pressing blue button, when we are blue alliance
         button = "Not Pressing";
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {

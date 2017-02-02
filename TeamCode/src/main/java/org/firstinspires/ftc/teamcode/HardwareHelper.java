@@ -48,6 +48,7 @@ public class HardwareHelper {
     public DcMotor  leftBackDrive = null;  private static final String cfgLBckDrive   = "L Back";
     public DcMotor  rightBackDrive = null; private static final String cfgRtBckDrive  = "R Back";
     public DcMotor  launchMotor = null;    private static final String cfgLaunchMotor = "Launcher";
+    //public DcMotor  launchMotor2 = null;    private static final String cfgLaunchMotor2 = "Launcher2";
     public Servo    launchServo = null;    private static final String cfgLaunchServo = "LaunchServo";
     public Servo    leftPush = null;       private static final String cfgLPush       = "L Push";
     public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
@@ -169,6 +170,7 @@ public class HardwareHelper {
         /* Set the subsequent motors based on type */
         if ( robotType == LAUNCHTEST || robotType == FULLTELEOP || robotType == FULLAUTO ) {
             launchMotor = hwMap.dcMotor.get(cfgLaunchMotor);
+            //vc1`launchMotor2 = hwMap.dcMotor.get(cfgLaunchMotor2);
             launchMotor.resetDeviceConfigurationForOpMode();
             launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
