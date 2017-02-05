@@ -53,7 +53,7 @@ public class HardwareHelper {
     public Servo    leftPush = null;       private static final String cfgLPush       = "L Push";
     public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
     public ColorSensor color = null;       private static final String cfgColor       = "color";
-    public DcMotor  manipMotor = null;    private static final  String cfgmanipMotor  = "Manipulator";
+    public DcMotor  manipMotor = null;     private static final  String cfgmanipMotor = "Manipulator";
     public ModernRoboticsI2cGyro gyro = null;    private static final      String cfgGyro        = "gyro";
 
     /* Servo positions, adjust as necessary. */
