@@ -148,72 +148,83 @@ public class FullRobot extends OpMode {
 
         telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
         telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
-        telemetry.addData("Servo", "LaunchServo set to " + robot.launchServo.getPosition());
+       // telemetry.addData("Servo", "LaunchServo set to " + robot.launchLift.getPosition());
 
-
-        if (gamepad2.y && (servoUpTime+2000) < runtime.milliseconds()) {
+        telemetry.addData("Motor", "Launch set to " + robot.launchLift.getPower());
+        if (gamepad2.y && servoUpTime+2 < runtime.seconds()) {
             telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
-            if (robot.launchServo.getPosition() == robot.launchliftStart) {
-                robot.launchServo.setPosition(robot.launchliftDeploy);
+            if (robot.launchLift.getPower() == 1) {
+                robot.launchLift.setPower(0);
+            } else {
+                robot.launchLift.setPower(1);
             }
-            else {
-                robot.launchServo.setPosition(robot.launchliftStart);
-            }
-            servoUpTime = runtime.milliseconds();
-        }
+            robot.launchLift.setPower(0);
 
-        /*
-         * If we've launched (servo in Deploy position) more than half-second ago, then have it
-         * reset back to the Start position to get ready for the next launch.
-         */
-        if (robot.launchServo.getPosition() == robot.launchliftDeploy && servoUpTime+500 < runtime.milliseconds()) {
-            robot.launchServo.setPosition(robot.launchliftStart);
-        }
 
-        telemetry.addData("Status", "Launcherlift Debug 1 at: " + runtime.toString());
-        telemetry.addData("Servo", " 1 Launcherlift Push Set to " + robot.launchServo.getPosition());
+            servoUpTime = runtime.seconds();
+        }
+//        if (gamepad2.y && (servoUpTime + 2000) < runtime.milliseconds()) {
+//            telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
+//            if (robot.launchServo.getPosition() == robot.launchliftStart) {
+//                robot.launchServo.setPosition(robot.launchliftDeploy);
+//            } else {
+//                robot.launchServo.setPosition(robot.launchliftStart);
+//            }
+//            servoUpTime = runtime.milliseconds();
+//        }
+//
+//        /*
+//         * If we've launched (servo in Deploy position) more than half-second ago, then have it
+//         * reset back to the Start position to get ready for the next launch.
+//         */
+//        if (robot.launchServo.getPosition() == robot.launchliftDeploy && servoUpTime + 500 < runtime.milliseconds()) {
+//            robot.launchServo.setPosition(robot.launchliftStart);
+//        }
+//
+//        telemetry.addData("Status", "Launcherlift Debug 1 at: " + runtime.toString());
+//        telemetry.addData("Servo", " 1 Launcherlift Push Set to " + robot.launchServo.getPosition());
         telemetry.addData("Status", " launchMotor Debug 1 at: " + runtime.toString());
         if (gamepad2.a && (launchPress + 2) < runtime.seconds()) {
-            if ( robot.launchMotor.getPower() > 0.0 ) {
+            if (robot.launchMotor1.getPower() > 0.0) {
                 robot.stopLauncher();
             } else {
                 robot.startLauncher();
             }
             launchPress = runtime.seconds();
         }
-        if (gamepad2.x && (decreaseSpeed +500) < runtime.milliseconds()){
-            robot.launchMotor.setPower(robot.launchMotor.getPower() - 0.025);
+        if (gamepad2.x && (decreaseSpeed + 500) < runtime.milliseconds()) {
+            robot.launchMotor1.setPower(robot.launchMotor1.getPower() - 0.025);
             decreaseSpeed = runtime.milliseconds();
+            robot.launchMotor2.setPower(robot.launchMotor2.getPower() - 0.025);
         }
 
 
-        if (gamepad2.b && (decreaseSpeed +500) < runtime.milliseconds()) {
-            robot.launchMotor.setPower(robot.launchMotor.getPower() + 0.025);
-            decreaseSpeed = runtime.milliseconds();
-        }
-        telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor.getPower());
-        try {
-            boolean ready = robot.adjustLaunchSpeed(this);
-            telemetry.addData("Launcher:", "%s Ready", ready ? "IS" : "IS NOT");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            if (gamepad2.b && (decreaseSpeed + 500) < runtime.milliseconds()) {
+                robot.launchMotor1.setPower(robot.launchMotor1.getPower() + 0.025);
+                robot.launchMotor2.setPower(robot.launchMotor2.getPower() + 0.025);
+                decreaseSpeed = runtime.milliseconds();
+            }
+                telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor1.getPower());
+                telemetry.addData("Motor", " 2 launchMotor Push Set to " + robot.launchMotor2.getPower());
+                try {
+                    boolean ready = robot.adjustLaunchSpeed(this);
+                    telemetry.addData("Launcher:", "%s Ready", ready ? "IS" : "IS NOT");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-        if(Math.abs(gamepad2.right_stick_y) > .01) {
-            robot.manipMotor.setPower(gamepad2.right_stick_y);
-        }
-        else {
-            robot.manipMotor.setPower(0);
-        }
-    }  // loop
+                if (Math.abs(gamepad2.right_stick_y) > .01) {
+                    robot.manipMotor.setPower(gamepad2.right_stick_y);
+                } else {
+                    robot.manipMotor.setPower(0);
+                }
+            }  // loop
 
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
-        robot.normalDrive(this, 0, 0);
-    }
+            //@Override
+            //public void stop() {robot.normalDrive(this, 0, 0);
+        }
 
-}

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -47,9 +48,9 @@ public class HardwareHelper {
     public DcMotor  rightMidDrive = null;  private static final String cfgRMidDrive   = "R Mid";
     public DcMotor  leftBackDrive = null;  private static final String cfgLBckDrive   = "L Back";
     public DcMotor  rightBackDrive = null; private static final String cfgRtBckDrive  = "R Back";
-    public DcMotor  launchMotor = null;    private static final String cfgLaunchMotor = "Launcher";
-    //public DcMotor  launchMotor2 = null;    private static final String cfgLaunchMotor2 = "Launcher2";
-    public Servo    launchServo = null;    private static final String cfgLaunchServo = "LaunchServo";
+    public DcMotor  launchMotor1 = null;    private static final String cfgLaunchMotor1 = "R Launch";
+    public DcMotor  launchMotor2 = null;    private static final String cfgLaunchMotor2 = "L Launch";
+    public DcMotor  launchLift = null;    private static final String cfglaunchLift = "Launch Lift";
     public Servo    leftPush = null;       private static final String cfgLPush       = "L Push";
     public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
     public ColorSensor color = null;       private static final String cfgColor       = "color";
@@ -61,8 +62,8 @@ public class HardwareHelper {
     public static final double lpushDeploy = 0.6;
     public static final double rpushStart = 0.4;
     public static final double rpushDeploy = 1;
-    public static final double launchliftStart = .80;
-    public static final double launchliftDeploy = 0.1;
+    //public static final double launchliftStart = .80;
+    //public static final double launchliftDeploy = 0.1;
     private static final int Samplesize = 250;
     private int[] encTicks = new int[Samplesize];
     private double[] encTime = new double [Samplesize];
@@ -169,14 +170,22 @@ public class HardwareHelper {
 
         /* Set the subsequent motors based on type */
         if ( robotType == LAUNCHTEST || robotType == FULLTELEOP || robotType == FULLAUTO ) {
-            launchMotor = hwMap.dcMotor.get(cfgLaunchMotor);
+            launchMotor1 = hwMap.dcMotor.get(cfgLaunchMotor1);
+            launchMotor2 = hwMap.dcMotor.get(cfgLaunchMotor2);
+
             //vc1`launchMotor2 = hwMap.dcMotor.get(cfgLaunchMotor2);
-            launchMotor.resetDeviceConfigurationForOpMode();
-            launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            launchMotor.setMaxSpeed(COUNTS_PER_SECOND_MAX);
-            launchMotor.setDirection(DcMotor.Direction.FORWARD);
-            launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            launchMotor1.resetDeviceConfigurationForOpMode();
+            launchMotor2.resetDeviceConfigurationForOpMode();
+            launchMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            launchMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            launchMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            launchMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            launchMotor1.setMaxSpeed(COUNTS_PER_SECOND_MAX);
+            launchMotor2.setMaxSpeed(COUNTS_PER_SECOND_MAX);
+            launchMotor1.setDirection(DcMotor.Direction.FORWARD);
+            launchMotor2.setDirection(DcMotor.Direction.REVERSE);
+            launchMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            launchMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             manipMotor = hwMap.dcMotor.get(cfgmanipMotor);
             //manipMotor.setDirection(DcMotor.Direction.REVERSE);
         }
@@ -189,8 +198,10 @@ public class HardwareHelper {
             leftPush.setPosition(lpushStart);
         }
         if ( robotType == LAUNCHTEST || robotType == FULLAUTO || robotType == FULLTELEOP ) {
-            launchServo = hwMap.servo.get(cfgLaunchServo);
-            launchServo.setPosition(launchliftStart);
+            launchLift = hwMap.dcMotor.get(cfglaunchLift);
+            launchLift.setDirection(DcMotor.Direction.REVERSE);
+
+
         }
 
         /* Set the sensors based on type */
@@ -403,7 +414,8 @@ public class HardwareHelper {
      * Stop the launcher, and reset any variables as part of the launcher
      */
     public void stopLauncher() {
-        launchMotor.setPower(0.0);
+        launchMotor1.setPower(0.0);
+        launchMotor2.setPower(0.0);
         isLauncherRunning = false;
     }
 
@@ -418,7 +430,8 @@ public class HardwareHelper {
 
         // Clear out the timing and encoder ticks arrays
         initLaunchArray();
-        launchMotor.setPower(0.65);
+        launchMotor1.setPower(0.65);
+        launchMotor2.setPower(0.65);
         isLauncherRunning = true;
         return batteryVoltage;
     }
@@ -428,7 +441,8 @@ public class HardwareHelper {
 
         // Clear out the timing and encoder ticks arrays
         initLaunchArray();
-        launchMotor.setPower(power);
+        launchMotor1.setPower(power);
+        launchMotor2.setPower(power);
         isLauncherRunning = true;
         return batteryVoltage;
     }
@@ -457,7 +471,8 @@ public class HardwareHelper {
 //        caller.telemetry.update();
         while (caller.opModeIsActive() &&  ! adjustLaunchSpeed(caller)) {
 
-            caller.telemetry.addData("Launch Motor", " Power at %.2f", launchMotor.getPower());
+            caller.telemetry.addData("Launch Motor1", " Power at %.2f", launchMotor1.getPower());
+            caller.telemetry.addData("Launch Motor2", " Power at %.2f", launchMotor2.getPower());
             caller.telemetry.update();
 
         }
@@ -475,10 +490,9 @@ public class HardwareHelper {
         caller.telemetry.update();
         caller.sleep(sleepTime);
         caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
-                volts, launchMotor.getPower());
+                volts, launchMotor1.getPower());
         caller.telemetry.update();
-        if ( !caller.opModeIsActive() ) return;
-        launchServo.setPosition(launchliftDeploy);      // Shoot the first ball
+             launchLift.setPower(1); // Shoot the first ball
         initLaunchArray();
         caller.sleep(500);
         //double stopIn = runtime.milliseconds() + 500;   // Stop in half a second
@@ -487,21 +501,23 @@ public class HardwareHelper {
 
 
         //caller.sleep(500);
-        launchServo.setPosition(launchliftStart);
-        launchMotor.setPower(launchMotor.getPower() + 0.1);
+        launchLift.setPower(1);
+        launchMotor1.setPower(launchMotor1.getPower() + 0.1);
+        launchMotor2.setPower(launchMotor2.getPower() + 0.1);
         caller.sleep(2200);
         /*
          * Before shoot the second, let the power get back up to speed, should be fast
          */
         while (caller.opModeIsActive() &&  ! adjustLaunchSpeed(caller)) {
-            caller.telemetry.addData("Launch Motor", " Power at %.2f", launchMotor.getPower());
+            caller.telemetry.addData("Launch Motor1", " Power at %.2f", launchMotor1.getPower());
+            caller.telemetry.addData("Launch Motor2", " Power at %.2f", launchMotor2.getPower());
             caller.telemetry.update();
         }
         if ( !caller.opModeIsActive() ) return;
-        launchServo.setPosition(launchliftDeploy);
+        launchLift.setPower(0);
         caller.sleep(500);
         if ( !caller.opModeIsActive() ) return;
-        launchServo.setPosition(launchliftStart);
+        launchLift.setPower(1);
         stopLauncher();
     }
 
@@ -517,7 +533,8 @@ public class HardwareHelper {
             encTime[i] = 0;
         }
         encIndex = 0;
-        prevEncoderSaved = launchMotor.getCurrentPosition();
+        prevEncoderSaved = launchMotor1.getCurrentPosition();
+        prevEncoderSaved = launchMotor2.getCurrentPosition();
         prevTimeSaved = runtime.milliseconds();
     }
 
@@ -534,7 +551,7 @@ public class HardwareHelper {
      */
     private boolean getTicks() {
         if ( ! isLauncherRunning ) return false;
-        int curEncoder = Math.abs(launchMotor.getCurrentPosition());
+        int curEncoder = Math.abs(launchMotor1.getCurrentPosition());
         double  curTime = runtime.milliseconds();
 
         if (prevEncoderSaved - curEncoder == 0 )

@@ -53,7 +53,8 @@ public class EncoderTests extends OpMode {
     private HashMap<String, Integer> motorEncoder = new HashMap<String, Integer>();
     private int motorState = 0;
     private double launchPress = 0;
-    private double launchStart = 0;
+    private double launchStart1 = 0;
+    private double launchStart2 = 0;
     private double drivePress = 0;
     private double driveStart = 0;
 
@@ -77,13 +78,14 @@ public class EncoderTests extends OpMode {
         motorEncoder.put("RMM-Start", 0);
         motorEncoder.put("RMM-End", 0);
         robot.robot_init(hardwareMap);
-        boolean resetOk =  robot.waitForReset(robot.leftBackDrive, robot.rightBackDrive,
+        boolean resetOk = robot.waitForReset(robot.leftBackDrive, robot.rightBackDrive,
                 robot.leftMidDrive, robot.rightMidDrive, 2000);
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftMidDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftMidDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.launchMotor.setMaxSpeed(3000);
+        robot.launchMotor1.setMaxSpeed(3000);
+        robot.launchMotor2.setMaxSpeed(3000);
         telemetry.addData("Status", "Initialized and encoders %s reset", resetOk ? "ARE" : "ARE NOT");
     }
 
@@ -115,83 +117,98 @@ public class EncoderTests extends OpMode {
         switch (motorState) {
             case 0:
                 if (gamepad1.a && launchPress + 10000 < runtime.milliseconds()) {
-                    robot.launchMotor.setPower(1.0);
+                    robot.launchMotor1.setPower(1.0);
                     launchPress = runtime.milliseconds();
                     motorState = 1;
-                } else if ( gamepad1.y && launchPress + 10000 < runtime.milliseconds() ) {
-                    robot.leftBackDrive.setPower(1.0);
-                    robot.leftMidDrive.setPower(1.0);
-                    robot.rightBackDrive.setPower(1.0);
-                    robot.rightMidDrive.setPower(1.0);
-                    launchPress = runtime.milliseconds();
-                    motorState = 3;
+                    if (gamepad1.a && launchPress + 10000 < runtime.milliseconds()) {
+                        robot.launchMotor2.setPower(1.0);
+                        launchPress = runtime.milliseconds();
+                        motorState = 1;
+                    } else if (gamepad1.y && launchPress + 10000 < runtime.milliseconds()) {
+                        robot.leftBackDrive.setPower(1.0);
+                        robot.leftMidDrive.setPower(1.0);
+                        robot.rightBackDrive.setPower(1.0);
+                        robot.rightMidDrive.setPower(1.0);
+                        launchPress = runtime.milliseconds();
+                        motorState = 3;
+                    }
                 }
                 break;
 
-            case 1:
-                if (launchPress + 2000 < runtime.milliseconds()) {
-                    launchStart = runtime.milliseconds();
-                    motorEncoder.put("LM-Start", robot.launchMotor.getCurrentPosition());
-                    motorTimes.put("LM-Start", launchStart);
-                    motorState = 2;
-                }
-                break;
 
-            case 2:
-                if (launchStart + 10000 < runtime.milliseconds()) {
-                    motorTimes.put("LM-End", runtime.milliseconds());
-                    robot.launchMotor.setPower(0.0);
-                    motorEncoder.put("LM-End", robot.launchMotor.getCurrentPosition());
-                    motorState = 0;
-                }
-                break;
+//                    if (launchPress + 2000 < runtime.milliseconds()) {
+//                        launchStart1 = runtime.milliseconds();
+//                        motorEncoder.put("LM-Start", robot.launchMotor1.getCurrentPosition());
+//                        motorTimes.put("LM-Start", launchStart1);
+//                        motorState = 2;
+                //}
+//                    if (launchPress + 2000 < runtime.milliseconds()) {
+//                        launchStart2 = runtime.milliseconds();
+//                        motorEncoder.put("LM-Start", robot.launchMotor2.getCurrentPosition());
+//                        motorTimes.put("LM-Start", launchStart2);
+//                        motorState = 2;
+//                    }
 
-            case 3:
-                if ( launchPress + 2000 < runtime.milliseconds() ) {
-                    launchStart = runtime.milliseconds();
-                    motorTimes.put("Drives-Start", launchStart);
-                    motorEncoder.put("LB-Start", robot.leftBackDrive.getCurrentPosition());
-                    motorEncoder.put("RB-Start", robot.rightBackDrive.getCurrentPosition());
-                    motorEncoder.put("LMM-Start", robot.leftMidDrive.getCurrentPosition());
-                    motorEncoder.put("RMM-Start", robot.rightMidDrive.getCurrentPosition());
-                    motorState = 4;
-                }
-                break;
+                    case 2:
+                    if (launchStart1 + 10000 < runtime.milliseconds()) {
+                        motorTimes.put("LM-End", runtime.milliseconds());
+                        robot.launchMotor1.setPower(0.0);
+                        motorEncoder.put("LM-End", robot.launchMotor1.getCurrentPosition());
+                        motorState = 0;
+                    }
+                    if (launchStart2 + 10000 < runtime.milliseconds()) {
+                        motorTimes.put("LM-End", runtime.milliseconds());
+                        robot.launchMotor2.setPower(0.0);
+                        motorEncoder.put("LM-End", robot.launchMotor2.getCurrentPosition());
+                        motorState = 0;
+                    }
+                    break;
 
-            case 4:
-                if ( launchStart + 10000 < runtime.milliseconds() ) {
-                    motorTimes.put("Drives-End", runtime.milliseconds());
-                    robot.normalDrive(this, 0.0, 0.0);
-                    motorEncoder.put("LB-End", robot.leftBackDrive.getCurrentPosition());
-                    motorEncoder.put("RB-End", robot.rightBackDrive.getCurrentPosition());
-                    motorEncoder.put("LMM-End", robot.leftMidDrive.getCurrentPosition());
-                    motorEncoder.put("RMM-End", robot.rightMidDrive.getCurrentPosition());
-                    motorState = 0;
+                    case 3:
+                    if (launchPress + 2000 < runtime.milliseconds()) {
+                        launchStart1 = runtime.milliseconds();
+                        motorTimes.put("Drives-Start", launchStart1);
+                        motorEncoder.put("LB-Start", robot.leftBackDrive.getCurrentPosition());
+                        motorEncoder.put("RB-Start", robot.rightBackDrive.getCurrentPosition());
+                        motorEncoder.put("LMM-Start", robot.leftMidDrive.getCurrentPosition());
+                        motorEncoder.put("RMM-Start", robot.rightMidDrive.getCurrentPosition());
+                        motorState = 4;
+                    }
+                    break;
+
+                    case 4:
+                    if (launchStart2 + 10000 < runtime.milliseconds()) {
+                        motorTimes.put("Drives-End", runtime.milliseconds());
+                        robot.normalDrive(this, 0.0, 0.0);
+                        motorEncoder.put("LB-End", robot.leftBackDrive.getCurrentPosition());
+                        motorEncoder.put("RB-End", robot.rightBackDrive.getCurrentPosition());
+                        motorEncoder.put("LMM-End", robot.leftMidDrive.getCurrentPosition());
+                        motorEncoder.put("RMM-End", robot.rightMidDrive.getCurrentPosition());
+                        motorState = 0;
+                    }
                 }
-        }
-        telemetry.addData("LM-Power:", "%.2f", robot.launchMotor.getPower())
-                .addData("LM-Runtime:", "%d in %.2f secs",
-                        motorEncoder.get("LM-End") - motorEncoder.get("LM-Start"),
-                        (motorTimes.get("LM-End") - motorTimes.get("LM-Start")) / 1000.0)
-                .addData("Drives Runtime:", "%.2f secs",
-                        (motorTimes.get("Drives-End") - motorTimes.get("Drives-Start")) / 1000.0)
-                .addData("LB-Encoders:", "%d",
-                        motorEncoder.get("LB-End") - motorEncoder.get("LB-Start"))
-                .addData("RB-Encoders:", "%d",
-                        motorEncoder.get("RB-End") - motorEncoder.get("RB-Start"))
-                .addData("LMM-Encoders:", "%d",
-                        motorEncoder.get("LMM-End") - motorEncoder.get("LMM-Start"))
-                .addData("RMM-Encoders:", "%d",
-                        motorEncoder.get("LB-End") - motorEncoder.get("LB-Start"));
-    }  // loop
+                telemetry.addData("LM-Power:", "%.2f", robot.launchMotor1.getPower());
+                telemetry.addData("LM-Power:", "%.2f", robot.launchMotor2.getPower());
+                telemetry.addData("LM-Runtime:", "%d in %.2f secs",
+                    motorEncoder.get("LM-End") - motorEncoder.get("LM-Start"),
+                    (motorTimes.get("LM-End") - motorTimes.get("LM-Start")) / 1000.0)
+                    .addData("Drives Runtime:", "%.2f secs",
+                            (motorTimes.get("Drives-End") - motorTimes.get("Drives-Start")) / 1000.0)
+                    .addData("LB-Encoders:", "%d",
+                            motorEncoder.get("LB-End") - motorEncoder.get("LB-Start"))
+                    .addData("RB-Encoders:", "%d",
+                            motorEncoder.get("RB-End") - motorEncoder.get("RB-Start"))
+                    .addData("LMM-Encoders:", "%d",
+                            motorEncoder.get("LMM-End") - motorEncoder.get("LMM-Start"))
+                    .addData("RMM-Encoders:", "%d",
+                            motorEncoder.get("LB-End") - motorEncoder.get("LB-Start"));
+        }  // loop
 
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
-        robot.normalDrive(this, 0, 0);
-    }
-
+        //@Override
+        //public void stop () {
+            //robot.normalDrive(this, 0, 0);
 }
