@@ -148,21 +148,21 @@ public class FullRobot extends OpMode {
 
         telemetry.addData("Status", "Debug 4 at: " + runtime.toString());
         telemetry.addData("Servo", "2 rightPush Servo Set to " + robot.rightPush.getPosition());
-       // telemetry.addData("Servo", "LaunchServo set to " + robot.launchLift.getPosition());
+        // telemetry.addData("Servo", "LaunchServo set to " + robot.launchLift.getPosition());
 
         telemetry.addData("Motor", "Launch set to " + robot.launchLift.getPower());
-        if (gamepad2.y && servoUpTime+2 < runtime.seconds()) {
-            telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
-            if (robot.launchLift.getPower() == 1) {
-                robot.launchLift.setPower(0);
-            } else {
-                robot.launchLift.setPower(1);
-            }
-            robot.launchLift.setPower(0);
-
-
-            servoUpTime = runtime.seconds();
-        }
+//        if (gamepad2.y && servoUpTime+2 < runtime.seconds()) {
+//            telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
+//            if (robot.launchLift.getPower() == 1) {
+//                robot.launchLift.setPower(0);
+//            } else {
+//                robot.launchLift.setPower(1);
+//            }
+//            robot.launchLift.setPower(0);
+//
+//
+//            servoUpTime = runtime.seconds();
+//        }
 //        if (gamepad2.y && (servoUpTime + 2000) < runtime.milliseconds()) {
 //            telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
 //            if (robot.launchServo.getPosition() == robot.launchliftStart) {
@@ -199,32 +199,51 @@ public class FullRobot extends OpMode {
         }
 
 
-            if (gamepad2.b && (decreaseSpeed + 500) < runtime.milliseconds()) {
-                robot.launchMotor1.setPower(robot.launchMotor1.getPower() + 0.025);
-                robot.launchMotor2.setPower(robot.launchMotor2.getPower() + 0.025);
-                decreaseSpeed = runtime.milliseconds();
-            }
-                telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor1.getPower());
-                telemetry.addData("Motor", " 2 launchMotor Push Set to " + robot.launchMotor2.getPower());
-                try {
-                    boolean ready = robot.adjustLaunchSpeed(this);
-                    telemetry.addData("Launcher:", "%s Ready", ready ? "IS" : "IS NOT");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (Math.abs(gamepad2.right_stick_y) > .01) {
-                    robot.manipMotor.setPower(gamepad2.right_stick_y);
-                } else {
-                    robot.manipMotor.setPower(0);
-                }
-            }  // loop
-
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-            //@Override
-            //public void stop() {robot.normalDrive(this, 0, 0);
+        if (gamepad2.b && (decreaseSpeed + 500) < runtime.milliseconds()) {
+            robot.launchMotor1.setPower(robot.launchMotor1.getPower() + 0.025);
+            robot.launchMotor2.setPower(robot.launchMotor2.getPower() + 0.025);
+            decreaseSpeed = runtime.milliseconds();
+        }
+        telemetry.addData("Motor", " 1 launchMotor Push Set to " + robot.launchMotor1.getPower());
+        telemetry.addData("Motor", " 2 launchMotor Push Set to " + robot.launchMotor2.getPower());
+        try {
+            boolean ready = robot.adjustLaunchSpeed(this);
+            telemetry.addData("Launcher:", "%s Ready", ready ? "IS" : "IS NOT");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
+        if (Math.abs(gamepad2.right_stick_y) > .01) {
+            robot.manipMotor.setPower(-gamepad2.right_stick_y);
+        } else {
+            robot.manipMotor.setPower(0);
+        }
+
+        if (Math.abs(gamepad2.left_stick_y) > .01) {
+            robot.launchLift.setPower(gamepad2.left_stick_y);
+        } else
+            robot.launchLift.setPower(0);
+        }
+    }
+
+
+
+//if  (Math.(gamepad2.left_stick_y)>.01){
+//        robot.launchLift.setPower(gamepad2.left_stick_y);
+//        } else{
+//        robot.launchLift.setPower(0);
+//     }
+//
+//
+//
+//
+//
+//
+//
+//    /*
+//     * Code to run ONCE after the driver hits STOP
+//     */
+//            //@Override
+//            //public void stop() {robot.normalDrive(this, 0, 0);
+//        }
+//

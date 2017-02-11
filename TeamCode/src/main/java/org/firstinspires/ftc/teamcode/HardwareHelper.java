@@ -58,10 +58,10 @@ public class HardwareHelper {
     public ModernRoboticsI2cGyro gyro = null;    private static final      String cfgGyro        = "gyro";
 
     /* Servo positions, adjust as necessary. */
-    public static final double lpushStart = 1.0;
-    public static final double lpushDeploy = 0.6;
-    public static final double rpushStart = 0.4;
-    public static final double rpushDeploy = 1;
+    public static final double lpushStart = 0.6;
+    public static final double lpushDeploy = 0.000000000000001;
+    public static final double rpushStart = 0.3;
+    public static final double rpushDeploy = 0.9;
     //public static final double launchliftStart = .80;
     //public static final double launchliftDeploy = 0.1;
     private static final int Samplesize = 250;
@@ -502,8 +502,8 @@ public class HardwareHelper {
 
         //caller.sleep(500);
         launchLift.setPower(1);
-        launchMotor1.setPower(launchMotor1.getPower() + 0.1);
-        launchMotor2.setPower(launchMotor2.getPower() + 0.1);
+        launchMotor1.setPower(launchMotor1.getPower() + 0.5);
+        launchMotor2.setPower(launchMotor2.getPower() + 0.5);
         caller.sleep(2200);
         /*
          * Before shoot the second, let the power get back up to speed, should be fast
