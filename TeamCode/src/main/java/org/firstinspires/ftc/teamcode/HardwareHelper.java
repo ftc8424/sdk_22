@@ -90,7 +90,7 @@ public class HardwareHelper {
     private static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth
     private static final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                    (WHEEL_DIAMETER_INCHES * 3.14159265);
-    private static final int    COUNTS_PER_LAUNCHER  = 1060;  // AndyMark NeveRest 20:1, ideal
+    private static final int    COUNTS_PER_LAUNCHER  = 3600; // AndyMark NeveRest 3.7:1, ideal
 
     /* Other privates for things such as the runtime, the hardware Map, etc. */
     private RobotType robotType;
@@ -180,8 +180,8 @@ public class HardwareHelper {
             launchMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             launchMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             launchMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            launchMotor1.setMaxSpeed(COUNTS_PER_SECOND_MAX);
-            launchMotor2.setMaxSpeed(COUNTS_PER_SECOND_MAX);
+            launchMotor1.setMaxSpeed(COUNTS_PER_LAUNCHER);
+            launchMotor2.setMaxSpeed(COUNTS_PER_LAUNCHER);
             launchMotor1.setDirection(DcMotor.Direction.FORWARD);
             launchMotor2.setDirection(DcMotor.Direction.REVERSE);
             launchMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
