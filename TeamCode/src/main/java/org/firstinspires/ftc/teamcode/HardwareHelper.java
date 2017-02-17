@@ -409,6 +409,7 @@ public class HardwareHelper {
      */
     private int prevEncoderSaved = 0;
     private double prevTimeSaved = 0;
+    private double launcherStartTime = 0;
 
     /**
      * Stop the launcher, and reset any variables as part of the launcher
@@ -416,6 +417,7 @@ public class HardwareHelper {
     public void stopLauncher() {
         launchMotor1.setPower(0.0);
         launchMotor2.setPower(0.0);
+        launcherStartTime = 0;
         isLauncherRunning = false;
     }
 
@@ -425,6 +427,7 @@ public class HardwareHelper {
      *
      * @return  the current voltage of the 12V main battery
      */
+
     public double startLauncher() {
         double batteryVoltage = getVoltage();
 
@@ -433,6 +436,7 @@ public class HardwareHelper {
         launchMotor1.setPower(0.65);
         launchMotor2.setPower(0.65);
         isLauncherRunning = true;
+        launcherStartTime = runtime.milliseconds();
         return batteryVoltage;
     }
 
@@ -444,6 +448,7 @@ public class HardwareHelper {
         launchMotor1.setPower(power);
         launchMotor2.setPower(power);
         isLauncherRunning = true;
+        launcherStartTime = runtime.milliseconds();
         return batteryVoltage;
     }
 
@@ -574,6 +579,12 @@ public class HardwareHelper {
      * @throws InterruptedException
      */
     public boolean adjustLaunchSpeed(OpMode caller) throws InterruptedException {
+        if ( isLauncherRunning && launcherStartTime == 0 ) {
+            launcherStartTime = runtime.milliseconds();
+        } else if ( isLauncherRunning && launcherStartTime + 500 < runtime.milliseconds() ) {
+            launchMotor1.setPower(1.0);
+            launchMotor2.setPower(1.0);
+        }
         return true;
 //        if (!getTicks())
 //            return false;

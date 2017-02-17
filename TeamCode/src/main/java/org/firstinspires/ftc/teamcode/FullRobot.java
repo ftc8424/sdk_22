@@ -188,7 +188,7 @@ public class FullRobot extends OpMode {
             if (robot.launchMotor1.getPower() > 0.0) {
                 robot.stopLauncher();
             } else {
-                robot.startLauncher(1.0);
+                robot.startLauncher();
             }
             launchPress = runtime.seconds();
         }
