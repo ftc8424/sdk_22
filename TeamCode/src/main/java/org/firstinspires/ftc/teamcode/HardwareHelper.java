@@ -60,8 +60,8 @@ public class HardwareHelper {
     /* Servo positions, adjust as necessary. */
     public static final double lpushStart = 0.6;
     public static final double lpushDeploy = 0.000000000000001;
-    public static final double rpushStart = 0.3;
-    public static final double rpushDeploy = 0.9;
+    public static final double rpushStart = 0.4;
+    public static final double rpushDeploy = 0.9999999999999999999999999999999;
     //public static final double launchliftStart = .80;
     //public static final double launchliftDeploy = 0.1;
     private static final int Samplesize = 250;
@@ -484,13 +484,13 @@ public class HardwareHelper {
             ;
         long sleepTime;
         if ( volts < 12.4 )
-               sleepTime = 2500;
+               sleepTime = 1500;
         else if ( volts < 12.6 )
-                sleepTime = 2000;
+                sleepTime = 1000;
         else if ( volts < 12.8 )
-                sleepTime = 1900;
+                sleepTime = 900;
         else
-            sleepTime = 1750;
+            sleepTime = 750;
         caller.telemetry.addData("Launch Motor", "Waiting %.2f Secs to spin-up", sleepTime / 1000.0);
         caller.telemetry.update();
         caller.sleep(sleepTime);
@@ -581,11 +581,15 @@ public class HardwareHelper {
     public boolean adjustLaunchSpeed(OpMode caller) throws InterruptedException {
         if ( isLauncherRunning && launcherStartTime == 0 ) {
             launcherStartTime = runtime.milliseconds();
+            return false;
         } else if ( isLauncherRunning && launcherStartTime + 500 < runtime.milliseconds() ) {
             launchMotor1.setPower(1.0);
             launchMotor2.setPower(1.0);
+            return true;
+        }else {
+            return false;
         }
-        return true;
+
 //        if (!getTicks())
 //            return false;
 //        int totalTicks = 0;
