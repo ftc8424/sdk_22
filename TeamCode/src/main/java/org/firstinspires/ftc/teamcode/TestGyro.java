@@ -41,7 +41,23 @@ public class TestGyro extends LinearOpMode {
             idle();
         }
         telemetry.addData("Heading:  ", "Final Heading %d", robot.gyro.getHeading());
-        telemetry.update();
-        sleep(5000);
+
+//        robot.launchMotor.setPower(1);
+//        telemetry.addData("Motor", "LaunchPower Set to " + robot.launchMotor.getCurrentPosition());
+//
+//        sleep(2500);
+//        if ( !opModeIsActive() ) return;
+//        telemetry.addData("Status", "Debug 1 at: " + runtime.toString());
+//        robot.launchServo.setPosition(robot.launchliftDeploy);
+//        sleep(500);
+//        if ( !opModeIsActive() ) return;
+//        robot.launchServo.setPosition(robot.launchliftStart);
+//        sleep(750);
+//        if ( !opModeIsActive() ) return;
+//        robot.launchServo.setPosition(robot.launchliftDeploy);
+//        sleep(500);
+//        if ( !opModeIsActive() ) return;
+//        robot.launchServo.setPosition(robot.launchliftStart);
+//        sleep(3000);
     }
 }

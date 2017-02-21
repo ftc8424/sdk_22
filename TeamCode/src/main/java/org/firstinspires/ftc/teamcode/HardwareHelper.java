@@ -55,7 +55,7 @@ public class HardwareHelper {
     public Servo    rightPush = null;      private static final String cfgRPush       = "R Push";
     public ColorSensor color = null;       private static final String cfgColor       = "color";
     public DcMotor  manipMotor = null;     private static final  String cfgmanipMotor = "Manipulator";
-    public ModernRoboticsI2cGyro gyro = null;    private static final      String cfgGyro        = "gyro";
+    public ModernRoboticsI2cGyro Gyro = null;    private static final      String cfgGyro        = "gyro";
 
     /* Servo positions, adjust as necessary. */
     public static final double lpushStart = 0.6;
@@ -88,9 +88,28 @@ public class HardwareHelper {
     private static final double COUNTS_PER_MOTOR_REV = 1120;  // AndyMark NeveRest 40:1 CPR
     private static final double DRIVE_GEAR_REDUCTION = 1.0;   // No gears, just motor shafts
     private static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth
-    private static final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                   (WHEEL_DIAMETER_INCHES * 3.14159265);
+
     private static final int    COUNTS_PER_LAUNCHER  = 3600; // AndyMark NeveRest 3.7:1, ideal
+
+    ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
+
+//    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+//    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+//    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+//    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+//            (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    private static final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.14159265);
+
+    // These constants define the desired driving/control characteristics
+    // The can/should be tweaked to suite the specific robot drive train.
+//    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
+//    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+//
+//    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+//    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+//    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
     /* Other privates for things such as the runtime, the hardware Map, etc. */
     private RobotType robotType;
@@ -228,6 +247,49 @@ public class HardwareHelper {
         prevTimeSaved = 0;
     }
 
+    public boolean gyroTurn(LinearOpMode caller,
+                            int heading,
+                             double timeoutS) throws InterruptedException {
+        int curHeading= gyro.getIntegratedZValue();
+        int curHeading360= curHeading%360;
+        double turnspeed= 0.10;
+        int relPosition= heading-curHeading360;
+        int targetHeading= curHeading+relPosition;
+        double stopTime = runtime.seconds() + timeoutS;
+
+        if (relPosition<0){
+            do {
+                leftMidDrive.setPower(-turnspeed);
+                rightMidDrive.setPower(turnspeed);
+                leftBackDrive.setPower(-turnspeed);
+                rightBackDrive.setPower(turnspeed);
+                curHeading= gyro.getIntegratedZValue();
+                caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", targetHeading, curHeading);
+                caller.telemetry.update();
+            }
+            while (caller.opModeIsActive() && Math.abs(curHeading-targetHeading)>1 && runtime.seconds()<stopTime);
+        } else {
+            do {
+                leftMidDrive.setPower(turnspeed);
+                rightMidDrive.setPower(-turnspeed);
+                leftBackDrive.setPower(turnspeed);
+                rightBackDrive.setPower(-turnspeed);
+                curHeading= gyro.getIntegratedZValue();
+                caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", targetHeading, curHeading);
+                caller.telemetry.update();
+            }
+            while (caller.opModeIsActive() && Math.abs(curHeading-targetHeading)>1 && runtime.seconds()<stopTime);
+        }
+        leftMidDrive.setPower(0.0);
+        rightMidDrive.setPower(0.0);
+        leftBackDrive.setPower(0.0);
+        rightBackDrive.setPower(0.0);
+        return Math.abs(gyro.getIntegratedZValue()-targetHeading)<=1;
+/*This code we wrote establishes different things 1.  It makes sure that during gyro that if certain
+statements are true than the code will stop working, 2. I don't know what else.
+ */
+
+    }
 
     /**
      * Drive by the encoders, running to a position relative to the current position based
@@ -377,6 +439,22 @@ public class HardwareHelper {
             rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+
+//    public void GyroTurn (OpMode caller, double speed, double angle)
+//        throws InterruptedException{
+//
+//        leftBackDrive .setTargetPosition(leftBackDrive .getCurrentPosition() + (int) (-angle * DEG));
+//        leftMidDrive.setTargetPosition(leftMidDrive.getCurrentPosition() + (int) ( angle * DEG));
+//        rightBackDrive .setTargetPosition(rightBackDrive .getCurrentPosition() + (int) (-angle * DEG));
+//        rightMidDrive.setTargetPosition(rightMidDrive.getCurrentPosition() + (int) ( angle * DEG));
+//
+//        leftMidDrive .setPower(-speed);
+//        leftBackDrive.setPower( speed);
+//        rightMidDrive .setPower(-speed);
+//        rightBackDrive.setPower( speed);
+//
+//    }
+
 
     /**
      * Drive the robot forward/backward based on power settings passed in.
@@ -699,6 +777,10 @@ public class HardwareHelper {
         return m1Pos == target;
     }
 }
+
+
+        // keep looping while we are still active, and not on heading.
+
 
 /************************************************************************************************
  * For encoder math, here is the information from AndyMark's web site, so it will be key in

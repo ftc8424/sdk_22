@@ -35,11 +35,11 @@ public class Auto_Red_Left_New extends LinearOpMode {
 
         robot.encoderDrive(this, 0.4, -6.9, 6.9, 10);
 
-        robot.encoderDrive(this, driveSpeed, 38, 38, 10);
+        robot.encoderDrive(this, driveSpeed, 39.5, 39.5, 10);
         //45 degree turn
         //sleep(1000);
         robot.encoderDrive(this, 0.35, -4.5, 4.5, 10);
-        robot.encoderDrive(this, driveSpeed, 12, 12, 10);
+        robot.encoderDrive(this, driveSpeed, 14, 14, 10);
         //logic for pressing button
 
         String button;
@@ -66,15 +66,15 @@ public class Auto_Red_Left_New extends LinearOpMode {
         robot.rightPush.setPosition(robot.rpushStart);
 
 
-        robot.encoderDrive(this, driveSpeed, -9.5, -9.5, 10);
+        robot.encoderDrive(this, driveSpeed, -10, -10, 10);
         //Turning right towards beacon 2
-        robot.encoderDrive(this, 0.25, 11.5, -11.5, 10);
+        robot.encoderDrive(this, 0.25, 12, -12, 10);
         //Driving towards beacon 2
         robot.encoderDrive(this, driveSpeed, 47.5, 47.5, 10);
         //Turning left at Beacon 2
-        robot.encoderDrive(this, 0.25, -12, 12, 10);
+        robot.encoderDrive(this, 0.25, -12.5, 12.5, 10);
         //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, 3, 3, 10);
+        robot.encoderDrive(this, driveSpeed, 3.5, 3.5, 10);
 
         button = "Not Pressing";
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
@@ -105,7 +105,7 @@ public class Auto_Red_Left_New extends LinearOpMode {
         //aligning (turning) to shoot
         robot.encoderDrive(this, driveSpeed, 6.5, -6.5, 5);
         //shooting
-        robot.encoderDrive(this, driveSpeed, -30, -30, 10);
+        robot.encoderDrive(this, driveSpeed, -31.5, -31.5, 10);
 
         robot.autoLauncher(this, 0.65);
         //forward to capball and parking on center
