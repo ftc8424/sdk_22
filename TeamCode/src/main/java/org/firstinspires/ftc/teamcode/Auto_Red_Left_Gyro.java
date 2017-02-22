@@ -36,16 +36,18 @@ public class Auto_Red_Left_Gyro extends LinearOpMode {
         telemetry.addData("Init:", "Calibrated!!");
         telemetry.update();
         waitForStart();
-
-        robot.encoderDrive(this, 0.35, 24, 24, 10);
+// 24
+        robot.encoderDrive(this, 0.35, 19, 19, 10);
 
         //robot.encoderDrive(this, 0.4, -6.9, 6.9, 10);
-        robot.gyroTurn(this,315,10);
+       robot.gyroTurn2(this, 315, 10);
 
-        robot.encoderDrive(this, driveSpeed, 39.5, 39.5, 10);
+        robot.encoderDrive(this, driveSpeed, 37, 37, 10);
         //45 degree turn
         //sleep(1000);
-        robot.encoderDrive(this, 0.35, -4.5, 4.5, 10);
+        robot.gyroTurn2(this, 270, 5);
+
+        //robot.encoderDrive(this, 0.35, -4.5, 4.5, 10);
         robot.encoderDrive(this, driveSpeed, 14, 14, 10);
         //logic for pressing button
 
@@ -75,11 +77,14 @@ public class Auto_Red_Left_Gyro extends LinearOpMode {
 
         robot.encoderDrive(this, driveSpeed, -10, -10, 10);
         //Turning right towards beacon 2
-        robot.encoderDrive(this, 0.25, 12, -12, 10);
+        robot.gyroTurn2(this, 0, 5);
+        //robot.encoderDrive(this, 0.25, 12, -12, 10);
         //Driving towards beacon 2
         robot.encoderDrive(this, driveSpeed, 47.5, 47.5, 10);
         //Turning left at Beacon 2
-        robot.encoderDrive(this, 0.25, -12.5, 12.5, 10);
+        robot.gyroTurn2(this, 270, 5);
+
+        //robot.encoderDrive(this, 0.25, -12.5, 12.5, 10);
         //Moving forward to get close enough to hit the beacon
         robot.encoderDrive(this, driveSpeed, 3.5, 3.5, 10);
 
@@ -110,7 +115,8 @@ public class Auto_Red_Left_Gyro extends LinearOpMode {
         //backing up from beacon 2
         robot.encoderDrive(this, driveSpeed, -10.5, -10.5, 8);
         //aligning (turning) to shoot
-        robot.encoderDrive(this, driveSpeed, 6.5, -6.5, 5);
+        robot.gyroTurn(this, 315, 5);
+       // robot.encoderDrive(this, driveSpeed, 6.5, -6.5, 5);
         //shooting
         robot.encoderDrive(this, driveSpeed, -31.5, -31.5, 10);
 

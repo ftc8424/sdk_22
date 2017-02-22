@@ -247,50 +247,149 @@ public class HardwareHelper {
         prevTimeSaved = 0;
     }
 
-    public boolean gyroTurn(LinearOpMode caller,
+    public boolean gyroTurn2(LinearOpMode caller,
                             int heading,
                              double timeoutS) throws InterruptedException {
-        int curHeading= gyro.getIntegratedZValue();
-        int curHeading360= curHeading%360;
-        double turnspeed= 0.10;
-        int relPosition= heading-curHeading360;
-        int targetHeading= curHeading+relPosition;
+        int zValue;
+        int gHeading;
+        int heading360;
+        int absHeading;
+        int deltaHeading;
+        double rightPower;
+        double leftPower;
+        double turnspeed = 0.1;
         double stopTime = runtime.seconds() + timeoutS;
 
-        if (relPosition<0){
+        do {
+            //zValue = gyro.getIntegratedZValue();
+            gHeading = gyro.getHeading();
+            //heading360 = zValue % 360;
+//            if ( heading360 > 0 )
+//                absHeading = heading360;
+//            else
+//                absHeading = heading360 + 360;
+            if ( gHeading < 180 )
+                gHeading = gHeading + 360;
+            //deltaHeading = absHeading - heading;
+            //caller.telemetry.addData("gyroTurn2:", "delta: %d absHeading: %d, currently at %d going to %d", deltaHeading, absHeading, zValue, heading);
+            caller.telemetry.addData("gyroTurn2:", "gHeading: %d, going to %d", gHeading, heading);
+            caller.telemetry.update();
+            //caller.sleep(1000);
+//            if (Math.abs(deltaHeading) <= 180 && heading360 > 180) {
+//                leftPower = -turnspeed;
+//                rightPower = turnspeed;
+//            } else {
+//                leftPower = turnspeed;
+//                rightPower = -turnspeed;
+//            }
+            if ( gHeading-heading < 180 ) {
+                leftPower = -turnspeed;
+                rightPower = turnspeed;
+            } else {
+                leftPower = turnspeed;
+                rightPower = -turnspeed;
+            }
+            leftMidDrive.setPower(leftPower);
+            leftBackDrive.setPower(leftPower);
+            rightMidDrive.setPower(rightPower);
+            rightBackDrive.setPower(rightPower);
+        }
+//        while (caller.opModeIsActive() && Math.abs(deltaHeading) > 1 && runtime.seconds() < stopTime );
+        while (caller.opModeIsActive() && Math.abs(gHeading - heading) > 1 && runtime.seconds() < stopTime );
+        leftMidDrive.setPower(0.0);
+        rightMidDrive.setPower(0.0);
+        leftBackDrive.setPower(0.0);
+        rightBackDrive.setPower(0.0);
+//        if ( deltaHeading <= 1 )
+        if ( Math.abs(gHeading - heading) <= 1 )
+            return true;
+        else
+            return false;
+//        if(heading360  < 0){
+//              absHeading = heading360 + 360;
+//        } else {
+//             absHeading = heading360;
+//        }
+
+//        int deltaHeading = absHeading - heading;
+//
+//        if (deltaHeading <=180){
+//            do {
+//                leftMidDrive.setPower(-turnspeed);
+//                rightMidDrive.setPower(turnspeed);
+//                leftBackDrive.setPower(-turnspeed);
+//                rightBackDrive.setPower(turnspeed);
+//                zValue = gyro.getIntegratedZValue();
+//                caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", absHeading, zValue);
+//                caller.telemetry.update();
+//            }
+//            while (caller.opModeIsActive() && Math.abs(zValue - absHeading) > 1 && runtime.seconds() < stopTime);
+//        } else {
+//            do {
+//                leftMidDrive.setPower(turnspeed);
+//                rightMidDrive.setPower(-turnspeed);
+//                leftBackDrive.setPower(turnspeed);
+//                rightBackDrive.setPower(-turnspeed);
+//                zValue = gyro.getIntegratedZValue();
+//                caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", absHeading, zValue);
+//                caller.telemetry.update();
+//            }
+//            while (caller.opModeIsActive() && Math.abs(zValue - absHeading) > 1 && runtime.seconds() < stopTime);
+//        }
+//        leftMidDrive.setPower(0.0);
+//        rightMidDrive.setPower(0.0);
+//        leftBackDrive.setPower(0.0);
+//        rightBackDrive.setPower(0.0);
+//        return Math.abs(gyro.getIntegratedZValue() - absHeading) <= 1;
+        }
+/*This code we wrote establishes different things 1.  It makes sure that during gyro that if certain
+statements are true than the code will stop working, 2. I don't know what else.
+ */
+
+
+
+
+
+
+    public boolean gyroTurn(LinearOpMode caller,
+                            int heading,
+                            double timeoutS) throws InterruptedException {
+        int curHeading = gyro.getIntegratedZValue();
+        int curHeading360 = curHeading % 360;
+        double turnspeed = 0.10;
+        int relPosition = heading - curHeading360;
+        int targetHeading = curHeading + relPosition;
+        double stopTime = runtime.seconds() + timeoutS;
+
+        if (relPosition < 0) {
             do {
                 leftMidDrive.setPower(-turnspeed);
                 rightMidDrive.setPower(turnspeed);
                 leftBackDrive.setPower(-turnspeed);
                 rightBackDrive.setPower(turnspeed);
-                curHeading= gyro.getIntegratedZValue();
+                curHeading = gyro.getIntegratedZValue();
                 caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", targetHeading, curHeading);
                 caller.telemetry.update();
             }
-            while (caller.opModeIsActive() && Math.abs(curHeading-targetHeading)>1 && runtime.seconds()<stopTime);
+            while (caller.opModeIsActive() && Math.abs(curHeading - targetHeading) > 1 && runtime.seconds() < stopTime);
         } else {
             do {
                 leftMidDrive.setPower(turnspeed);
                 rightMidDrive.setPower(-turnspeed);
                 leftBackDrive.setPower(turnspeed);
                 rightBackDrive.setPower(-turnspeed);
-                curHeading= gyro.getIntegratedZValue();
+                curHeading = gyro.getIntegratedZValue();
                 caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", targetHeading, curHeading);
                 caller.telemetry.update();
             }
-            while (caller.opModeIsActive() && Math.abs(curHeading-targetHeading)>1 && runtime.seconds()<stopTime);
+            while (caller.opModeIsActive() && Math.abs(curHeading - targetHeading) > 1 && runtime.seconds() < stopTime);
         }
         leftMidDrive.setPower(0.0);
         rightMidDrive.setPower(0.0);
         leftBackDrive.setPower(0.0);
         rightBackDrive.setPower(0.0);
-        return Math.abs(gyro.getIntegratedZValue()-targetHeading)<=1;
-/*This code we wrote establishes different things 1.  It makes sure that during gyro that if certain
-statements are true than the code will stop working, 2. I don't know what else.
- */
-
+        return Math.abs(gyro.getIntegratedZValue() - targetHeading) <= 1;
     }
-
     /**
      * Drive by the encoders, running to a position relative to the current position based
      * on encoder ticks for a left and right motor.  It will move to a position for a specified
