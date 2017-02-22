@@ -268,8 +268,6 @@ public class HardwareHelper {
 //                absHeading = heading360;
 //            else
 //                absHeading = heading360 + 360;
-            if ( gHeading < 180 )
-                gHeading = gHeading + 360;
             //deltaHeading = absHeading - heading;
             //caller.telemetry.addData("gyroTurn2:", "delta: %d absHeading: %d, currently at %d going to %d", deltaHeading, absHeading, zValue, heading);
             caller.telemetry.addData("gyroTurn2:", "gHeading: %d, going to %d", gHeading, heading);
@@ -282,7 +280,13 @@ public class HardwareHelper {
 //                leftPower = turnspeed;
 //                rightPower = -turnspeed;
 //            }
-            if ( gHeading-heading < 180 ) {
+            /*
+             * Turn left if the difference from where we're heading to where we want to head
+             * is smaller than -180 or is between 1 and 180.  All else (including the 0 and 180
+             * situations) turn right.
+             */
+            deltaHeading = gHeading - heading;
+            if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {
                 leftPower = -turnspeed;
                 rightPower = turnspeed;
             } else {
