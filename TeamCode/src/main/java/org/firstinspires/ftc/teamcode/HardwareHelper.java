@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.AUTOTEST;
 import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.COLORTEST;
@@ -247,9 +248,9 @@ public class HardwareHelper {
         prevTimeSaved = 0;
     }
 
-    public boolean gyroTurn2(LinearOpMode caller,
+    public boolean gyroTurn(LinearOpMode caller,
                             int heading,
-                             double timeoutS) throws InterruptedException {
+                            double timeoutS) throws InterruptedException {
         int zValue;
         int gHeading;
         int heading360;
@@ -269,8 +270,8 @@ public class HardwareHelper {
 //            else
 //                absHeading = heading360 + 360;
             //deltaHeading = absHeading - heading;
-            //caller.telemetry.addData("gyroTurn2:", "delta: %d absHeading: %d, currently at %d going to %d", deltaHeading, absHeading, zValue, heading);
-            caller.telemetry.addData("gyroTurn2:", "gHeading: %d, going to %d", gHeading, heading);
+            //caller.telemetry.addData("gyroTurn:", "delta: %d absHeading: %d, currently at %d going to %d", deltaHeading, absHeading, zValue, heading);
+            caller.telemetry.addData("gyroTurn:", "gHeading: %d, going to %d", gHeading, heading);
             caller.telemetry.update();
             //caller.sleep(1000);
 //            if (Math.abs(deltaHeading) <= 180 && heading360 > 180) {
@@ -355,45 +356,45 @@ statements are true than the code will stop working, 2. I don't know what else.
 
 
 
-    public boolean gyroTurn(LinearOpMode caller,
-                            int heading,
-                            double timeoutS) throws InterruptedException {
-        int curHeading = gyro.getIntegratedZValue();
-        int curHeading360 = curHeading % 360;
-        double turnspeed = 0.10;
-        int relPosition = heading - curHeading360;
-        int targetHeading = curHeading + relPosition;
-        double stopTime = runtime.seconds() + timeoutS;
-
-        if (relPosition < 0) {
-            do {
-                leftMidDrive.setPower(-turnspeed);
-                rightMidDrive.setPower(turnspeed);
-                leftBackDrive.setPower(-turnspeed);
-                rightBackDrive.setPower(turnspeed);
-                curHeading = gyro.getIntegratedZValue();
-                caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", targetHeading, curHeading);
-                caller.telemetry.update();
-            }
-            while (caller.opModeIsActive() && Math.abs(curHeading - targetHeading) > 1 && runtime.seconds() < stopTime);
-        } else {
-            do {
-                leftMidDrive.setPower(turnspeed);
-                rightMidDrive.setPower(-turnspeed);
-                leftBackDrive.setPower(turnspeed);
-                rightBackDrive.setPower(-turnspeed);
-                curHeading = gyro.getIntegratedZValue();
-                caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", targetHeading, curHeading);
-                caller.telemetry.update();
-            }
-            while (caller.opModeIsActive() && Math.abs(curHeading - targetHeading) > 1 && runtime.seconds() < stopTime);
-        }
-        leftMidDrive.setPower(0.0);
-        rightMidDrive.setPower(0.0);
-        leftBackDrive.setPower(0.0);
-        rightBackDrive.setPower(0.0);
-        return Math.abs(gyro.getIntegratedZValue() - targetHeading) <= 1;
-    }
+//    public boolean gyroTurn(LinearOpMode caller,
+//                            int heading,
+//                            double timeoutS) throws InterruptedException {
+//        int curHeading = gyro.getIntegratedZValue();
+//        int curHeading360 = curHeading % 360;
+//        double turnspeed = 0.10;
+//        int relPosition = heading - curHeading360;
+//        int targetHeading = curHeading + relPosition;
+//        double stopTime = runtime.seconds() + timeoutS;
+//
+//        if (relPosition < 0) {
+//            do {
+//                leftMidDrive.setPower(-turnspeed);
+//                rightMidDrive.setPower(turnspeed);
+//                leftBackDrive.setPower(-turnspeed);
+//                rightBackDrive.setPower(turnspeed);
+//                curHeading = gyro.getIntegratedZValue();
+//                caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", targetHeading, curHeading);
+//                caller.telemetry.update();
+//            }
+//            while (caller.opModeIsActive() && Math.abs(curHeading - targetHeading) > 1 && runtime.seconds() < stopTime);
+//        } else {
+//            do {
+//                leftMidDrive.setPower(turnspeed);
+//                rightMidDrive.setPower(-turnspeed);
+//                leftBackDrive.setPower(turnspeed);
+//                rightBackDrive.setPower(-turnspeed);
+//                curHeading = gyro.getIntegratedZValue();
+//                caller.telemetry.addData("gyroTurn:", "Turning to %d, currently at %d", targetHeading, curHeading);
+//                caller.telemetry.update();
+//            }
+//            while (caller.opModeIsActive() && Math.abs(curHeading - targetHeading) > 1 && runtime.seconds() < stopTime);
+//        }
+//        leftMidDrive.setPower(0.0);
+//        rightMidDrive.setPower(0.0);
+//        leftBackDrive.setPower(0.0);
+//        rightBackDrive.setPower(0.0);
+//        return Math.abs(gyro.getIntegratedZValue() - targetHeading) <= 1;
+//    }
     /**
      * Drive by the encoders, running to a position relative to the current position based
      * on encoder ticks for a left and right motor.  It will move to a position for a specified
@@ -420,6 +421,7 @@ statements are true than the code will stop working, 2. I don't know what else.
         int newRightMidTarget;
         int newLeftBackTarget;
         int newRightBackTarget;
+        int getHeading = gyro.getIntegratedZValue();
         long encoderTimeout = 2000;   // Wait no more than two seconds, an eternity, to set
 
         if ( !caller.opModeIsActive() )
@@ -433,6 +435,8 @@ statements are true than the code will stop working, 2. I don't know what else.
             leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+
+
 
         /*
          * Determine new target position and pass to motor controller
@@ -494,13 +498,44 @@ statements are true than the code will stop working, 2. I don't know what else.
         int lbCurPos;
         int rbCurPos;
         double stopTime = runtime.seconds() + timeoutS;
+        double leftPower;
+        double rightPower;
+        double lastSetTime = runtime.milliseconds();
+        int HeadingLoop;
+
         do {
-            rightBackDrive.setPower(Math.abs(speed));
-            leftBackDrive.setPower(Math.abs(speed));
-            if ( robotType == FULLAUTO ) {
-                rightMidDrive.setPower(Math.abs(speed));
-                leftMidDrive.setPower(Math.abs(speed));
+            leftPower = speed;
+            rightPower = speed;
+            if (leftPower <= 0.01) {
+                lastSetTime = runtime.milliseconds();
+                leftPower = speed;
+                rightPower = speed;
             }
+            HeadingLoop = gyro.getIntegratedZValue();
+//            if (runtime.milliseconds() > lastSetTime + 250){
+//                if(getHeading > HeadingLoop + 5 ){
+//                    leftPower += 0.05;
+//                    rightPower -= 0.05;
+//                    lastSetTime = runtime.milliseconds();
+//
+//                } else if (getHeading < HeadingLoop +5){
+//                    leftPower -= 0.05;
+//                    rightPower += 0.05;
+//                    lastSetTime = runtime.milliseconds();
+//                }
+//            }
+
+            leftPower = Range.clip(leftPower, -1.0, 1.0);
+            rightPower = Range.clip(rightPower, -1.0, 1.0);
+            leftBackDrive.setPower(leftPower);
+            rightBackDrive.setPower(rightPower);
+
+            if(robotType == FULLAUTO){
+                leftMidDrive.setPower(leftPower);
+                rightMidDrive.setPower(rightPower);
+            }
+            caller.telemetry.addData("Power:", "Left Power %.2f, Right Power %.2f, Gyro %d %d", leftPower, rightPower, getHeading, HeadingLoop);
+            caller.telemetry.update();
 //            caller.telemetry.addLine("Drives-TO ")
 //                    .addData("POS ", "%7d : %7d : %7d : %7d",
 //                            newLeftMidTarget, newRightMidTarget,
@@ -678,32 +713,11 @@ statements are true than the code will stop working, 2. I don't know what else.
         caller.telemetry.addData("Launch Motor", "Bat Voltage is %.2f / Power at %.2f",
                 volts, launchMotor1.getPower());
         caller.telemetry.update();
-             launchLift.setPower(1); // Shoot the first ball
+        launchLift.setPower(1); // Shoot the first ball
         initLaunchArray();
-        caller.sleep(500);
-        //double stopIn = runtime.milliseconds() + 500;   // Stop in half a second
-        // allow launcher to stabilize again
-
-
-
-        //caller.sleep(500);
-        launchLift.setPower(1);
-        launchMotor1.setPower(launchMotor1.getPower() + 0.5);
-        launchMotor2.setPower(launchMotor2.getPower() + 0.5);
         caller.sleep(2200);
-        /*
-         * Before shoot the second, let the power get back up to speed, should be fast
-         */
-        while (caller.opModeIsActive() &&  ! adjustLaunchSpeed(caller)) {
-            caller.telemetry.addData("Launch Motor1", " Power at %.2f", launchMotor1.getPower());
-            caller.telemetry.addData("Launch Motor2", " Power at %.2f", launchMotor2.getPower());
-            caller.telemetry.update();
-        }
         if ( !caller.opModeIsActive() ) return;
         launchLift.setPower(0);
-        caller.sleep(500);
-        if ( !caller.opModeIsActive() ) return;
-        launchLift.setPower(1);
         stopLauncher();
     }
 
