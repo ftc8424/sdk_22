@@ -42,10 +42,10 @@ public class Auto_Red_Left_Gyro extends LinearOpMode {
         //robot.encoderDrive(this, 0.4, -6.9, 6.9, 10);
        robot.gyroTurn(this, 315, 10);
 
-        robot.encoderDrive(this, driveSpeed, 39.625, 39.625, 10);
+        robot.encoderDrive(this, driveSpeed, 40.625, 40.625, 10);
         //45 degree turn
         //sleep(1000);
-        robot.gyroTurn(this, 272, 5);
+        robot.gyroTurn(this, 273, 5);
 
         //robot.encoderDrive(this, 0.35, -4.5, 4.5, 10);
         robot.encoderDrive(this, driveSpeed, 16, 16, 10);
@@ -77,16 +77,16 @@ public class Auto_Red_Left_Gyro extends LinearOpMode {
         robot.autoLauncher(this, 0.65);
 
         //Turning right towards beacon 2
-        robot.gyroTurn(this, 350, 5);
+        robot.gyroTurn(this,358, 5);
         //robot.encoderDrive(this, 0.25, 12, -12, 10);
         //Driving towards beacon 2
         robot.encoderDrive(this, driveSpeed, 46, 46, 10);
         //Turning left at Beacon 2
-        robot.gyroTurn(this, 270, 5);
+        robot.gyroTurn(this, 272, 5);
 
         //robot.encoderDrive(this, 0.25, -12.5, 12.5, 10);
         //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, 4, 4, 10);
+        robot.encoderDrive(this, driveSpeed, 6.5, 6.5, 10);
 
         button = "Not Pressing";
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {

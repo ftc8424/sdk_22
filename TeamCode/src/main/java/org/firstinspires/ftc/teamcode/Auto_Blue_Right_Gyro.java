@@ -48,7 +48,7 @@ public class Auto_Blue_Right_Gyro extends LinearOpMode {
         robot.gyroTurn(this, 85, 5);
 
         //robot.encoderDrive(this, 0.35, -4.5, 4.5, 10);
-        robot.encoderDrive(this, driveSpeed, 16, 16, 10);
+        robot.encoderDrive(this, driveSpeed, 17, 17, 10);
         //logic for pressing button
 
         String button;
@@ -86,7 +86,7 @@ public class Auto_Blue_Right_Gyro extends LinearOpMode {
 
         //robot.encoderDrive(this, 0.25, -12.5, 12.5, 10);
         //Moving forward to get close enough to hit the beacon
-        robot.encoderDrive(this, driveSpeed, 5, 5, 10);
+        robot.encoderDrive(this, driveSpeed, 6, 6, 10);
 
         button = "Not Pressing";
         if (robot.color.blue() > 0 && robot.color.blue() > robot.color.red()) {
