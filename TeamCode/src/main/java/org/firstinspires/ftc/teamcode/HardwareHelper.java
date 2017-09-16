@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -786,44 +783,46 @@ statements are true than the code will stop working, 2. I don't know what else.
             return false;
         }
 
-//        if (!getTicks())
-//            return false;
-//        int totalTicks = 0;
-//        double totalTime  = 0;
-//        int count = 0;
-//        for (int i = 0; i < Samplesize; i++) {
-//            totalTicks = totalTicks + encTicks[i];
-//            totalTime  = totalTime  + encTime[i];
-//            if ( encTicks[i] > 0 ) count++;
-//        }
-//
-//        int last = (encIndex == 0) ? Samplesize-1 : encIndex - 1;
-//        int TicksAvg = totalTicks / count;
-//        long TimeAvg = Math.round(totalTime / count);
-//        double timeInSecs = TimeAvg / 1000.0;
-//        long ticksInSecs = Math.round(TicksAvg / timeInSecs);
-//        caller.telemetry.addData("adjustLaunchSpeed", "TicksAvg %d, TimeAvg %d, timeInSecs %.2f, ticksInSecs: %d, Count: %d",
-//                TicksAvg, TimeAvg, timeInSecs, ticksInSecs, count);
-//        caller.telemetry.update();
-//
-//        if ( count <= (Samplesize / 2) ) return false;    // Not large enough, keep going.
-//
-//        if (Math.abs(encTicks[0] - TicksAvg) <= 100) {
-//            if (Math.abs(ticksInSecs - COUNTS_PER_LAUNCHER) <= 100) {
-//                return true;
-//            } else if (ticksInSecs > COUNTS_PER_LAUNCHER && launchMotor.getPower() > 0.1) {
-//                launchMotor.setPower(launchMotor.getPower() - 0.05);
-//                initLaunchArray();    // Clear out buckets, so we can see if new power is right
-//                return false;
-//            } else {
-//                launchMotor.setPower(launchMotor.getPower() + 0.05);
-//                initLaunchArray();    // Clear out buckets, so we can see if new power is right
-//                return false;
-//            }
-//        } else {
-//            return false;
-//        }
-    }
+      /*
+        if (!getTicks())
+            return false;
+        int totalTicks = 0;
+        double totalTime  = 0;
+        int count = 0;
+        for (int i = 0; i < Samplesize; i++) {
+            totalTicks = totalTicks + encTicks[i];
+            totalTime  = totalTime  + encTime[i];
+            if ( encTicks[i] > 0 ) count++;
+        }
+
+        int last = (encIndex == 0) ? Samplesize-1 : encIndex - 1;
+        int TicksAvg = totalTicks / count;
+        long TimeAvg = Math.round(totalTime / count);
+        double timeInSecs = TimeAvg / 1000.0;
+        long ticksInSecs = Math.round(TicksAvg / timeInSecs);
+        caller.telemetry.addData("adjustLaunchSpeed", "TicksAvg %d, TimeAvg %d, timeInSecs %.2f, ticksInSecs: %d, Count: %d",
+                TicksAvg, TimeAvg, timeInSecs, ticksInSecs, count);
+        caller.telemetry.update();
+
+        if ( count <= (Samplesize / 2) ) return false;    // Not large enough, keep going.
+
+        if (Math.abs(encTicks[0] - TicksAvg) <= 100) {
+            if (Math.abs(ticksInSecs - COUNTS_PER_LAUNCHER) <= 100) {
+                return true;
+            } else if (ticksInSecs > COUNTS_PER_LAUNCHER && launchMotor.getPower() > 0.1) {
+                launchMotor.setPower(launchMotor.getPower() - 0.05);
+                initLaunchArray();    // Clear out buckets, so we can see if new power is right
+                return false;
+            } else {
+                launchMotor.setPower(launchMotor.getPower() + 0.05);
+                initLaunchArray();    // Clear out buckets, so we can see if new power is right
+                return false;
+            }
+        } else {
+            return false;
+        }
+      */
+   }
 
         /**
          * Waits for the encoders to be reset on the 4 motors, and returns a boolean as to whether
